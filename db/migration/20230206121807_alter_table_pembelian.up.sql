@@ -1,0 +1,2 @@
+ALTER TABLE pembelian
+ADD COLUMN jumlah INTEGER DEFAULT 0;
