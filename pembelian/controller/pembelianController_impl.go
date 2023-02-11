@@ -36,10 +36,10 @@ func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, req
 		"pembelian/views/index.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
-	serv, err := controller.PembelianService.FindByAll(context.Background())
+	awal := request.URL.Query().Get("awal")
+	akhir := request.URL.Query().Get("akhir")
+	serv, err := controller.PembelianService.FindByAll(context.Background(), awal, akhir)
 	helper.PanicIfError(err)
-	//fmt.Fprintln(writer, serv)
-
 	myTemplate.ExecuteTemplate(writer, "indexPembelian", Data{
 		Title:   "Cafe Mewa",
 		AllData: serv,
@@ -88,26 +88,34 @@ func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, req
 }
 func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 
-	myTemplate := template.New("INSERT")
+	myTemplate := template.New("UPDATE").Funcs(
+		map[string]interface{}{
+			"add":          helper.Add,
+			"format":       helper.FormatTanggal,
+			"formatNumber": helper.FormatNumberic,
+		})
 	myTemplate = template.Must(myTemplate.ParseFiles(
-		"pembelian/views/create.gohtml", "view/layout/app.gohtml",
+		"pembelian/views/show.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
-	myTemplate.ExecuteTemplate(writer, "createPembelian", map[string]interface{}{
-		"Title": "Cafe Mewa - Create",
-
-		"barang": map[int]string{
-			1: "kopi",
-		},
+	serv, err := controller.PembelianService.FindById(context.Background(), params.ByName("id"))
+	helper.PanicIfError(err)
+	//fmt.Fprintln(writer, serv)
+	type barang struct {
+		id   int
+		nama string
+	}
+	myTemplate.ExecuteTemplate(writer, "showPembelian", map[string]interface{}{
+		"Title":  "Cafe Mewa - Create",
+		"data":   serv,
+		"barang": barang{1, "kopi"},
 	})
 }
 func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	panic("Controller")
 }
 func (controller *PembelianControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	id, err := strconv.Atoi(params.ByName("id"))
-	helper.PanicIfError(err)
-	err = controller.PembelianService.Delete(context.Background(), id)
+	err := controller.PembelianService.Delete(context.Background(), params.ByName("id"))
 	helper.PanicIfError(err)
 	http.Redirect(writer, request, "/pembelian/", http.StatusFound)
 	return

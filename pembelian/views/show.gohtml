@@ -1,4 +1,4 @@
-{{define "createPembelian"}}
+{{define "showPembelian"}}
     <!DOCTYPE html>
     <html lang="en">
     {{template "head"}}
@@ -7,41 +7,44 @@
 
         <div class="page-title">
             <div class="title_left">
-                <h3>Create - Pembelian</h3>
+                <h3>Update - Pembelian</h3>
             </div>
 
             <div class="title_right text-right">
-                <a href="" class="btn btn-outline-warning"><i class="fa fa-search"></i> Search</a>
-                <a href="/pembelian/create/" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create</a>
+
             </div>
         </div>
         <div class="clearfix"></div>
 
         <div class="page-body">
-            <form action="/pembelian/store/" method="POST" enctype="multipart/form-data">
+            <form action="/pembelian/update/{{.data.Id}}" method="POST" enctype="multipart/form-data">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 offset-3">
                                 <div class="form-group">
-                                    <label for="">Tanggal</label>
-                                    <input type="date" class="form-control" placeholder="Tanggal" name="tanggal">
+                                    <label for="">Tanggal {{.data}}</label>
+                                    <input type="date" class="form-control" placeholder="Tanggal" name="tanggal" value="{{format .data.Tanggal}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Barang</label>
                                     <select name="barang" id="barang" class="form-control">
                                         <option value="">Pilih Barang Pembelian</option>
                                         {{range $index , $item := .barang}}
+                                            {{ if eq .data.id_bahan_baku .barang.id }}
+                                            <option value=1 selected>{{$item}}</option>
+                                            {{else}}
                                             <option value=1>{{$item}}</option>
+                                            {{ end }}
                                         {{end}}
                                     </select>
                                     <div class="form-group">
                                         <label for="">Jumlah</label>
-                                        <input type="number" class="form-control" placeholder="Jumlah" name="jumlah">
+                                        <input type="number" class="form-control" placeholder="Jumlah" name="jumlah" value="{{.data.Jumlah}}">
                                     </div>
                                     <div class="form-group">
                                         <label for="">Biaya</label>
-                                        <input type="number" class="form-control" placeholder="Biaya Pembelian" name="biaya">
+                                        <input type="number" class="form-control" placeholder="Biaya Pembelian" name="biaya" value="{{ .data.Biaya }}">
                                     </div>
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="useCheck"  name="use">

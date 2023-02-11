@@ -20,29 +20,30 @@ func NewPembelianService(pembelianRepository repository.PembelianRepository, DB 
 	}
 }
 
-func (service *PembelianServiceImpl) Add(ctx context.Context, index int, id int) int {
-	return index + id
-}
-
-func (service *PembelianServiceImpl) FindById(ctx context.Context, id int) (web.PembelianResponse, error) {
+func (service *PembelianServiceImpl) FindById(ctx context.Context, id string) (web.PembelianUpdateResponse, error) {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.ErrorTx(tx)
 
-	pembelian, err := service.PembelianRepository.FindByIdPembelian(ctx, tx, int32(id))
+	pembelian, err := service.PembelianRepository.FindByIdPembelian(ctx, tx, id)
 
-	return helper.ToPembelianResponse(pembelian), err
+	return helper.ToPembelianUpdateResponse(pembelian), err
 }
 
-func (service *PembelianServiceImpl) FindByAll(ctx context.Context) ([]web.PembelianResponse, error) {
+func (service *PembelianServiceImpl) FindByAll(ctx context.Context, filterAwal string, filterAkhir string) ([]web.PembelianResponse, error) {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.ErrorTx(tx)
+	if filterAwal == "" || filterAkhir == "" {
+		pembelian, err := service.PembelianRepository.FindByAllPembelian(ctx, tx)
+		helper.PanicIfError(err)
+		return helper.ToPembelianAllResponse(pembelian), nil
+	} else {
+		pembelian, err := service.PembelianRepository.FindByAllPembelianByDate(ctx, tx, filterAwal, filterAkhir)
+		helper.PanicIfError(err)
+		return helper.ToPembelianAllResponse(pembelian), nil
+	}
 
-	pembelian, err := service.PembelianRepository.FindByAllPembelian(ctx, tx)
-	helper.PanicIfError(err)
-
-	return helper.ToPembelianAllResponse(pembelian), nil
 }
 
 func (service *PembelianServiceImpl) Store(ctx context.Context, request web.PembelianCreateRequest) (web.PembelianResponse, error) {
@@ -64,7 +65,7 @@ func (service *PembelianServiceImpl) Update(ctx context.Context, request web.Pem
 	helper.PanicIfError(err)
 	return helper.RequestToResponse(pembelian), nil
 }
-func (service *PembelianServiceImpl) Delete(ctx context.Context, id int) error {
+func (service *PembelianServiceImpl) Delete(ctx context.Context, id string) error {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.ErrorTx(tx)

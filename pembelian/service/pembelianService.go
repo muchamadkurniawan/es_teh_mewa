@@ -6,10 +6,9 @@ import (
 )
 
 type PembelianService interface {
-	FindById(ctx context.Context, id int) (web.PembelianResponse, error)
-	FindByAll(ctx context.Context) ([]web.PembelianResponse, error)
+	FindById(ctx context.Context, id string) (web.PembelianUpdateResponse, error)
+	FindByAll(ctx context.Context, filterAwal string, filterAkhir string) ([]web.PembelianResponse, error)
 	Store(ctx context.Context, request web.PembelianCreateRequest) (web.PembelianResponse, error)
 	Update(ctx context.Context, response web.PembelianCreateRequest) (web.PembelianResponse, error)
-	Delete(ctx context.Context, id int) error
-	Add(ctx context.Context, index int, i int) int
+	Delete(ctx context.Context, id string) error
 }

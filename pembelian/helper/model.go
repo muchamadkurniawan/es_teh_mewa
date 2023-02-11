@@ -37,6 +37,18 @@ func ToPembelianResponse(pembelian entity.Pembelian) web.PembelianResponse {
 	}
 }
 
+func ToPembelianUpdateResponse(pembelian entity.Pembelian) web.PembelianUpdateResponse {
+	return web.PembelianUpdateResponse{
+		Id:            int(pembelian.Id),
+		Id_user:       int(pembelian.IdUser),
+		Id_bahan_baku: int(pembelian.IdBahan_Baku),
+		Tanggal:       pembelian.Tanggal,
+		Biaya:         int(pembelian.Biaya),
+		Jumlah:        int(pembelian.Jumlah),
+		Use_pembelian: pembelian.UsePembelian,
+	}
+}
+
 func ToEntityPembelian(pembelian web.PembelianCreateRequest) entity.Pembelian {
 	return entity.Pembelian{
 		IdUser:       int32(pembelian.Id_user),
