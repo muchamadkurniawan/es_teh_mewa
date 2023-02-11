@@ -1,0 +1,69 @@
+{{define "indexPembelian"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head"}}
+    {{template "bodyTop"}}
+        <div class="right_col" role="main">
+
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Pembelian</h3>
+                </div>
+
+                <div class="title_right text-right">
+                    <a href="" class="btn btn-outline-warning"><i class="fa fa-search"></i> Search</a>
+                    <a href="/pembelian/create/" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create</a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="page-body">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Tanggal</th>
+                                <th class="text-center">Bahan Baku</th>
+                                <th class="text-center">Jumlah</th>
+                                <th class="text-center">Biaya</th>
+                                <th class="text-left">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                {{ range $index, $item := .AllData }}
+                                    <tr>
+                                        <td class="text-center">{{ add $index 1 }}</td>
+                                        <td class="text-center">{{ $item.Tanggal }}</td>
+                                        <td class="text-center">{{ $item.Id_bahan_baku }}</td>
+                                        <td class="text-center">{{ $item.Jumlah }}</td>
+                                        <td class="text-center">Rp. {{ formatNumber $item.Biaya }}</td>
+
+                                        <td class="text-right">
+                                            <div class="form-inline text-right">
+                                                <a href="#" class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i></a>
+                                                <form action="/pembelian/delete/{{$item.Id}}" method="POST">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {{ else }}
+                                    <tr>
+                                        <td colspan="7" class="text-center">Data not available !</td>
+                                    </tr>
+                                {{ end }}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    {{template "footer"}}
+
+</html>
+{{end}}

@@ -6,6 +6,9 @@ import (
 	"eh_teh_mewa/master/controller"
 	"eh_teh_mewa/master/repository"
 	"eh_teh_mewa/master/service"
+	controllerPembelian "eh_teh_mewa/pembelian/controller"
+	repositoryPembelian "eh_teh_mewa/pembelian/model/repository"
+	servicePembelian "eh_teh_mewa/pembelian/service"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -18,9 +21,9 @@ func main() {
 	usersController := controller.NewUsersController(userService)
 
 	//
-	//pembelianRepository := repositoryPembelian.NewPembelianRepository()
-	//pembelianService := servicePembelian.NewPembelianService(pembelianRepository, db)
-	//pembelianController := controllerPembelian.NewPembelianController(pembelianService)
+	pembelianRepository := repositoryPembelian.NewPembelianRepository()
+	pembelianService := servicePembelian.NewPembelianService(pembelianRepository, db)
+	pembelianController := controllerPembelian.NewPembelianController(pembelianService)
 
 	router := httprouter.New()
 
@@ -28,11 +31,11 @@ func main() {
 	router.GET("/user/", usersController.FindAll)
 	router.GET("/user/create/", usersController.Create)
 
-	//router.GET("/pembelian/", pembelianController.Index)
-	//router.GET("/pembelian/create/", pembelianController.Create)
-	//router.POST("/pembelian/store/", pembelianController.Store)
-	//router.GET("/pembelian/show/:id/", pembelianController.Show)
-	//router.POST("/pembelian/delete/:id/", pembelianController.Delete)
+	router.GET("/pembelian/", pembelianController.Index)
+	router.GET("/pembelian/create/", pembelianController.Create)
+	router.POST("/pembelian/store/", pembelianController.Store)
+	router.GET("/pembelian/show/:id/", pembelianController.Show)
+	router.POST("/pembelian/delete/:id/", pembelianController.Delete)
 
 	server := http.Server{
 		Addr:    "localhost:8080",
