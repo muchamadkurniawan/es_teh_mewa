@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/pembelian/helper"
+	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/pembelian/model/entity"
 	"eh_teh_mewa/pembelian/model/web"
 	"errors"
@@ -39,10 +39,10 @@ func (repository *PembelianRespositoryImpl) DeletePembelian(ctx context.Context,
 func (repository *PembelianRespositoryImpl) InsertPembelian(ctx context.Context, tx *sql.Tx, pembelian web.PembelianCreateRequest) (web.PembelianCreateRequest, error) {
 	SQL := "INSERT INTO pembelian(id_user, id_bahan_baku, tanggal, jumlah, biaya, use_pembelian) VALUES(?, ?, ?, ?, ?, ?);"
 	result, err := tx.ExecContext(ctx, SQL, pembelian.Id_user, pembelian.Id_bahan_baku, pembelian.Tanggal, pembelian.Jumlah, pembelian.Biaya, pembelian.Use_pembelian)
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 
 	id, err := result.LastInsertId()
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	pembelian.Id = int(id)
 	return pembelian, nil
 

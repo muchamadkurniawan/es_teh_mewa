@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/pembelian/helper"
 	"eh_teh_mewa/pembelian/model/web"
 	"eh_teh_mewa/pembelian/service"
@@ -41,7 +42,7 @@ func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, req
 	awal := request.URL.Query().Get("awal")
 	akhir := request.URL.Query().Get("akhir")
 	serv, err := controller.PembelianService.FindByAll(context.Background(), awal, akhir)
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	myTemplate.ExecuteTemplate(writer, "indexPembelian", map[string]interface{}{
 		"Title":   "Cafe Mewa",
 		"Tanggal": now,
@@ -66,11 +67,11 @@ func (controller *PembelianControllerImpl) Create(writer http.ResponseWriter, re
 }
 func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	barang, err := strconv.Atoi(request.PostFormValue("barang"))
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	jumlah, err := strconv.Atoi(request.PostFormValue("jumlah"))
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	biaya, err := strconv.Atoi(request.PostFormValue("biaya"))
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	use := true
 	if request.PostFormValue("use") == "on" {
 		use = true
@@ -87,7 +88,7 @@ func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, req
 		Use_pembelian: use,
 	}
 	respon, err := controller.PembelianService.Store(context.Background(), requestCustom)
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	http.Redirect(writer, request, "/pembelian/show/"+strconv.Itoa(respon.Id), http.StatusFound)
 	return
 }
@@ -105,7 +106,7 @@ func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, requ
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
 	serv, err := controller.PembelianService.FindById(context.Background(), params.ByName("id"))
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	//fmt.Fprintln(writer, serv)
 	type barang struct {
 		id   int
@@ -128,7 +129,7 @@ func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, re
 	} else {
 		use = false
 	}
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	respon, err := controller.PembelianService.Update(context.Background(), web.PembelianCreateRequest{
 		Id:            id,
 		Id_user:       1,
@@ -138,13 +139,13 @@ func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, re
 		Biaya:         biaya,
 		Use_pembelian: use,
 	})
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	http.Redirect(writer, request, "/pembelian/show/"+strconv.Itoa(respon.Id), http.StatusFound)
 	return
 }
 func (controller *PembelianControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	err := controller.PembelianService.Delete(context.Background(), params.ByName("id"))
-	helper.PanicIfError(err)
+	helperMain.PanicIfError(err)
 	http.Redirect(writer, request, "/pembelian/", http.StatusFound)
 	return
 }

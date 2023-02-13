@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/pembelian/model/entity"
 	"eh_teh_mewa/pembelian/model/web"
 	"time"
@@ -9,7 +10,7 @@ import (
 func StringToTime(date string) time.Time {
 	dateString := date + "00:00"
 	myDate, err := time.Parse("2006-01-02 15:04", dateString)
-	PanicIfError(err)
+	helperMain.PanicIfError(err)
 	return myDate
 }
 
