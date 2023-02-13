@@ -7,7 +7,11 @@
 
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Pembelian</h3>
+                    {{ if ne .Awal "" }}
+                        <h3>Pembelian {{.Awal}} - {{.Akhir}}</h3>
+                    {{ else }}
+                        <h3>Pembelian {{.Tanggal}}</h3>
+                    {{ end }}
                 </div>
 
                 <div class="title_right text-right">

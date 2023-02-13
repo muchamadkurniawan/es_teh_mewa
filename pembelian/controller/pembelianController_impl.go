@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type PembelianControllerImpl struct {
@@ -36,13 +37,17 @@ func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, req
 		"pembelian/views/index.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
+	now := time.Now().Format("2006 Jan 02")
 	awal := request.URL.Query().Get("awal")
 	akhir := request.URL.Query().Get("akhir")
 	serv, err := controller.PembelianService.FindByAll(context.Background(), awal, akhir)
 	helper.PanicIfError(err)
-	myTemplate.ExecuteTemplate(writer, "indexPembelian", Data{
-		Title:   "Cafe Mewa",
-		AllData: serv,
+	myTemplate.ExecuteTemplate(writer, "indexPembelian", map[string]interface{}{
+		"Title":   "Cafe Mewa",
+		"Tanggal": now,
+		"Awal":    awal,
+		"Akhir":   akhir,
+		"AllData": serv,
 	})
 }
 
@@ -91,8 +96,9 @@ func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, requ
 	myTemplate := template.New("UPDATE").Funcs(
 		map[string]interface{}{
 			"add":          helper.Add,
-			"format":       helper.FormatTanggal,
+			"format":       helper.FormatTanggalUpdate,
 			"formatNumber": helper.FormatNumberic,
+			"checkbool":    helper.CheckBool,
 		})
 	myTemplate = template.Must(myTemplate.ParseFiles(
 		"pembelian/views/show.gohtml", "view/layout/app.gohtml",
@@ -108,11 +114,33 @@ func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, requ
 	myTemplate.ExecuteTemplate(writer, "showPembelian", map[string]interface{}{
 		"Title":  "Cafe Mewa - Create",
 		"data":   serv,
-		"barang": barang{1, "kopi"},
+		"barang": 1,
 	})
 }
 func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	panic("Controller")
+	id, err := strconv.Atoi(params.ByName("id"))
+	barang, err := strconv.Atoi(request.PostFormValue("barang"))
+	jumlah, err := strconv.Atoi(request.PostFormValue("jumlah"))
+	biaya, err := strconv.Atoi(request.PostFormValue("biaya"))
+	use := true
+	if request.PostFormValue("use") == "on" {
+		use = true
+	} else {
+		use = false
+	}
+	helper.PanicIfError(err)
+	respon, err := controller.PembelianService.Update(context.Background(), web.PembelianCreateRequest{
+		Id:            id,
+		Id_user:       1,
+		Id_bahan_baku: barang,
+		Tanggal:       request.PostFormValue("tanggal"),
+		Jumlah:        jumlah,
+		Biaya:         biaya,
+		Use_pembelian: use,
+	})
+	helper.PanicIfError(err)
+	http.Redirect(writer, request, "/pembelian/show/"+strconv.Itoa(respon.Id), http.StatusFound)
+	return
 }
 func (controller *PembelianControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	err := controller.PembelianService.Delete(context.Background(), params.ByName("id"))

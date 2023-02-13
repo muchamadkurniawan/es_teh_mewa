@@ -35,6 +35,7 @@ func main() {
 	router.GET("/pembelian/create/", pembelianController.Create)
 	router.POST("/pembelian/store/", pembelianController.Store)
 	router.GET("/pembelian/show/:id/", pembelianController.Show)
+	router.POST("/pembelian/update/:id", pembelianController.Update)
 	router.POST("/pembelian/delete/:id/", pembelianController.Delete)
 
 	server := http.Server{

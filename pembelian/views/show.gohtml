@@ -23,19 +23,17 @@
                         <div class="row">
                             <div class="col-md-6 offset-3">
                                 <div class="form-group">
-                                    <label for="">Tanggal {{.data}}</label>
+                                    <label for="">Tanggal</label>
                                     <input type="date" class="form-control" placeholder="Tanggal" name="tanggal" value="{{format .data.Tanggal}}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Barang</label>
+                                    <label for="">Barang {{.barang}}</label>
                                     <select name="barang" id="barang" class="form-control">
                                         <option value="">Pilih Barang Pembelian</option>
-                                        {{range $index , $item := .barang}}
-                                            {{ if eq .data.id_bahan_baku .barang.id }}
-                                            <option value=1 selected>{{$item}}</option>
-                                            {{else}}
-                                            <option value=1>{{$item}}</option>
-                                            {{ end }}
+                                        {{ if eq .data.Id_bahan_baku .barang }}
+                                            <option value={{.barang}} selected>kopi</option>
+                                        {{else}}
+                                            <option value=1>Bukan</option>
                                         {{end}}
                                     </select>
                                     <div class="form-group">
@@ -47,7 +45,11 @@
                                         <input type="number" class="form-control" placeholder="Biaya Pembelian" name="biaya" value="{{ .data.Biaya }}">
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="useCheck"  name="use">
+                                        {{ if .data.Use_pembelian }}
+                                            <input type="checkbox" class="form-check-input" id="useCheck"  name="use" checked>
+                                        {{else}}
+                                            <input type="checkbox" class="form-check-input" id="useCheck"  name="use">
+                                        {{ end }}
                                         <label class="form-check-label" for="useCheck">Gunakan sebagai acuhan biaya</label>
                                     </div>
                                 </div>
