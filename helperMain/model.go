@@ -20,3 +20,18 @@ func ToUserResponse(user entity.Users) web.UsersResponse {
 		Password: user.Password,
 	}
 }
+
+func ToSatuanResponse(satuan entity.Satuan) web.SatuanResponse {
+	return web.SatuanResponse{
+		Id:   (satuan.Id),
+		Name: satuan.Nama,
+	}
+}
+
+func ToSatuanResponses(satuans []entity.Satuan) []web.SatuanResponse {
+	var satuanResponses []web.SatuanResponse
+	for _, satuan := range satuans {
+		satuanResponses = append(satuanResponses, ToSatuanResponse(satuan))
+	}
+	return satuanResponses
+}
