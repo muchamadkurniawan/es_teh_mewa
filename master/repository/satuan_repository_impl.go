@@ -11,18 +11,31 @@ type SatuanRepoImpl struct {
 }
 
 func (SatuanRepoImpl) InsertSatuan(ctx context.Context, tx *sql.Tx, satuan entity.Satuan) error {
-	//TODO implement me
-	panic("implement me")
+	SQL := "INSERT INTO satuan (nama) VALUES (?)"
+	_, err := tx.ExecContext(ctx, SQL, satuan.Nama)
+	if err != nil {
+		panic(err)
+		return err
+	}
+	return nil
 }
 
 func (SatuanRepoImpl) UpdateSatuan(ctx context.Context, tx *sql.Tx, satuan entity.Satuan) error {
-	//TODO implement me
-	panic("implement me")
+	SQL := "UPDATE satuan SET nama = ? where id = ?"
+	_, err := tx.ExecContext(ctx, SQL, satuan.Nama, satuan.Id)
+	if err != nil {
+		panic(err)
+	}
+	return nil
 }
 
 func (SatuanRepoImpl) DeleteSatuan(ctx context.Context, tx *sql.Tx, id int32) error {
-	//TODO implement me
-	panic("implement me")
+	SQL := "DELETE FROM satuan WHERE id = ?"
+	_, err := tx.ExecContext(ctx, SQL, id)
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 func (SatuanRepoImpl) FindAllSatuan(ctx context.Context, tx *sql.Tx) ([]entity.Satuan, error) {
@@ -48,6 +61,17 @@ func (SatuanRepoImpl) FindAllSatuan(ctx context.Context, tx *sql.Tx) ([]entity.S
 
 func (SatuanRepoImpl) FindByIdSatuan(ctx context.Context, tx *sql.Tx, id int32) (entity.Satuan, error) {
 	satuan := entity.Satuan{}
-
+	SQL := "SELECT id, nama FROM satuan where id=?"
+	rows, err := tx.QueryContext(ctx, SQL, id)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	if rows.Next() {
+		err := rows.Scan(&satuan.Nama)
+		if err != nil {
+			panic(err)
+		}
+	}
 	return satuan, nil
 }
