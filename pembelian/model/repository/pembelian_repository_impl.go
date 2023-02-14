@@ -45,7 +45,6 @@ func (repository *PembelianRespositoryImpl) InsertPembelian(ctx context.Context,
 	helperMain.PanicIfError(err)
 	pembelian.Id = int(id)
 	return pembelian, nil
-
 }
 func (repository *PembelianRespositoryImpl) FindByIdPembelian(ctx context.Context, tx *sql.Tx, id string) (entity.Pembelian, error) {
 	var pembelian entity.Pembelian

@@ -27,7 +27,7 @@ func (repository *PembelianRepositoryImpl) FindAllProduk(ctx context.Context, tx
 	return respon, nil
 }
 
-func (repository *PembelianRepositoryImpl) FindAllProdukById(ctx context.Context, tx *sql.Tx, id int) (web.ResponseProduk, error) {
+func (repository *PembelianRepositoryImpl) FindProdukById(ctx context.Context, tx *sql.Tx, id int) (web.ResponseProduk, error) {
 	SQL := "SELECT id, id_user, id_bahan_baku, harga, stock FROM produk_jual WHERE id = ?;"
 	rows, err := tx.QueryContext(ctx, SQL, id)
 	helperMain.PanicIfError(err)
@@ -41,15 +41,25 @@ func (repository *PembelianRepositoryImpl) FindAllProdukById(ctx context.Context
 }
 
 func (repository *PembelianRepositoryImpl) CreateProduk(ctx context.Context, tx *sql.Tx, produk web.RequestProduk) (web.RequestProduk, error) {
-	//SQL := "INSERT "
+	SQL := "INSERT INTO produk_jual(id_user, id_bahan_baku, harga, stock) VALUES(?, ?, ?, ?);"
+	result, err := tx.ExecContext(ctx, SQL, produk.Id_User, produk.Id_Barang, produk.Harga, produk.Stock)
+	helperMain.PanicIfError(err)
+	id, err := result.LastInsertId()
+	helperMain.PanicIfError(err)
+	produk.Id = int(id)
+	return produk, nil
 }
 
 func (repository *PembelianRepositoryImpl) UpdateProduk(ctx context.Context, tx *sql.Tx, produk web.RequestProduk) (web.RequestProduk, error) {
-	//TODO implement me
-	panic("implement me")
+	SQL := "UPDATE produk_jual SET id_user = ?, id_bahan_baku = ?, harga = ?, stock = ? WHERE id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, produk.Id_User, produk.Id_Barang, produk.Harga, produk.Stock)
+	helperMain.PanicIfError(err)
+	return produk, nil
 }
 
 func (repository *PembelianRepositoryImpl) DeleteProduk(ctx context.Context, tx *sql.Tx, id int) error {
-	//TODO implement me
-	panic("implement me")
+	SQL := "DELETE FROM produk_jual WHERE id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, id)
+	helperMain.PanicIfError(err)
+	return nil
 }
