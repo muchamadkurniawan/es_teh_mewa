@@ -10,6 +10,10 @@ type SatuanRepoImpl struct {
 	DB *sql.DB
 }
 
+func NewSatuanRepository() *SatuanRepoImpl {
+	return &SatuanRepoImpl{}
+}
+
 func (SatuanRepoImpl) InsertSatuan(ctx context.Context, tx *sql.Tx, satuan entity.Satuan) error {
 	SQL := "INSERT INTO satuan (nama) VALUES (?)"
 	_, err := tx.ExecContext(ctx, SQL, satuan.Nama)
@@ -68,7 +72,7 @@ func (SatuanRepoImpl) FindByIdSatuan(ctx context.Context, tx *sql.Tx, id int32) 
 	}
 	defer rows.Close()
 	if rows.Next() {
-		err := rows.Scan(&satuan.Nama)
+		err := rows.Scan(&satuan.Id, &satuan.Nama)
 		if err != nil {
 			panic(err)
 		}
