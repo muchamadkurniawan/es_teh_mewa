@@ -7,9 +7,9 @@ import (
 )
 
 type SatuanRepository interface {
-	InsertSatuan(ctx context.Context, tx *sql.Tx, satuan entity.Satuan)
-	UpdateSatuan(ctx context.Context, tx *sql.Tx, satuan entity.Satuan)
-	DeleteSatuan()
-	FindAllSatuan()
-	FindByIdSatuan()
+	InsertSatuan(ctx context.Context, tx *sql.Tx, satuan entity.Satuan) error
+	UpdateSatuan(ctx context.Context, tx *sql.Tx, satuan entity.Satuan) error
+	DeleteSatuan(ctx context.Context, tx *sql.Tx, id int32) error
+	FindAllSatuan(ctx context.Context, tx *sql.Tx) ([]entity.Satuan, error)
+	FindByIdSatuan(ctx context.Context, tx *sql.Tx, id int32) (entity.Satuan, error)
 }
