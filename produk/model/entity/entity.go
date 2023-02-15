@@ -1,6 +1,6 @@
 package entity
 
-type entityProduk struct {
+type Produk struct {
 	Id       int
 	Id_User  int
 	Id_Bahan int

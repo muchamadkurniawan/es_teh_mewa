@@ -35,3 +35,17 @@ func ToSatuanResponses(satuans []entity.Satuan) []web.SatuanResponse {
 	}
 	return satuanResponses
 }
+func ToBahanRresponses(bahans []entity.BahanBaku) []web.BahanbakuResponse {
+	var bahanResponses []web.BahanbakuResponse
+	for _, bahan := range bahans {
+		bahanResponses = append(bahanResponses, ToBahanResponse(bahan))
+	}
+	return bahanResponses
+}
+func ToBahanResponse(bahan entity.BahanBaku) web.BahanbakuResponse {
+	return web.BahanbakuResponse{
+		Id:       bahan.Id,
+		IdSatuan: bahan.IdSatuan,
+		Nama:     bahan.Nama,
+	}
+}
