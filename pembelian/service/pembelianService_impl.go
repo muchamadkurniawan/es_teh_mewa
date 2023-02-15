@@ -24,7 +24,7 @@ func NewPembelianService(pembelianRepository repository.PembelianRepository, DB 
 func (service *PembelianServiceImpl) FindById(ctx context.Context, id string) (web.PembelianUpdateResponse, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
-	defer helper.ErrorTx(tx)
+	defer helperMain.ErrorTx(tx)
 
 	pembelian, err := service.PembelianRepository.FindByIdPembelian(ctx, tx, id)
 
@@ -34,7 +34,7 @@ func (service *PembelianServiceImpl) FindById(ctx context.Context, id string) (w
 func (service *PembelianServiceImpl) FindByAll(ctx context.Context, filterAwal string, filterAkhir string) ([]web.PembelianResponse, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
-	defer helper.ErrorTx(tx)
+	defer helperMain.ErrorTx(tx)
 	if filterAwal == "" || filterAkhir == "" {
 		pembelian, err := service.PembelianRepository.FindByAllPembelian(ctx, tx)
 		helperMain.PanicIfError(err)
@@ -50,7 +50,7 @@ func (service *PembelianServiceImpl) FindByAll(ctx context.Context, filterAwal s
 func (service *PembelianServiceImpl) Store(ctx context.Context, request web.PembelianCreateRequest) (web.PembelianResponse, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
-	defer helper.ErrorTx(tx)
+	defer helperMain.ErrorTx(tx)
 
 	pembelian, err := service.PembelianRepository.InsertPembelian(ctx, tx, request)
 	helperMain.PanicIfError(err)
@@ -60,7 +60,7 @@ func (service *PembelianServiceImpl) Store(ctx context.Context, request web.Pemb
 func (service *PembelianServiceImpl) Update(ctx context.Context, request web.PembelianCreateRequest) (web.PembelianResponse, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
-	defer helper.ErrorTx(tx)
+	defer helperMain.ErrorTx(tx)
 
 	pembelian, err := service.PembelianRepository.UpdatePembelian(ctx, tx, request)
 	helperMain.PanicIfError(err)
@@ -69,7 +69,7 @@ func (service *PembelianServiceImpl) Update(ctx context.Context, request web.Pem
 func (service *PembelianServiceImpl) Delete(ctx context.Context, id string) error {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
-	defer helper.ErrorTx(tx)
+	defer helperMain.ErrorTx(tx)
 
 	err = service.PembelianRepository.DeletePembelian(ctx, tx, id)
 	helperMain.PanicIfError(err)
