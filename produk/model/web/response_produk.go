@@ -1,9 +1,9 @@
 package web
 
 type ResponseProduk struct {
-	Id        int
-	Id_User   int
-	Id_Barang int
-	Harga     int
-	Stock     bool
+	Id        int  `json:"id"`
+	Id_User   int  `json:"id_user"`
+	Id_Barang int  `json:"id_barang"`
+	Harga     int  `json:"harga"`
+	Stock     bool `json:"stock"`
 }

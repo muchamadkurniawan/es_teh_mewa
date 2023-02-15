@@ -42,6 +42,7 @@ func (repository *PembelianRepositoryImpl) FindAllProdukById(ctx context.Context
 
 func (repository *PembelianRepositoryImpl) CreateProduk(ctx context.Context, tx *sql.Tx, produk web.RequestProduk) (web.RequestProduk, error) {
 	//SQL := "INSERT "
+	panic("implement me")
 }
 
 func (repository *PembelianRepositoryImpl) UpdateProduk(ctx context.Context, tx *sql.Tx, produk web.RequestProduk) (web.RequestProduk, error) {
