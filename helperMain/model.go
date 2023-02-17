@@ -18,6 +18,7 @@ func ToUserResponse(user entity.Users) web.UsersResponse {
 		Id:       int(user.Id),
 		Username: user.UserName,
 		Password: user.Password,
+		Type:     user.Type_user,
 	}
 }
 

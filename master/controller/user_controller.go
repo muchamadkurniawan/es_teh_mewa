@@ -2,10 +2,12 @@ package controller
 
 import (
 	"context"
+	"eh_teh_mewa/helperMain"
 	service "eh_teh_mewa/master/service"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 type UserControllerImpl struct {
@@ -53,6 +55,16 @@ func (controller *UserControllerImpl) FindAll(w http.ResponseWriter, r *http.Req
 }
 
 func (controller *UserControllerImpl) FindById(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	myTemplate := template.Must(template.ParseFiles("master/views/user/show.gohtml", "view/layout/app.gohtml",
+		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
+		"view/layout/sidebar.gohtml"))
+	id, err := strconv.Atoi(param.ByName("id"))
+	helperMain.PanicIfError(err)
+	serv := controller.UserService.FindById(context.Background(), id)
+	myTemplate.ExecuteTemplate(w, "showUser", map[string]interface{}{
+		"data": serv,
+		"type": [...]string{
+			"admin", "kasir",
+		},
+	})
 }

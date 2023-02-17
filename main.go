@@ -30,6 +30,7 @@ func main() {
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
 	router.GET("/user/", usersController.FindAll)
 	router.GET("/user/create/", usersController.Create)
+	router.GET("/user/show/:id", usersController.FindById)
 
 	router.GET("/pembelian/", pembelianController.Index)
 	router.GET("/pembelian/create/", pembelianController.Create)

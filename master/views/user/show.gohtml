@@ -1,4 +1,4 @@
-{{define "createUser"}}
+{{define "showUser"}}
     <!DOCTYPE html>
     <html lang="en">
     {{template "head"}}
@@ -24,17 +24,23 @@
                             <div class="col-md-6 offset-3">
                                 <div class="form-group">
                                     <label for="">Username</label>
-                                    <input type="text" class="form-control" placeholder="Username" name="username">
+                                    <input type="text" value="{{.data.nama}}" class="form-control" placeholder="Username" name="username">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Password</label>
-                                    <input type="password" class="form-control" placeholder="password" name="password">
+                                    <input type="password" value="{{.data.password}}" class="form-control" placeholder="password" name="password">
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Type User</label>
+                                    <p>{{.data.type}}</p>
+                                    <label for="typeUser">Type User</label>
                                     <select name="typeUser" id="typeUser" class="form-control" data-placeholder="Type User">
                                         {{range $index , $item := .type}}
-                                        <option value={{$item}}>{{$item}}</option>
+                                            {{if eq $item .data.type}}
+                                                <option value="{{$item}}" selected>{{$item}}</option>
+                                            {{else}}
+                                                <option value="{{$item}}">{{$item}}</option>
+                                            {{end}}
+                                            <option value="{{$item}}">{{$item}}</option>
                                         {{end}}
                                     </select>
                                 </div>
