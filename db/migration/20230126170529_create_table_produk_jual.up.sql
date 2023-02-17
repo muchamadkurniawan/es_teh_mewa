@@ -1,6 +1,6 @@
 CREATE TABLE produk_jual
 (
-    id INT NOT NULL PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_user INT NOT NULL,
     id_bahan_baku INT NOT NULL,
     harga INT NOT NULL default(0),

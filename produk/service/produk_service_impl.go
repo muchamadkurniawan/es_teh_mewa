@@ -3,8 +3,9 @@ package service
 import (
 	"context"
 	"database/sql"
+	"eh_teh_mewa/helperMain"
+	"eh_teh_mewa/produk/model/entity"
 	"eh_teh_mewa/produk/model/repository"
-	"eh_teh_mewa/produk/model/web"
 )
 
 type ProdukServiceImpl struct {
@@ -19,38 +20,46 @@ func NewProdukService(produkRepository repository.ProdukRepository, DB *sql.DB) 
 	}
 }
 
-func (service *ProdukServiceImpl) FindByAll(ctx context.Context) ([]web.ResponseProduk, error) {
-	//tx, err := service.DB.Begin()
-	//helperMain.PanicIfError(err)
-	//defer helperMain.ErrorTx(tx)
-	//produk, err := service.ProdukRepository.FindAllProduk(ctx, tx)
-	//helperMain.PanicIfError(err)
-	//return produk, nil
-	//TODO implement me
-	panic("implement me")
+func (service *ProdukServiceImpl) FindByAll(ctx context.Context) ([]entity.Produk, error) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	var produks []entity.Produk
+	produks = service.ProdukRepository.FindAllProduk(ctx, tx)
+	helperMain.PanicIfError(err)
+	return produks, err
 }
 
-func (service *ProdukServiceImpl) FindById(ctx context.Context, id int) (web.ResponseProduk, error) {
-	//tx, err := service.DB.Begin()
-	//helperMain.PanicIfError(err)
-	//defer helperMain.ErrorTx(tx)
-	//produk, err := service.ProdukRepository.FindProdukById(ctx, tx, id)
-	//return produk, nil
-	//TODO implement me
-	panic("implement me")
+func (service *ProdukServiceImpl) FindById(ctx context.Context, id int) (entity.Produk, error) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	var produk entity.Produk
+	produk = service.ProdukRepository.FindProdukById(ctx, tx, id)
+	return produk, err
 }
 
-func (service *ProdukServiceImpl) Create(ctx context.Context, produk web.RequestProduk) (web.ResponseProduk, error) {
-	//TODO implement me
-	panic("implement me")
+func (service *ProdukServiceImpl) Create(ctx context.Context, produk entity.Produk) (entity.Produk, error) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	//defer tx.Commit()
+	service.ProdukRepository.CreateProduk(ctx, tx, produk)
+	return produk, err
 }
 
-func (service *ProdukServiceImpl) Update(ctx context.Context, produk web.ResponseProduk) (web.ResponseProduk, error) {
-	//TODO implement me
-	panic("implement me")
+func (service *ProdukServiceImpl) Update(ctx context.Context, produk entity.Produk) (entity.Produk, error) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	updateProduk := service.ProdukRepository.UpdateProduk(ctx, tx, produk)
+	return updateProduk, err
 }
 
 func (service *ProdukServiceImpl) Delete(ctx context.Context, id int) error {
-	//TODO implement me
-	panic("implement me")
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	service.ProdukRepository.DeleteProduk(ctx, tx, id)
+	return err
 }
