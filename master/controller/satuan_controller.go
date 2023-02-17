@@ -56,14 +56,25 @@ func (controller *SatuanControllerImpl) Store(w http.ResponseWriter, r *http.Req
 	controller.service.Save(context.Background(), file)
 
 	http.Redirect(w, r, "/satuan/", http.StatusAccepted)
+	return
 }
 
 func (controller *SatuanControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	id, err := strconv.Atoi(params.ByName("id"))
+	helperMain.PanicIfError(err)
+	file := web.SatuanResponse{
+		Id:   id,
+		Name: r.PostFormValue("nama"),
+	}
+	controller.service.Update(context.Background(), file)
+	http.Redirect(w, r, "/satuan/show/"+params.ByName("id")+"/", http.StatusAccepted)
+	return
 }
 
 func (controller *SatuanControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	id, err := strconv.Atoi(params.ByName("id"))
+	helperMain.PanicIfError(err)
+	controller.service.Delete(context.Background(), id)
+	http.Redirect(w, r, "/satuan/", http.StatusAccepted)
+	return
 }
