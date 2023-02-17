@@ -8,7 +8,7 @@ import (
 type SatuanService interface {
 	Save(ctx context.Context, request web.SatuanRequest)
 	Update(ctx context.Context, response web.SatuanResponse)
-	Delete(ctx context.Context, id int32)
-	FindAll(ctx context.Context) []map[string]interface{}
-	FindById(ctx context.Context, id int32) map[string]interface{}
+	Delete(ctx context.Context, id int)
+	FindAll(ctx context.Context) []web.SatuanResponse
+	FindById(ctx context.Context, id int) web.SatuanResponse
 }

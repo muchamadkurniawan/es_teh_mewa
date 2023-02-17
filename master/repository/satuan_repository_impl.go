@@ -33,7 +33,7 @@ func (SatuanRepoImpl) UpdateSatuan(ctx context.Context, tx *sql.Tx, satuan entit
 	return nil
 }
 
-func (SatuanRepoImpl) DeleteSatuan(ctx context.Context, tx *sql.Tx, id int32) error {
+func (SatuanRepoImpl) DeleteSatuan(ctx context.Context, tx *sql.Tx, id int) error {
 	SQL := "DELETE FROM satuan WHERE id = ?"
 	_, err := tx.ExecContext(ctx, SQL, id)
 	if err != nil {
@@ -63,7 +63,7 @@ func (SatuanRepoImpl) FindAllSatuan(ctx context.Context, tx *sql.Tx) ([]entity.S
 	return satuans, nil
 }
 
-func (SatuanRepoImpl) FindByIdSatuan(ctx context.Context, tx *sql.Tx, id int32) (entity.Satuan, error) {
+func (SatuanRepoImpl) FindByIdSatuan(ctx context.Context, tx *sql.Tx, id int) (entity.Satuan, error) {
 	satuan := entity.Satuan{}
 	SQL := "SELECT id, nama FROM satuan where id=?"
 	rows, err := tx.QueryContext(ctx, SQL, id)

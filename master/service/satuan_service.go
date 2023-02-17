@@ -26,7 +26,7 @@ func (Service *SatuanServiceImpl) Save(ctx context.Context, request web.SatuanRe
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 	satuan := entity.Satuan{
 		Nama: request.Nama,
 	}
@@ -38,7 +38,7 @@ func (Service *SatuanServiceImpl) Update(ctx context.Context, response web.Satua
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	satuan := entity.Satuan{
 		Id:   response.Id,
@@ -47,44 +47,42 @@ func (Service *SatuanServiceImpl) Update(ctx context.Context, response web.Satua
 	Service.SatuanRepo.UpdateSatuan(ctx, tx, satuan)
 }
 
-func (Service *SatuanServiceImpl) Delete(ctx context.Context, id int32) {
+func (Service *SatuanServiceImpl) Delete(ctx context.Context, id int) {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	Service.SatuanRepo.DeleteSatuan(ctx, tx, id)
 }
 
-func (Service *SatuanServiceImpl) FindAll(ctx context.Context) []map[string]interface{} {
+func (Service *SatuanServiceImpl) FindAll(ctx context.Context) []web.SatuanResponse {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	satuans, err := Service.SatuanRepo.FindAllSatuan(ctx, tx)
 	if err != nil {
 		return nil
 	}
 	satuanResponses := helperMain.ToSatuanResponses(satuans)
-	var toMap = helperMain.StructSliceToMap_Satuan(satuanResponses)
-	return toMap
+	return satuanResponses
 }
 
-func (Service *SatuanServiceImpl) FindById(ctx context.Context, id int32) map[string]interface{} {
+func (Service *SatuanServiceImpl) FindById(ctx context.Context, id int) web.SatuanResponse {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	satuan, err := Service.SatuanRepo.FindByIdSatuan(ctx, tx, id)
 	if err != nil {
 		panic(err)
 	}
 	satuanResponse := helperMain.ToSatuanResponse(satuan)
-	map_satuan := helperMain.StructToMap_Satuan(satuanResponse)
-	return map_satuan
+	return satuanResponse
 }
