@@ -18,13 +18,13 @@ func ToUserResponse(user entity.Users) web.UsersResponse {
 		Id:       int(user.Id),
 		Username: user.UserName,
 		Password: user.Password,
-		Type:     user.Type_user,
+		Tipe:     user.Type_user,
 	}
 }
 
 func ToSatuanResponse(satuan entity.Satuan) web.SatuanResponse {
 	return web.SatuanResponse{
-		Id:   (satuan.Id),
+		Id:   int(satuan.Id),
 		Name: satuan.Nama,
 	}
 }
@@ -36,17 +36,19 @@ func ToSatuanResponses(satuans []entity.Satuan) []web.SatuanResponse {
 	}
 	return satuanResponses
 }
-func ToBahanRresponses(bahans []entity.BahanBaku) []web.BahanbakuResponse {
-	var bahanResponses []web.BahanbakuResponse
+func ToBahanRresponses(bahans []entity.BahanBakuFull) []web.BahanbakuFullResponse {
+	var bahanResponses []web.BahanbakuFullResponse
 	for _, bahan := range bahans {
-		bahanResponses = append(bahanResponses, ToBahanResponse(bahan))
+		bahanResponses = append(bahanResponses, ToBahanrespon(bahan))
 	}
 	return bahanResponses
 }
-func ToBahanResponse(bahan entity.BahanBaku) web.BahanbakuResponse {
-	return web.BahanbakuResponse{
+
+func ToBahanrespon(bahan entity.BahanBakuFull) web.BahanbakuFullResponse {
+	newBahan := web.BahanbakuFullResponse{
 		Id:       bahan.Id,
 		IdSatuan: bahan.IdSatuan,
 		Nama:     bahan.Nama,
 	}
+	return newBahan
 }

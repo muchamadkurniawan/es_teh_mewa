@@ -30,16 +30,16 @@
                             </thead>
                             <tbody>
 
-                                {{ range $index, $item := . }}
+                                {{ range $index, $item := .data }}
 
                                     <tr>
-                                        <td class="text-center">{{ $item.username }}</td>
-                                        <td class="text-center">{{ $item.type }}</td>
+                                        <td class="text-center">{{ $item.Username }}</td>
+                                        <td class="text-center">{{ $item.Tipe }}</td>
 
                                         <td class="text-right">
                                             <div class="form-inline text-right">
-                                                <a href="/user/show/{{$item.id}}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i></a>
-                                                <form action="/user/delete/{{$item.Id}}" method="POST">
+                                                <a href="/user/show/{{$item.Id}}/" class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i></a>
+                                                <form action="/user/delete/{{$item.Id}}/" method="POST">
                                                     <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
                                                 </form>
                                             </div>

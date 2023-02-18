@@ -7,7 +7,7 @@
 
         <div class="page-title">
             <div class="title_left">
-                <h3>Create - User</h3>
+                <h3>Detail - User {{.data.Username}}</h3>
             </div>
 
             <div class="title_right text-right">
@@ -17,35 +17,29 @@
         <div class="clearfix"></div>
 
         <div class="page-body">
-            <form action="/user/store/" method="POST" enctype="multipart/form-data">
+            <form action="/user/update/{{.data.Id}}/" method="POST" enctype="multipart/form-data">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 offset-3">
                                 <div class="form-group">
                                     <label for="">Username</label>
-                                    <input type="text" value="{{.data.nama}}" class="form-control" placeholder="Username" name="username">
+                                    <input type="text" value="{{.data.Username}}" class="form-control" placeholder="Username" name="username">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Password</label>
-                                    <input type="password" value="{{.data.password}}" class="form-control" placeholder="password" name="password">
+                                    <input type="password" value="{{.data.Password}}" class="form-control" placeholder="password" name="password">
                                 </div>
                                 <div class="form-group">
-                                    <p>{{.data.type}}</p>
-                                    <label for="typeUser">Type User</label>
-                                    <select name="typeUser" id="typeUser" class="form-control" data-placeholder="Type User">
-                                        {{range $index , $item := .type}}
-                                            {{if eq $item .data.type}}
-                                                <option value="{{$item}}" selected>{{$item}}</option>
-                                            {{else}}
-                                                <option value="{{$item}}">{{$item}}</option>
-                                            {{end}}
-                                            <option value="{{$item}}">{{$item}}</option>
+                                    <label for="type">Type User</label>
+                                    <select name="type" id="typeUser" class="form-control">
+                                        {{range $item := .tipe}}
+                                            <option value="{{$item}}" {{if eq $.data.Tipe $item}}selected="selected"{{ end }}>{{$item}}</option>
                                         {{end}}
                                     </select>
                                 </div>
                                 <div class="form-group text-right">
-                                    <a href="/user/list/" class="btn btn-outline-secondary"><i class="fa fa-close"></i> Cancel</a>
+                                    <a href="/user/" class="btn btn-outline-secondary"><i class="fa fa-close"></i> Cancel</a>
                                     <button class="btn btn-outline-primary" type="submit"><i class="fa fa-save"></i> Save</button>
                                 </div>
                             </div>

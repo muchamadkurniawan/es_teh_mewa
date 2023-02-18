@@ -15,7 +15,7 @@ func NewUsersRepository() *usersRepositoryImpl {
 }
 
 func (usersRepositoryImpl) InsertUsers(ctx context.Context, tx *sql.Tx, user entity.Users) (entity.Users, error) {
-	SQL := "INSERT INTO users (username, password, type) values (?,?,?)"
+	SQL := "INSERT INTO users (username, password, type) values (?,?,?);"
 	result, err := tx.ExecContext(ctx, SQL, user.UserName, user.Password, user.Type_user)
 	if err != nil {
 		panic(err)
@@ -29,7 +29,7 @@ func (usersRepositoryImpl) InsertUsers(ctx context.Context, tx *sql.Tx, user ent
 }
 
 func (usersRepositoryImpl) FindByIdUsers(ctx context.Context, tx *sql.Tx, id int32) (entity.Users, error) {
-	SQL := "SELECT username, password, type FROM users WHERE id = ?"
+	SQL := "SELECT id, username, password, type FROM users WHERE id = ?;"
 	rows, err := tx.QueryContext(ctx, SQL, id)
 	if err != nil {
 		panic(err)
@@ -37,7 +37,7 @@ func (usersRepositoryImpl) FindByIdUsers(ctx context.Context, tx *sql.Tx, id int
 	defer rows.Close()
 	user := entity.Users{}
 	if rows.Next() {
-		err = rows.Scan(&user.UserName, &user.Password, &user.Type_user)
+		err = rows.Scan(&user.Id, &user.UserName, &user.Password, &user.Type_user)
 		if err != nil {
 			return entity.Users{}, err
 		}
@@ -67,11 +67,10 @@ func (usersRepositoryImpl) FindByAllUsers(ctx context.Context, tx *sql.Tx) ([]en
 }
 
 func (usersRepositoryImpl) UpdateUsers(ctx context.Context, tx *sql.Tx, user entity.Users) (entity.Users, error) {
-	SQL := "update users set username = ?, password = ?, type = ? where id = ?"
-	_, err := tx.ExecContext(context.Background(), SQL, user.UserName, user.Password, user.Type_user, user.Id)
+	SQL := "UPDATE users SET username = ?, password = ?, type = ? where id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, user.UserName, user.Password, user.Type_user, user.Id)
 	if err != nil {
-		return entity.Users{}, err
-		panic(err)
+		return user, err
 	}
 	return user, nil
 }

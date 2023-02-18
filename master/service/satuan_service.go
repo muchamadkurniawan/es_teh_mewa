@@ -41,7 +41,7 @@ func (Service *SatuanServiceImpl) Update(ctx context.Context, response web.Satua
 	defer helperMain.ErrorTx(tx)
 
 	satuan := entity.Satuan{
-		Id:   response.Id,
+		Id:   int32(response.Id),
 		Nama: response.Name,
 	}
 	Service.SatuanRepo.UpdateSatuan(ctx, tx, satuan)

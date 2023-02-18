@@ -23,12 +23,13 @@ func NewBahanBakuController(BahanBakuService service.BahanbakuService) BahanBaku
 
 func (controller *BahanBakuControllerImpl) FindAllBahanBaku(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	file := controller.service.FindAll(context.Background())
-	myTemplate := template.Must(template.ParseFiles("master/views/bahan_baku/show.gohtml", "view/layout/app.gohtml",
+	myTemplate := template.Must(template.ParseFiles("master/views/bahan_baku/index.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
 	myTemplate.ExecuteTemplate(w, "indexBahanBaku", map[string]interface{}{
-		"Title": "Cafe Mewa - Bahan Baku",
-		"data":  file,
+		"Title":  "Cafe Mewa - Bahan Baku",
+		"data":   file,
+		"satuan": controller.service.GetSatuan(context.Background()),
 	})
 }
 
@@ -73,7 +74,7 @@ func (controller *BahanBakuControllerImpl) Update(w http.ResponseWriter, r *http
 	idSatuan, err := strconv.Atoi(r.PostFormValue("idSatuan"))
 	helperMain.PanicIfError(err)
 	nama := r.PostFormValue("nama")
-	file := web.BahanbakuResponse{
+	file := web.BahanbakuRequest{
 		Id:       id,
 		IdSatuan: idSatuan,
 		Nama:     nama,

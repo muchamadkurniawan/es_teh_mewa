@@ -7,8 +7,9 @@ import (
 
 type BahanbakuService interface {
 	Save(ctx context.Context, request web.BahanbakuRequest)
-	Update(ctx context.Context, response web.BahanbakuResponse)
+	Update(ctx context.Context, response web.BahanbakuRequest)
 	Delete(ctx context.Context, id int)
-	FindAll(ctx context.Context) []web.BahanbakuResponse
-	FindById(ctx context.Context, id int) web.BahanbakuResponse
+	FindAll(ctx context.Context) []web.BahanbakuFullResponse
+	FindById(ctx context.Context, id int) web.BahanbakuFullResponse
+	GetSatuan(ctx context.Context) []web.SatuanResponse
 }

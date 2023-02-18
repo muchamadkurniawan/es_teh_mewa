@@ -5,3 +5,9 @@ type BahanBaku struct {
 	IdSatuan int
 	Nama     string
 }
+
+type BahanBakuFull struct {
+	Id       int
+	IdSatuan string
+	Nama     string
+}

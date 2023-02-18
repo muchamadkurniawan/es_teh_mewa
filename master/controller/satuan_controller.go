@@ -15,6 +15,12 @@ type SatuanControllerImpl struct {
 	service service.SatuanService
 }
 
+func NewSatuanController(serviceSatuan service.SatuanService) SatuanController {
+	return &SatuanControllerImpl{
+		service: serviceSatuan,
+	}
+}
+
 func (controller *SatuanControllerImpl) FindAllSatuan(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	serv := controller.service.FindAll(context.Background())
 	myTemplate := template.Must(template.ParseFiles("master/views/satuan/index.gohtml", "view/layout/app.gohtml",
@@ -22,7 +28,8 @@ func (controller *SatuanControllerImpl) FindAllSatuan(response http.ResponseWrit
 		"view/layout/sidebar.gohtml"))
 
 	myTemplate.ExecuteTemplate(response, "indexSatuan", map[string]interface{}{
-		"data": serv,
+		"data":  serv,
+		"Title": "Cafe Mewa - Satuan",
 	})
 }
 
@@ -35,7 +42,8 @@ func (controller *SatuanControllerImpl) FindById(response http.ResponseWriter, r
 		"view/layout/sidebar.gohtml"))
 
 	myTemplate.ExecuteTemplate(response, "showSatuan", map[string]interface{}{
-		"data": serv,
+		"data":  serv,
+		"Title": "Cafe Mewa - Satuan",
 	})
 }
 
@@ -54,9 +62,7 @@ func (controller *SatuanControllerImpl) Store(w http.ResponseWriter, r *http.Req
 		Nama: r.PostFormValue("name"),
 	}
 	controller.service.Save(context.Background(), file)
-
-	http.Redirect(w, r, "/satuan/", http.StatusAccepted)
-	return
+	http.Redirect(w, r, "/satuan/", http.StatusFound)
 }
 
 func (controller *SatuanControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -64,17 +70,15 @@ func (controller *SatuanControllerImpl) Update(w http.ResponseWriter, r *http.Re
 	helperMain.PanicIfError(err)
 	file := web.SatuanResponse{
 		Id:   id,
-		Name: r.PostFormValue("nama"),
+		Name: r.PostFormValue("name"),
 	}
 	controller.service.Update(context.Background(), file)
-	http.Redirect(w, r, "/satuan/show/"+params.ByName("id")+"/", http.StatusAccepted)
-	return
+	http.Redirect(w, r, "/satuan/", http.StatusFound)
 }
 
 func (controller *SatuanControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	controller.service.Delete(context.Background(), id)
-	http.Redirect(w, r, "/satuan/", http.StatusAccepted)
-	return
+	http.Redirect(w, r, "/satuan/", http.StatusFound)
 }

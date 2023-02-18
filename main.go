@@ -25,12 +25,36 @@ func main() {
 	pembelianService := servicePembelian.NewPembelianService(pembelianRepository, db)
 	pembelianController := controllerPembelian.NewPembelianController(pembelianService)
 
+	//
+	satuanRepository := repository.NewSatuanRepository()
+	satuanService := service.NewSatuanService(satuanRepository, db)
+	satuanController := controller.NewSatuanController(satuanService)
+
+	bahanBakuRepository := repository.NewBahanRepository()
+	bahanBakuService := service.NewBahanbakuService(bahanBakuRepository, db)
+	bahanBakuController := controller.NewBahanBakuController(bahanBakuService)
+
 	router := httprouter.New()
 
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
+
 	router.GET("/user/", usersController.FindAll)
 	router.GET("/user/create/", usersController.Create)
-	router.GET("/user/show/:id", usersController.FindById)
+	router.POST("/user/store/", usersController.Store)
+	router.GET("/user/show/:id/", usersController.FindById)
+	router.POST("/user/update/:id/", usersController.Update)
+	router.POST("/user/delete/:id/", usersController.Delete)
+
+	router.GET("/satuan/", satuanController.FindAllSatuan)
+	router.GET("/satuan/show/:id", satuanController.FindById)
+	router.POST("/satuan/store/", satuanController.Store)
+	router.POST("/satuan/update/:id", satuanController.Update)
+	router.POST("/satuan/delete/:id", satuanController.Delete)
+
+	router.GET("/bahan-baku/", bahanBakuController.FindAllBahanBaku)
+	router.GET("/bahan-baku/show/:id", bahanBakuController.FindByIdBahanBaku)
+	router.POST("/bahan-baku/store/", bahanBakuController.Store)
+	router.POST("/bahan-baku/delete/:id", bahanBakuController.Delete)
 
 	router.GET("/pembelian/", pembelianController.Index)
 	router.GET("/pembelian/create/", pembelianController.Create)

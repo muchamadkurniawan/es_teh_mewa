@@ -25,49 +25,46 @@ func (controller *UserControllerImpl) Create(w http.ResponseWriter, r *http.Requ
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
 	myTemplate.ExecuteTemplate(w, "createUser", map[string]interface{}{
-		"type": [...]string{
+		"type": []string{
 			"admin", "kasir",
 		},
 	})
 }
 
 func (controller *UserControllerImpl) Store(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
-	name := r.PostFormValue("nama")
+	name := r.PostFormValue("username")
 	password := r.PostFormValue("password")
-	tipe := r.PostFormValue("type")
+	tipe := r.PostFormValue("typeUser")
 	file := web.UsersCreateRequest{
 		Username: name,
 		Password: password,
 		Type:     tipe,
 	}
 	controller.UserService.Create(context.Background(), file)
-	http.Redirect(w, r, "/user/", http.StatusAccepted)
-	return
+	http.Redirect(w, r, "/user/", http.StatusFound)
 }
 
 func (controller *UserControllerImpl) Update(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
 	id, err := strconv.Atoi(param.ByName("id"))
 	helperMain.PanicIfError(err)
-	name := r.PostFormValue("nama")
+	name := r.PostFormValue("username")
 	password := r.PostFormValue("password")
 	tipe := r.PostFormValue("type")
 	file := web.UsersResponse{
 		Id:       id,
 		Username: name,
 		Password: password,
-		Type:     tipe,
+		Tipe:     tipe,
 	}
 	controller.UserService.Update(context.Background(), file)
-	http.Redirect(w, r, "/user/show/"+param.ByName("id")+"/", http.StatusAccepted)
-	return
+	http.Redirect(w, r, "/user/show/"+param.ByName("id")+"/", http.StatusFound)
 }
 
 func (controller *UserControllerImpl) Delete(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
 	id, err := strconv.Atoi(param.ByName("id"))
 	helperMain.PanicIfError(err)
 	controller.UserService.Delete(context.Background(), id)
-	http.Redirect(w, r, "/user/", http.StatusAccepted)
-	return
+	http.Redirect(w, r, "/user/", http.StatusFound)
 }
 
 func (controller *UserControllerImpl) FindAll(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
@@ -76,7 +73,10 @@ func (controller *UserControllerImpl) FindAll(w http.ResponseWriter, r *http.Req
 		"view/layout/sidebar.gohtml"))
 
 	serv := controller.UserService.FindAll(context.Background())
-	myTemplate.ExecuteTemplate(w, "indexUser", serv)
+	myTemplate.ExecuteTemplate(w, "indexUser", map[string]interface{}{
+		"Title": "Cafe Mewa - User",
+		"data":  serv,
+	})
 }
 
 func (controller *UserControllerImpl) FindById(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
@@ -88,7 +88,7 @@ func (controller *UserControllerImpl) FindById(w http.ResponseWriter, r *http.Re
 	serv := controller.UserService.FindById(context.Background(), id)
 	myTemplate.ExecuteTemplate(w, "showUser", map[string]interface{}{
 		"data": serv,
-		"type": [...]string{
+		"tipe": [2]string{
 			"admin", "kasir",
 		},
 	})

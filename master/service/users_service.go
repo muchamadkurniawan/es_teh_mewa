@@ -26,7 +26,7 @@ func (service *UsersServiceImpl) Create(ctx context.Context, request web.UsersCr
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 	user := entity.Users{
 		UserName:  request.Username,
 		Password:  request.Password,
@@ -40,13 +40,13 @@ func (service *UsersServiceImpl) Update(ctx context.Context, response web.UsersR
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	user := entity.Users{
 		Id:        int32(response.Id),
 		UserName:  response.Username,
 		Password:  response.Password,
-		Type_user: response.Type,
+		Type_user: response.Tipe,
 	}
 	_, err = service.UsersRepo.UpdateUsers(ctx, tx, user)
 	if err != nil {
@@ -59,7 +59,7 @@ func (service *UsersServiceImpl) Delete(ctx context.Context, id int) {
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	err = service.UsersRepo.DeleteUsers(context.Background(), tx, int32(id))
 	if err != nil {
@@ -67,33 +67,31 @@ func (service *UsersServiceImpl) Delete(ctx context.Context, id int) {
 	}
 }
 
-func (service *UsersServiceImpl) FindAll(ctx context.Context) []map[string]interface{} {
+func (service *UsersServiceImpl) FindAll(ctx context.Context) []web.UsersResponse {
 	tx, err := service.DB.Begin()
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	users, err := service.UsersRepo.FindByAllUsers(ctx, tx)
 	if err != nil {
 		panic(err)
 	}
 	usersResponse := helperMain.ToUserResponses(users)
-	datas := helperMain.StructSliceToMap_Users(usersResponse)
-	return datas
+	return usersResponse
 }
 
-func (service *UsersServiceImpl) FindById(ctx context.Context, id int) map[string]interface{} {
+func (service *UsersServiceImpl) FindById(ctx context.Context, id int) web.UsersResponse {
 	tx, err := service.DB.Begin()
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 	user, err := service.UsersRepo.FindByIdUsers(ctx, tx, int32(id))
 	if err != nil {
 		panic(err)
 	}
 	userResponse := helperMain.ToUserResponse(user)
-	data := helperMain.StructToMap_Users(userResponse)
-	return data
+	return userResponse
 }

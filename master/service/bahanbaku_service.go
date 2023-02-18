@@ -21,6 +21,15 @@ func NewBahanbakuService(bakuRepository repository.BahanBakuRepository, db *sql.
 	}
 }
 
+func (service *BahanbakuServiceimpl) GetSatuan(ctx context.Context) []web.SatuanResponse {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	satuan := repository.NewSatuanRepository()
+	satuans, err := satuan.FindAllSatuan(ctx, tx)
+	return helperMain.ToSatuanResponses(satuans)
+}
+
 func (Service *BahanbakuServiceimpl) Save(ctx context.Context, request web.BahanbakuRequest) {
 	tx, err := Service.DB.Begin()
 	if err != nil {
@@ -34,7 +43,7 @@ func (Service *BahanbakuServiceimpl) Save(ctx context.Context, request web.Bahan
 	Service.BahanRepo.Insert(ctx, tx, bahan)
 }
 
-func (Service *BahanbakuServiceimpl) Update(ctx context.Context, response web.BahanbakuResponse) {
+func (Service *BahanbakuServiceimpl) Update(ctx context.Context, response web.BahanbakuRequest) {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
@@ -59,7 +68,7 @@ func (Service *BahanbakuServiceimpl) Delete(ctx context.Context, id int) {
 	Service.BahanRepo.Delete(ctx, tx, id)
 }
 
-func (Service *BahanbakuServiceimpl) FindAll(ctx context.Context) []web.BahanbakuResponse {
+func (Service *BahanbakuServiceimpl) FindAll(ctx context.Context) []web.BahanbakuFullResponse {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
@@ -71,7 +80,7 @@ func (Service *BahanbakuServiceimpl) FindAll(ctx context.Context) []web.Bahanbak
 	return helperMain.ToBahanRresponses(all)
 }
 
-func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) web.BahanbakuResponse {
+func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) web.BahanbakuFullResponse {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
@@ -79,5 +88,5 @@ func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) web.B
 	defer helperMain.ErrorTx(tx)
 	byId := Service.BahanRepo.FindById(ctx, tx, id)
 
-	return helperMain.ToBahanResponse(byId)
+	return helperMain.ToBahanrespon(byId)
 }

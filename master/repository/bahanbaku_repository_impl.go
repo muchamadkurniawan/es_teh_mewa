@@ -40,15 +40,15 @@ func (BahanRepository) Delete(ctx context.Context, tx *sql.Tx, id int) {
 	}
 }
 
-func (BahanRepository) FindAll(ctx context.Context, tx *sql.Tx) []entity.BahanBaku {
-	SQL := "SELECT id, id_satuan, nama FROM bahan_baku"
+func (BahanRepository) FindAll(ctx context.Context, tx *sql.Tx) []entity.BahanBakuFull {
+	SQL := "SELECT bahan_baku.id, satuan.nama, bahan_baku.nama FROM bahan_baku INNER JOIN satuan ON bahan_baku.id_satuan = satuan.id;"
 	rows, err := tx.QueryContext(ctx, SQL)
 	if err != nil {
 		panic(err)
 	}
-	var bahans []entity.BahanBaku
-	if rows.Next() {
-		bahan := entity.BahanBaku{}
+	var bahans []entity.BahanBakuFull
+	for rows.Next() {
+		bahan := entity.BahanBakuFull{}
 		err := rows.Scan(&bahan.Id, &bahan.IdSatuan, &bahan.Nama)
 		if err != nil {
 			panic(err)
@@ -58,18 +58,18 @@ func (BahanRepository) FindAll(ctx context.Context, tx *sql.Tx) []entity.BahanBa
 	return bahans
 }
 
-func (BahanRepository) FindById(ctx context.Context, tx *sql.Tx, id int) entity.BahanBaku {
-	SQL := "SELECT id, id_satuan, nama FROM bahan_baku WHERE id=?"
+func (BahanRepository) FindById(ctx context.Context, tx *sql.Tx, id int) entity.BahanBakuFull {
+	SQL := "SELECT id, satuan.nama, nama FROM bahan_baku INNER JOIN satuan ON bahan_baku.id_satuan = satuan.id WHERE bahan_baku.id=?;"
 	rows, err := tx.QueryContext(ctx, SQL, id)
-	bahan := entity.BahanBaku{}
+	bahan := entity.BahanBakuFull{}
 	if err != nil {
 		panic(err)
 	}
 	if rows.Next() {
-		err := rows.Scan(&bahan.Id, &bahan.IdSatuan, &bahan.Nama)
+		var id int
+		err := rows.Scan(&bahan.Id, &id, &bahan.Nama)
 		if err != nil {
-			panic(err)
-			return entity.BahanBaku{}
+			return entity.BahanBakuFull{}
 		}
 	}
 	return bahan

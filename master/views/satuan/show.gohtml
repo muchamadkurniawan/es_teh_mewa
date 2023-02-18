@@ -1,0 +1,44 @@
+{{define "showSatuan"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head"}}
+    {{template "bodyTop"}}
+    <div class="right_col" role="main">
+
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Detail - Satuan</h3>
+            </div>
+
+            <div class="title_right text-right">
+                <a href="/satuan/" class="btn btn-outline-warning"><i class="fa fa-back"></i> Back List</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body">
+            <form action="/satuan/update/{{.data.Id}}/" method="POST" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 offset-3">
+                                <div class="form-group">
+                                    <label for="">Nama Satuan</label>
+                                    <input type="text" value="{{.data.Name}}" class="form-control" placeholder="Satuan" name="name">
+                                </div>
+                                <div class="form-group text-right">
+                                    <a href="/satuan/" class="btn btn-outline-secondary"><i class="fa fa-close"></i> Cancel</a>
+                                    <button class="btn btn-outline-primary" type="submit"><i class="fa fa-save"></i> Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}
