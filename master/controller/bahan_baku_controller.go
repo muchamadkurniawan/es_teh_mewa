@@ -2,46 +2,90 @@ package controller
 
 import (
 	"context"
+	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/master/service"
+	"eh_teh_mewa/master/web"
 	"github.com/julienschmidt/httprouter"
+	"html/template"
 	"net/http"
+	"strconv"
 )
 
 type BahanBakuControllerImpl struct {
 	service service.BahanbakuService
 }
 
-func NewBahanBakuController(service service.BahanbakuService) BahanBakuController {
+func NewBahanBakuController(BahanBakuService service.BahanbakuService) BahanBakuController {
 	return &BahanBakuControllerImpl{
-		service: service,
+		service: BahanBakuService,
 	}
 }
 
 func (controller *BahanBakuControllerImpl) FindAllBahanBaku(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	file := controller.service.FindAll(context.Background())
+	myTemplate := template.Must(template.ParseFiles("master/views/bahan_baku/show.gohtml", "view/layout/app.gohtml",
+		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
+		"view/layout/sidebar.gohtml"))
+	myTemplate.ExecuteTemplate(w, "indexBahanBaku", map[string]interface{}{
+		"Title": "Cafe Mewa - Bahan Baku",
+		"data":  file,
+	})
 }
 
 func (controller *BahanBakuControllerImpl) FindByIdBahanBaku(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	id, err := strconv.Atoi(params.ByName("id"))
+	helperMain.PanicIfError(err)
+	file := controller.service.FindById(context.Background(), id)
+	myTemplate := template.Must(template.ParseFiles("master/views/bahan_baku/show.gohtml", "view/layout/app.gohtml",
+		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
+		"view/layout/sidebar.gohtml"))
+	myTemplate.ExecuteTemplate(w, "showBahanBaku", map[string]interface{}{
+		"Title": "Cafe Mewa - Bahan Baku",
+		"data":  file,
+	})
 }
 
 func (controller *BahanBakuControllerImpl) Create(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	myTemplate := template.Must(template.ParseFiles("master/views/bahan_baku/create.gohtml", "view/layout/app.gohtml",
+		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
+		"view/layout/sidebar.gohtml"))
+	myTemplate.ExecuteTemplate(w, "createBahanBaku", map[string]interface{}{
+		"Title": "Cafe Mewa - Bahan Baku",
+	})
 }
 
 func (controller *BahanBakuControllerImpl) Store(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	idSatuan, err := strconv.Atoi(r.PostFormValue("idSatuan"))
+	helperMain.PanicIfError(err)
+	nama := r.PostFormValue("nama")
+	file := web.BahanbakuRequest{
+		IdSatuan: idSatuan,
+		Nama:     nama,
+	}
+	controller.service.Save(context.Background(), file)
+	http.Redirect(w, r, "/bahan-baku/", http.StatusAccepted)
+	return
 }
 
 func (controller *BahanBakuControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	id, err := strconv.Atoi(params.ByName("id"))
+	helperMain.PanicIfError(err)
+	idSatuan, err := strconv.Atoi(r.PostFormValue("idSatuan"))
+	helperMain.PanicIfError(err)
+	nama := r.PostFormValue("nama")
+	file := web.BahanbakuResponse{
+		Id:       id,
+		IdSatuan: idSatuan,
+		Nama:     nama,
+	}
+	controller.service.Update(context.Background(), file)
+	http.Redirect(w, r, "/bahan-baku/show/"+params.ByName("id")+"/", http.StatusAccepted)
+	return
 }
 
 func (controller *BahanBakuControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	id, err := strconv.Atoi(params.ByName("id"))
+	helperMain.PanicIfError(err)
+	controller.service.Delete(context.Background(), id)
+	http.Redirect(w, r, "/bahan-baku/", http.StatusAccepted)
 }

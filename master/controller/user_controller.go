@@ -4,6 +4,7 @@ import (
 	"context"
 	"eh_teh_mewa/helperMain"
 	service "eh_teh_mewa/master/service"
+	"eh_teh_mewa/master/web"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"
@@ -31,18 +32,42 @@ func (controller *UserControllerImpl) Create(w http.ResponseWriter, r *http.Requ
 }
 
 func (controller *UserControllerImpl) Store(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	name := r.PostFormValue("nama")
+	password := r.PostFormValue("password")
+	tipe := r.PostFormValue("type")
+	file := web.UsersCreateRequest{
+		Username: name,
+		Password: password,
+		Type:     tipe,
+	}
+	controller.UserService.Create(context.Background(), file)
+	http.Redirect(w, r, "/user/", http.StatusAccepted)
+	return
 }
 
 func (controller *UserControllerImpl) Update(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	id, err := strconv.Atoi(param.ByName("id"))
+	helperMain.PanicIfError(err)
+	name := r.PostFormValue("nama")
+	password := r.PostFormValue("password")
+	tipe := r.PostFormValue("type")
+	file := web.UsersResponse{
+		Id:       id,
+		Username: name,
+		Password: password,
+		Type:     tipe,
+	}
+	controller.UserService.Update(context.Background(), file)
+	http.Redirect(w, r, "/user/show/"+param.ByName("id")+"/", http.StatusAccepted)
+	return
 }
 
 func (controller *UserControllerImpl) Delete(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
-	//TODO implement me
-	panic("implement me")
+	id, err := strconv.Atoi(param.ByName("id"))
+	helperMain.PanicIfError(err)
+	controller.UserService.Delete(context.Background(), id)
+	http.Redirect(w, r, "/user/", http.StatusAccepted)
+	return
 }
 
 func (controller *UserControllerImpl) FindAll(w http.ResponseWriter, r *http.Request, param httprouter.Params) {

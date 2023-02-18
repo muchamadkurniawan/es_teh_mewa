@@ -59,27 +59,25 @@ func (Service *BahanbakuServiceimpl) Delete(ctx context.Context, id int) {
 	Service.BahanRepo.Delete(ctx, tx, id)
 }
 
-func (Service *BahanbakuServiceimpl) FindAll(ctx context.Context) []map[string]interface{} {
+func (Service *BahanbakuServiceimpl) FindAll(ctx context.Context) []web.BahanbakuResponse {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	all := Service.BahanRepo.FindAll(ctx, tx)
-	var toMap = helperMain.StructSliceToMap_Bahan(
-		helperMain.ToBahanRresponses(all))
-	return toMap
+
+	return helperMain.ToBahanRresponses(all)
 }
 
-func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) map[string]interface{} {
+func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) web.BahanbakuResponse {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 	byId := Service.BahanRepo.FindById(ctx, tx, id)
-	var toMap = helperMain.StructToMap_Bahan(
-		helperMain.ToBahanResponse(byId))
-	return toMap
+
+	return helperMain.ToBahanResponse(byId)
 }
