@@ -1,0 +1,77 @@
+{{define "indexProduk"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head" .}}
+    {{template "bodyTop"}}
+    <div class="right_col" role="main">
+
+        <div class="page-title">
+            <div class="title_left">
+                    <h3>Pembelian {{.namaBarang}}</h3>
+            </div>
+
+            <div class="title_right text-right">
+                <form action="/produk/" METHOD="GET">
+                    <div class="row">
+                        <div class="col">
+                            <select name="barang_filter" id="barang_filter" class="form-control w-25 ml-auto">
+                                <option value="">Bahan Baku</option>
+                            {{range $item := .barang}}
+                                <option value="{{$item.Id}}">{{$item.Nama}}</option>
+                            {{end}}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-outline-warning"><i class="fa fa-search"></i>Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Bahan Baku</th>
+                            <th class="text-center">Harga</th>
+                            <th class="text-center">Manage</th>
+                            <th class="text-left">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {{ range $item := .data }}
+                            <tr>
+                                <td class="text-center">{{ $item.Barang }}</td>
+                                <td class="text-center">{{ $item.Harga }}</td>
+                                <td class="text-center">{{ $item.Stock }}</td>
+
+                                <td class="text-right">
+                                    <div class="form-inline text-right">
+                                        <a href="/produk/show/{{$item.Id}}/" class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i></a>
+                                        <form action="/produk/delete/{{$item.Id}}/" method="POST">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{ else }}
+                            <tr>
+                                <td colspan="7" class="text-center">Data not available !</td>
+                            </tr>
+                        {{ end }}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}

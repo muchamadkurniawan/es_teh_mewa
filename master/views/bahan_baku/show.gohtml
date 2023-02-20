@@ -1,0 +1,52 @@
+{{define "showBahanBaku"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head"}}
+    {{template "bodyTop"}}
+    <div class="right_col" role="main">
+
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Detail - Satuan</h3>
+            </div>
+
+            <div class="title_right text-right">
+                <a href="/bahan-baku/" class="btn btn-outline-warning"><i class="fa fa-back"></i> Back List</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body w-75 mr-auto ml-auto">
+            <form action="/bahan-baku/update/{{.data.Id}}/" method="POST" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 offset-3">
+                                <div class="form-group">
+                                    <label for="">Bahan Baku</label>
+                                    <input type="text" value="{{.data.Nama}}" class="form-control" placeholder="Bahan Baku" name="nama" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Satuan</label>
+                                    <select name="satuan" id="satuan" class="form-control">
+                                        {{range $item := .satuan}}
+                                        <option value="{{$item.Id}}" {{if eq $.data.IdSatuan $item.Id}}selected="selected"{{ end }}>{{$item.Name}}</option>
+                                        {{end}}
+                                    </select>
+                                </div>
+                                <div class="form-group text-right">
+                                    <a href="/bahan-baku/" class="btn btn-outline-secondary"><i class="fa fa-close"></i> Cancel</a>
+                                    <button class="btn btn-outline-primary" type="submit"><i class="fa fa-save"></i> Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}

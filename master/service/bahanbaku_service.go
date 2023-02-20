@@ -48,7 +48,7 @@ func (Service *BahanbakuServiceimpl) Update(ctx context.Context, response web.Ba
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	bahan := entity.BahanBaku{
 		Id:       response.Id,
@@ -80,7 +80,7 @@ func (Service *BahanbakuServiceimpl) FindAll(ctx context.Context) []web.Bahanbak
 	return helperMain.ToBahanRresponses(all)
 }
 
-func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) web.BahanbakuFullResponse {
+func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) web.BahanbakuResponse {
 	tx, err := Service.DB.Begin()
 	if err != nil {
 		panic(err)
@@ -88,5 +88,9 @@ func (Service *BahanbakuServiceimpl) FindById(ctx context.Context, id int) web.B
 	defer helperMain.ErrorTx(tx)
 	byId := Service.BahanRepo.FindById(ctx, tx, id)
 
-	return helperMain.ToBahanrespon(byId)
+	return web.BahanbakuResponse{
+		Id:       byId.Id,
+		Nama:     byId.Nama,
+		IdSatuan: byId.IdSatuan,
+	}
 }

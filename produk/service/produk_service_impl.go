@@ -4,8 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"eh_teh_mewa/helperMain"
+	repositoryBahan "eh_teh_mewa/master/repository"
+	webBahan "eh_teh_mewa/master/web"
 	"eh_teh_mewa/produk/model/entity"
 	"eh_teh_mewa/produk/model/repository"
+	"eh_teh_mewa/produk/model/web"
 )
 
 type ProdukServiceImpl struct {
@@ -20,12 +23,22 @@ func NewProdukService(produkRepository repository.ProdukRepository, DB *sql.DB) 
 	}
 }
 
-func (service *ProdukServiceImpl) FindByAll(ctx context.Context) ([]entity.Produk, error) {
+func (service *ProdukServiceImpl) GetBahan(ctx context.Context) ([]webBahan.BahanbakuFullResponse, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-	var produks []entity.Produk
-	produks = service.ProdukRepository.FindAllProduk(ctx, tx)
+	repo := repositoryBahan.NewBahanRepository()
+	bahan := repo.FindAll(context.Background(), tx)
+	bahans := helperMain.ToBahanRresponses(bahan)
+	return bahans, nil
+
+}
+
+func (service *ProdukServiceImpl) FindByAll(ctx context.Context) ([]web.ResponseProdukFull, error) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	produks := service.ProdukRepository.FindAllProduk(ctx, tx)
 	helperMain.PanicIfError(err)
 	return produks, err
 }

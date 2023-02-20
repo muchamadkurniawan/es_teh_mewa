@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/produk/model/entity"
+	"eh_teh_mewa/produk/model/web"
 )
 
 type ProdukRepositoryImpl struct {
@@ -15,14 +16,15 @@ func NewProdukRepo() *ProdukRepositoryImpl {
 	return &ProdukRepositoryImpl{}
 }
 
-func (ProdukRepositoryImpl) FindAllProduk(ctx context.Context, tx *sql.Tx) []entity.Produk {
-	SQL := "SELECT id, id_user, id_bahan_baku, harga, stock FROM produk_jual;"
+func (ProdukRepositoryImpl) FindAllProduk(ctx context.Context, tx *sql.Tx) []web.ResponseProdukFull {
+	SQL := "SELECT bahan_baku.id, users.username, bahan_baku.nama, bahan_baku.harga, bahan_baku.stock FROM produk_jual JOIN users ON user.id = produk_jual.id_user " +
+		"JOIN bahan_baku ON bahan_baku.id = produk_jual.id_bahan_baku;"
 	rows, err := tx.QueryContext(ctx, SQL)
 	helperMain.PanicIfError(err)
-	var produks []entity.Produk
-	if rows.Next() {
-		produk := entity.Produk{}
-		err := rows.Scan(&produk.Id, &produk.Id_User, &produk.Id_Bahan, &produk.Harga, &produk.Stock)
+	var produks []web.ResponseProdukFull
+	for rows.Next() {
+		produk := web.ResponseProdukFull{}
+		err := rows.Scan(&produk.Id, &produk.User, &produk.Barang, &produk.Harga, &produk.Stock)
 		if err != nil {
 			helperMain.PanicIfError(err)
 		}
@@ -68,50 +70,3 @@ func (ProdukRepositoryImpl) DeleteProduk(ctx context.Context, tx *sql.Tx, id int
 		panic(err)
 	}
 }
-
-//type PembelianRepositoryImpl struct{}
-//
-//func NewProdukRepository() ProdukRepository {
-//	return &PembelianRepositoryImpl{}
-//}
-//
-//func (repository *PembelianRepositoryImpl) FindAllProduk(ctx context.Context, tx *sql.Tx) ([]web.ResponseProduk, error) {
-//	var respon []web.ResponseProduk
-//	SQL := "SELECT id, id_user, id_bahan_baku, harga, stock FROM produk_jual;"
-//	rows, err := tx.QueryContext(ctx, SQL)
-//	helperMain.PanicIfError(err)
-//	for rows.Next() {
-//		newRespon := web.ResponseProduk{}
-//		rows.Scan(&newRespon.Id, &newRespon.Id_User, &newRespon.Id_Barang, &newRespon.Harga, &newRespon.Stock)
-//		respon = append(respon, newRespon)
-//	}
-//	return respon, nil
-//}
-//
-//func (repository *PembelianRepositoryImpl) FindAllProdukById(ctx context.Context, tx *sql.Tx, id int) (web.ResponseProduk, error) {
-//	SQL := "SELECT id, id_user, id_bahan_baku, harga, stock FROM produk_jual WHERE id = ?;"
-//	rows, err := tx.QueryContext(ctx, SQL, id)
-//	helperMain.PanicIfError(err)
-//	respon := web.ResponseProduk{}
-//	if rows.Next() {
-//		rows.Scan(&respon.Id, &respon.Id_User, &respon.Id_Barang, &respon.Harga, &respon.Stock)
-//		return respon, nil
-//	} else {
-//		return respon, errors.New("It's Not Found")
-//	}
-//}
-//
-//func (repository *PembelianRepositoryImpl) CreateProduk(ctx context.Context, tx *sql.Tx, produk web.RequestProduk) (web.RequestProduk, error) {
-//	//SQL := "INSERT "
-//	panic("implement me")
-//}
-//
-//func (repository *PembelianRepositoryImpl) UpdateProduk(ctx context.Context, tx *sql.Tx, produk web.RequestProduk) (web.RequestProduk, error) {
-//TODO implement me
-//	panic("implement me")
-//}
-//
-//func (repository *PembelianRepositoryImpl) DeleteProduk(ctx context.Context, tx *sql.Tx, id int) error {
-//TODO implement me
-//	panic("implement me")
-//}

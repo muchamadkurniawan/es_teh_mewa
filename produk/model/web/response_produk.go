@@ -7,3 +7,11 @@ type ResponseProduk struct {
 	Harga     int  `json:"harga"`
 	Stock     bool `json:"stock"`
 }
+
+type ResponseProdukFull struct {
+	Id     int
+	User   string
+	Barang string
+	Harga  int
+	Stock  bool
+}

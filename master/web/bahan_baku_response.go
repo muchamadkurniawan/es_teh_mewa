@@ -2,7 +2,7 @@ package web
 
 type BahanbakuResponse struct {
 	Id       int
-	IdSatuan SatuanResponse
+	IdSatuan int
 	Nama     string
 }
 

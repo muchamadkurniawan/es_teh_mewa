@@ -9,6 +9,9 @@ import (
 	controllerPembelian "eh_teh_mewa/pembelian/controller"
 	repositoryPembelian "eh_teh_mewa/pembelian/model/repository"
 	servicePembelian "eh_teh_mewa/pembelian/service"
+	controllerProduk "eh_teh_mewa/produk/controller"
+	repositoryProduk "eh_teh_mewa/produk/model/repository"
+	serviceProduk "eh_teh_mewa/produk/service"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -34,6 +37,10 @@ func main() {
 	bahanBakuService := service.NewBahanbakuService(bahanBakuRepository, db)
 	bahanBakuController := controller.NewBahanBakuController(bahanBakuService)
 
+	produkRepository := repositoryProduk.NewProdukRepo()
+	produkService := serviceProduk.NewProdukService(produkRepository, db)
+	produkController := controllerProduk.NewProdukController(produkService)
+
 	router := httprouter.New()
 
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
@@ -46,15 +53,16 @@ func main() {
 	router.POST("/user/delete/:id/", usersController.Delete)
 
 	router.GET("/satuan/", satuanController.FindAllSatuan)
-	router.GET("/satuan/show/:id", satuanController.FindById)
+	router.GET("/satuan/show/:id/", satuanController.FindById)
 	router.POST("/satuan/store/", satuanController.Store)
-	router.POST("/satuan/update/:id", satuanController.Update)
-	router.POST("/satuan/delete/:id", satuanController.Delete)
+	router.POST("/satuan/update/:id/", satuanController.Update)
+	router.POST("/satuan/delete/:id/", satuanController.Delete)
 
 	router.GET("/bahan-baku/", bahanBakuController.FindAllBahanBaku)
 	router.GET("/bahan-baku/show/:id", bahanBakuController.FindByIdBahanBaku)
 	router.POST("/bahan-baku/store/", bahanBakuController.Store)
-	router.POST("/bahan-baku/delete/:id", bahanBakuController.Delete)
+	router.POST("/bahan-baku/update/:id/", bahanBakuController.Update)
+	router.POST("/bahan-baku/delete/:id/", bahanBakuController.Delete)
 
 	router.GET("/pembelian/", pembelianController.Index)
 	router.GET("/pembelian/create/", pembelianController.Create)
@@ -62,6 +70,12 @@ func main() {
 	router.GET("/pembelian/show/:id/", pembelianController.Show)
 	router.POST("/pembelian/update/:id", pembelianController.Update)
 	router.POST("/pembelian/delete/:id/", pembelianController.Delete)
+
+	router.GET("/produk/", produkController.FindByAll)
+	router.GET("/produk/show/:id/", produkController.FindById)
+	router.GET("/produk/create/", produkController.Create)
+	router.POST("/produk/update/:id/", produkController.Update)
+	router.POST("/produk/delete/:id/", produkController.Delete)
 
 	server := http.Server{
 		Addr:    "localhost:8080",

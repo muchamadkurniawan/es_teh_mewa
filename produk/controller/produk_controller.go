@@ -4,6 +4,7 @@ import (
 	"context"
 	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/produk/model/entity"
+	"eh_teh_mewa/produk/model/web"
 	"eh_teh_mewa/produk/service"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
@@ -13,6 +14,12 @@ import (
 
 type ProdukControllerImpl struct {
 	service service.ProdukService
+}
+
+func NewProdukController(serviceProduk service.ProdukService) ProdukController {
+	return &ProdukControllerImpl{
+		service: serviceProduk,
+	}
 }
 
 func (controller *ProdukControllerImpl) FindById(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -30,14 +37,24 @@ func (controller *ProdukControllerImpl) FindById(w http.ResponseWriter, r *http.
 }
 
 func (controller *ProdukControllerImpl) FindByAll(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	file, err := controller.service.FindByAll(context.Background())
-	helperMain.PanicIfError(err)
+	var file []web.ResponseProdukFull
+	var err error
+	if params.ByName("barang") != "" {
+		file, err = controller.service.FindByAll(context.Background())
+		helperMain.PanicIfError(err)
+	} else {
+		file, err = controller.service.FindByAll(context.Background())
+		helperMain.PanicIfError(err)
+	}
+	barang, _ := controller.service.GetBahan(context.Background())
 	myTemplate := template.Must(template.ParseFiles("produk/views/index.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
 	myTemplate.ExecuteTemplate(w, "indexProduk", map[string]interface{}{
-		"Title": "Cafe Mewa - Produk",
-		"data":  file,
+		"Title":      "Cafe Mewa - Produk",
+		"data":       file,
+		"barang":     barang,
+		"namaBarang": r.URL.Query().Get("barang"),
 	})
 }
 
