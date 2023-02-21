@@ -7,7 +7,7 @@
 
         <div class="page-title">
             <div class="title_left">
-                    <h3>Pembelian {{.namaBarang}}</h3>
+                    <h3>Produk Jual {{.namaBarang}}</h3>
             </div>
 
             <div class="title_right text-right">
@@ -45,9 +45,16 @@
 
                         {{ range $item := .data }}
                             <tr>
+                                <td class="text-center">#</td>
                                 <td class="text-center">{{ $item.Barang }}</td>
                                 <td class="text-center">{{ $item.Harga }}</td>
-                                <td class="text-center">{{ $item.Stock }}</td>
+                                <td class="text-center">
+                                    {{if $item.Stock }}
+                                        <i class="fa fa-check"></i>
+                                    {{else}}
+                                        <i class="fa fa-close"></i>
+                                    {{end}}
+                                </td>
 
                                 <td class="text-right">
                                     <div class="form-inline text-right">

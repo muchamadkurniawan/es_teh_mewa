@@ -74,6 +74,7 @@ func main() {
 	router.GET("/produk/", produkController.FindByAll)
 	router.GET("/produk/show/:id/", produkController.FindById)
 	router.GET("/produk/create/", produkController.Create)
+	router.POST("/produk/store/", produkController.Store)
 	router.POST("/produk/update/:id/", produkController.Update)
 	router.POST("/produk/delete/:id/", produkController.Delete)
 

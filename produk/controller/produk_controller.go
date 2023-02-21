@@ -27,20 +27,23 @@ func (controller *ProdukControllerImpl) FindById(w http.ResponseWriter, r *http.
 	helperMain.PanicIfError(err)
 	file, err := controller.service.FindById(context.Background(), id)
 	helperMain.PanicIfError(err)
+	barang, _ := controller.service.GetBahan(context.Background())
 	myTemplate := template.Must(template.ParseFiles("produk/views/show.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
 	myTemplate.ExecuteTemplate(w, "showProduk", map[string]interface{}{
-		"Title": "Cafe Mewa - Produk",
-		"data":  file,
+		"Title":  "Cafe Mewa - Produk",
+		"data":   file,
+		"barang": barang,
 	})
 }
 
 func (controller *ProdukControllerImpl) FindByAll(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	var file []web.ResponseProdukFull
 	var err error
-	if params.ByName("barang") != "" {
-		file, err = controller.service.FindByAll(context.Background())
+	idBarang, err := strconv.Atoi(r.PostFormValue("barang_filter"))
+	if r.PostFormValue("barang_filter") != "" {
+		file, err = controller.service.FindAllByBahan(context.Background(), idBarang)
 		helperMain.PanicIfError(err)
 	} else {
 		file, err = controller.service.FindByAll(context.Background())
@@ -62,15 +65,19 @@ func (controller *ProdukControllerImpl) Create(w http.ResponseWriter, r *http.Re
 	myTemplate := template.Must(template.ParseFiles("produk/views/create.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
-	myTemplate.ExecuteTemplate(w, "indexProduk", map[string]interface{}{
-		"Title": "Cafe Mewa - Produk",
+	barang, _ := controller.service.GetBahan(context.Background())
+	myTemplate.ExecuteTemplate(w, "createProduk", map[string]interface{}{
+		"Title":  "Cafe Mewa - Produk",
+		"barang": barang,
 	})
 }
 
 func (controller *ProdukControllerImpl) Store(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	idUser := 1
-	idBahan, err := strconv.Atoi(r.PostFormValue("bahan"))
+	idBahan, err := strconv.Atoi(r.PostFormValue("barang"))
+	helperMain.PanicIfError(err)
 	harga, err := strconv.Atoi(r.PostFormValue("harga"))
+	helperMain.PanicIfError(err)
 	var stock bool
 	if r.PostFormValue("stock") != "" {
 		stock = true
@@ -83,15 +90,26 @@ func (controller *ProdukControllerImpl) Store(w http.ResponseWriter, r *http.Req
 		Harga:    harga,
 		Stock:    stock,
 	}
-	file, err := controller.service.Create(context.Background(), request)
-	helperMain.PanicIfError(err)
-	id := strconv.Itoa(file.Id)
-	http.Redirect(w, r, "/produk/show/"+id+"/", http.StatusAccepted)
+	check, err := controller.service.CheckByBahan(context.Background(), idBahan)
+	//fmt.Fprintln(w, check, request)
+	if check.Id == 0 {
+		file, err := controller.service.Create(context.Background(), request)
+		helperMain.PanicIfError(err)
+		id := strconv.Itoa(file.Id)
+		http.Redirect(w, r, "/produk/show/"+id+"/", http.StatusFound)
+	} else {
+		request.Id = check.Id
+		id := strconv.Itoa(check.Id)
+		_, err = controller.service.Update(context.Background(), request)
+		helperMain.PanicIfError(err)
+		http.Redirect(w, r, "/produk/show/"+id+"/", http.StatusFound)
+	}
+	return
 }
 
 func (controller *ProdukControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	id, err := strconv.Atoi(params.ByName("id"))
-	idBahan, err := strconv.Atoi(r.PostFormValue("bahan"))
+	idBahan, err := strconv.Atoi(r.PostFormValue("barang"))
 	harga, err := strconv.Atoi(r.PostFormValue("harga"))
 	var stock bool
 	if r.PostFormValue("stock") != "" {
@@ -108,7 +126,7 @@ func (controller *ProdukControllerImpl) Update(w http.ResponseWriter, r *http.Re
 	}
 	_, err = controller.service.Update(context.Background(), request)
 	helperMain.PanicIfError(err)
-	http.Redirect(w, r, "/produk/show/"+params.ByName("id")+"/", http.StatusAccepted)
+	http.Redirect(w, r, "/produk/show/"+params.ByName("id")+"/", http.StatusFound)
 }
 
 func (controller *ProdukControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

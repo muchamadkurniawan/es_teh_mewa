@@ -43,6 +43,24 @@ func (service *ProdukServiceImpl) FindByAll(ctx context.Context) ([]web.Response
 	return produks, err
 }
 
+func (service *ProdukServiceImpl) FindAllByBahan(ctx context.Context, barang int) ([]web.ResponseProdukFull, error) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	produks := service.ProdukRepository.FindAllProdukByBahan(ctx, tx, barang)
+	helperMain.PanicIfError(err)
+	return produks, err
+}
+
+func (service *ProdukServiceImpl) CheckByBahan(ctx context.Context, barang int) (entity.Produk, error) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	produks, err := service.ProdukRepository.FindProdukByBahan(ctx, tx, barang)
+	helperMain.PanicIfError(err)
+	return produks, err
+}
+
 func (service *ProdukServiceImpl) FindById(ctx context.Context, id int) (entity.Produk, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
@@ -52,13 +70,14 @@ func (service *ProdukServiceImpl) FindById(ctx context.Context, id int) (entity.
 	return produk, err
 }
 
-func (service *ProdukServiceImpl) Create(ctx context.Context, produk entity.Produk) (entity.Produk, error) {
+func (service *ProdukServiceImpl) Create(ctx context.Context, request entity.Produk) (entity.Produk, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-	//defer tx.Commit()
-	service.ProdukRepository.CreateProduk(ctx, tx, produk)
-	return produk, err
+	produk, err := service.ProdukRepository.CreateProduk(ctx, tx, request)
+	helperMain.PanicIfError(err)
+
+	return produk, nil
 }
 
 func (service *ProdukServiceImpl) Update(ctx context.Context, produk entity.Produk) (entity.Produk, error) {

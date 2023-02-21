@@ -46,6 +46,7 @@ func (repository *PembelianRespositoryImpl) InsertPembelian(ctx context.Context,
 	pembelian.Id = int(id)
 	return pembelian, nil
 }
+
 func (repository *PembelianRespositoryImpl) FindByIdPembelian(ctx context.Context, tx *sql.Tx, id string) (entity.Pembelian, error) {
 	var pembelian entity.Pembelian
 	SQL := "SELECT id, id_user, id_bahan_baku, tanggal, jumlah, biaya, use_pembelian FROM pembelian WHERE id = ? LIMIT 1;"
