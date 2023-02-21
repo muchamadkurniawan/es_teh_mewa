@@ -49,7 +49,7 @@
                                 {{ range $index, $item := .AllData }}
                                     <tr>
                                         <td class="text-center">{{ add $index 1 }}</td>
-                                        <td class="text-center">{{ $item.Tanggal }}</td>
+                                        <td class="text-center">{{ format $item.Tanggal }}</td>
                                         <td class="text-center">{{ $item.Id_bahan_baku }}</td>
                                         <td class="text-center">{{ $item.Jumlah }}</td>
                                         <td class="text-center">Rp. {{ formatNumber $item.Biaya }}</td>

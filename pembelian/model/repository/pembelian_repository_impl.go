@@ -65,38 +65,36 @@ func (repository *PembelianRespositoryImpl) FindByIdPembelian(ctx context.Contex
 		return pembelian, errors.New("id Not Found")
 	}
 }
-func (repository *PembelianRespositoryImpl) FindByAllPembelian(ctx context.Context, tx *sql.Tx) ([]entity.Pembelian, error) {
-	var pembelian []entity.Pembelian
-	date := time.Now().AddDate(0, 0, 1)
-	SQL := "SELECT id, id_user, id_bahan_baku, tanggal, jumlah, biaya, use_pembelian FROM pembelian WHERE tanggal = ?;"
-	rows, err := tx.QueryContext(ctx, SQL, date)
-	// defer rows.Close()
-	if err != nil {
-		return pembelian, err
-	}
+func (repository *PembelianRespositoryImpl) FindByAllPembelian(ctx context.Context, tx *sql.Tx) ([]web.PembelianResponseFull, error) {
+	var pembelian []web.PembelianResponseFull
+	date := time.Now().AddDate(0, 0, 1).Format("2006-01-22")
+	now := time.Now().Format("2006-01-21")
+	SQL := "SELECT pembelian.id, pembelian.id_user, bahan_baku.nama, pembelian.tanggal, pembelian.jumlah, " +
+		"pembelian.biaya, pembelian.use_pembelian FROM pembelian INNER JOIN bahan_baku ON bahan_baku.id = pembelian.id_bahan_baku WHERE pembelian.tanggal BETWEEN ? AND ?;"
+	rows, err := tx.QueryContext(ctx, SQL, date, now)
+	helperMain.PanicIfError(err)
 	for rows.Next() {
-		newPembelian := entity.Pembelian{}
-		err := rows.Scan(&newPembelian.Id, &newPembelian.IdUser, &newPembelian.IdBahan_Baku, &newPembelian.Tanggal, &newPembelian.Jumlah, &newPembelian.Biaya, &newPembelian.UsePembelian)
-		if err != nil {
-			return pembelian, err
-		}
+		newPembelian := web.PembelianResponseFull{}
+		err := rows.Scan(&newPembelian.Id, &newPembelian.Id_user, &newPembelian.Id_bahan_baku, &newPembelian.Tanggal, &newPembelian.Jumlah, &newPembelian.Biaya, &newPembelian.Use_pembelian)
+		helperMain.PanicIfError(err)
 
 		pembelian = append(pembelian, newPembelian)
 	}
 	return pembelian, nil
 }
 
-func (repository *PembelianRespositoryImpl) FindByAllPembelianByDate(ctx context.Context, tx *sql.Tx, filterAwal string, filterAkhir string) ([]entity.Pembelian, error) {
-	var pembelian []entity.Pembelian
-	SQL := "SELECT id, id_user, id_bahan_baku, tanggal, jumlah, biaya, use_pembelian FROM pembelian WHERE tanggal BETWEEN ? AND ?;"
+func (repository *PembelianRespositoryImpl) FindByAllPembelianByDate(ctx context.Context, tx *sql.Tx, filterAwal string, filterAkhir string) ([]web.PembelianResponseFull, error) {
+	var pembelian []web.PembelianResponseFull
+	SQL := "SELECT pembelian.id, pembelian.id_user, bahan_baku.nama, pembelian.tanggal, pembelian.jumlah, pembelian.biaya, " +
+		"pembelian.use_pembelian FROM pembelian INNER JOIN bahan_baku ON bahan_baku.id = pembelian.id_bahan_baku WHERE pembelian.tanggal BETWEEN ? AND ?;"
 	rows, err := tx.QueryContext(ctx, SQL, filterAwal, filterAkhir)
 	// defer rows.Close()
 	if err != nil {
 		return pembelian, err
 	}
 	for rows.Next() {
-		newPembelian := entity.Pembelian{}
-		err := rows.Scan(&newPembelian.Id, &newPembelian.IdUser, &newPembelian.IdBahan_Baku, &newPembelian.Tanggal, &newPembelian.Jumlah, &newPembelian.Biaya, &newPembelian.UsePembelian)
+		newPembelian := web.PembelianResponseFull{}
+		err := rows.Scan(&newPembelian.Id, &newPembelian.Id_user, &newPembelian.Id_bahan_baku, &newPembelian.Tanggal, &newPembelian.Jumlah, &newPembelian.Biaya, &newPembelian.Use_pembelian)
 		if err != nil {
 			return pembelian, err
 		}

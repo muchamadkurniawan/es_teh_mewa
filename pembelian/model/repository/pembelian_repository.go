@@ -12,6 +12,6 @@ type PembelianRepository interface {
 	DeletePembelian(ctx context.Context, tx *sql.Tx, id string) error
 	InsertPembelian(ctx context.Context, tx *sql.Tx, pembelian web.PembelianCreateRequest) (web.PembelianCreateRequest, error)
 	FindByIdPembelian(ctx context.Context, tx *sql.Tx, id string) (entity.Pembelian, error)
-	FindByAllPembelian(ctx context.Context, tx *sql.Tx) ([]entity.Pembelian, error)
-	FindByAllPembelianByDate(ctx context.Context, tx *sql.Tx, filterAwal string, filterAkhir string) ([]entity.Pembelian, error)
+	FindByAllPembelian(ctx context.Context, tx *sql.Tx) ([]web.PembelianResponseFull, error)
+	FindByAllPembelianByDate(ctx context.Context, tx *sql.Tx, filterAwal string, filterAkhir string) ([]web.PembelianResponseFull, error)
 }

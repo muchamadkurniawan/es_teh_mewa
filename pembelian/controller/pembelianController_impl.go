@@ -41,6 +41,7 @@ func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, req
 	now := time.Now().Format("2006 Jan 02")
 	awal := request.URL.Query().Get("awal")
 	akhir := request.URL.Query().Get("akhir")
+	//fmt.Fprintln(writer, now, awal, akhir)
 	serv, err := controller.PembelianService.FindByAll(context.Background(), awal, akhir)
 	helperMain.PanicIfError(err)
 	myTemplate.ExecuteTemplate(writer, "indexPembelian", map[string]interface{}{

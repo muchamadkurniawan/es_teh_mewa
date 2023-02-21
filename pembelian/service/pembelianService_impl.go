@@ -31,18 +31,18 @@ func (service *PembelianServiceImpl) FindById(ctx context.Context, id string) (w
 	return helper.ToPembelianUpdateResponse(pembelian), err
 }
 
-func (service *PembelianServiceImpl) FindByAll(ctx context.Context, filterAwal string, filterAkhir string) ([]web.PembelianResponse, error) {
+func (service *PembelianServiceImpl) FindByAll(ctx context.Context, filterAwal string, filterAkhir string) ([]web.PembelianResponseFull, error) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-	if filterAwal == "" || filterAkhir == "" {
+	if filterAwal == "" && filterAkhir == "" {
 		pembelian, err := service.PembelianRepository.FindByAllPembelian(ctx, tx)
 		helperMain.PanicIfError(err)
-		return helper.ToPembelianAllResponse(pembelian), nil
+		return pembelian, nil
 	} else {
 		pembelian, err := service.PembelianRepository.FindByAllPembelianByDate(ctx, tx, filterAwal, filterAkhir)
 		helperMain.PanicIfError(err)
-		return helper.ToPembelianAllResponse(pembelian), nil
+		return pembelian, nil
 	}
 
 }
