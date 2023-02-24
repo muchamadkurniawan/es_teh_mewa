@@ -10,7 +10,6 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type PembelianControllerImpl struct {
@@ -38,15 +37,12 @@ func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, req
 		"pembelian/views/index.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
-	now := time.Now().Format("2006 Jan 02")
 	awal := request.URL.Query().Get("awal")
 	akhir := request.URL.Query().Get("akhir")
-	//fmt.Fprintln(writer, now, awal, akhir)
 	serv, err := controller.PembelianService.FindByAll(context.Background(), awal, akhir)
 	helperMain.PanicIfError(err)
 	myTemplate.ExecuteTemplate(writer, "indexPembelian", map[string]interface{}{
 		"Title":   "Cafe Mewa",
-		"Tanggal": now,
 		"Awal":    awal,
 		"Akhir":   akhir,
 		"AllData": serv,

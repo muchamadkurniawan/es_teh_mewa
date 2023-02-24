@@ -93,16 +93,12 @@ func (controller *ProdukControllerImpl) Store(w http.ResponseWriter, r *http.Req
 	check, err := controller.service.CheckByBahan(context.Background(), idBahan)
 	//fmt.Fprintln(w, check, request)
 	if check.Id == 0 {
-		file, err := controller.service.Create(context.Background(), request)
+		controller.service.Create(context.Background(), request)
 		helperMain.PanicIfError(err)
-		id := strconv.Itoa(file.Id)
-		http.Redirect(w, r, "/produk/show/"+id+"/", http.StatusFound)
+		http.Redirect(w, r, "/produk/", http.StatusFound)
 	} else {
-		request.Id = check.Id
-		id := strconv.Itoa(check.Id)
-		_, err = controller.service.Update(context.Background(), request)
-		helperMain.PanicIfError(err)
-		http.Redirect(w, r, "/produk/show/"+id+"/", http.StatusFound)
+		controller.service.Update(context.Background(), request)
+		http.Redirect(w, r, "/produk/", http.StatusFound)
 	}
 	return
 }
@@ -111,6 +107,7 @@ func (controller *ProdukControllerImpl) Update(w http.ResponseWriter, r *http.Re
 	id, err := strconv.Atoi(params.ByName("id"))
 	idBahan, err := strconv.Atoi(r.PostFormValue("barang"))
 	harga, err := strconv.Atoi(r.PostFormValue("harga"))
+	helperMain.PanicIfError(err)
 	var stock bool
 	if r.PostFormValue("stock") != "" {
 		stock = true
@@ -124,9 +121,8 @@ func (controller *ProdukControllerImpl) Update(w http.ResponseWriter, r *http.Re
 		Harga:    harga,
 		Stock:    stock,
 	}
-	_, err = controller.service.Update(context.Background(), request)
-	helperMain.PanicIfError(err)
-	http.Redirect(w, r, "/produk/show/"+params.ByName("id")+"/", http.StatusFound)
+	controller.service.Update(context.Background(), request)
+	http.Redirect(w, r, "/produk/", http.StatusFound)
 }
 
 func (controller *ProdukControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

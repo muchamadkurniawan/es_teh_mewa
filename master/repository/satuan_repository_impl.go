@@ -43,7 +43,7 @@ func (SatuanRepoImpl) DeleteSatuan(ctx context.Context, tx *sql.Tx, id int) erro
 }
 
 func (SatuanRepoImpl) FindAllSatuan(ctx context.Context, tx *sql.Tx) ([]entity.Satuan, error) {
-	SQL := "SELECT id, nama FROM satuan"
+	SQL := "SELECT id, nama FROM satuan ORDER BY id DESC;"
 	rows, err := tx.QueryContext(ctx, SQL)
 	if err != nil {
 		panic(err)
@@ -65,7 +65,7 @@ func (SatuanRepoImpl) FindAllSatuan(ctx context.Context, tx *sql.Tx) ([]entity.S
 
 func (SatuanRepoImpl) FindByIdSatuan(ctx context.Context, tx *sql.Tx, id int) (entity.Satuan, error) {
 	satuan := entity.Satuan{}
-	SQL := "SELECT id, nama FROM satuan where id=?"
+	SQL := "SELECT id, nama FROM satuan where id=?;"
 	rows, err := tx.QueryContext(ctx, SQL, id)
 	if err != nil {
 		panic(err)

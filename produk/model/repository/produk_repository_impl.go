@@ -73,27 +73,22 @@ func (ProdukRepositoryImpl) FindProdukById(ctx context.Context, tx *sql.Tx, id i
 	return produk
 }
 
-func (ProdukRepositoryImpl) CreateProduk(ctx context.Context, tx *sql.Tx, produk entity.Produk) (entity.Produk, error) {
+func (ProdukRepositoryImpl) CreateProduk(ctx context.Context, tx *sql.Tx, produk entity.Produk) {
 	SQL := "INSERT INTO produk_jual(id_user, id_bahan_baku, harga, stock) VALUES(?,?,?,?);"
 	save, err := tx.ExecContext(ctx, SQL, produk.Id_User, produk.Id_Bahan, produk.Harga, produk.Stock)
 	helperMain.PanicIfError(err)
 	id, err := save.LastInsertId()
 	produk.Id = int(id)
-	return produk, nil
 }
 
-func (ProdukRepositoryImpl) UpdateProduk(ctx context.Context, tx *sql.Tx, produk entity.Produk) entity.Produk {
-	SQL := "UPDATE produk_jual SET id_user = ?, id_bahan_baku = ?, harga = ?, stock = ? WHERE id=?"
+func (ProdukRepositoryImpl) UpdateProduk(ctx context.Context, tx *sql.Tx, produk entity.Produk) {
+	SQL := "UPDATE produk_jual SET id_user = ?, id_bahan_baku = ?, harga = ?, stock = ? WHERE id=?;"
 	_, err := tx.ExecContext(ctx, SQL, produk.Id_User, produk.Id_Bahan, produk.Harga, produk.Stock, produk.Id)
-	if err != nil {
-		panic(err)
-		return entity.Produk{}
-	}
-	return produk
+	helperMain.PanicIfError(err)
 }
 
 func (ProdukRepositoryImpl) DeleteProduk(ctx context.Context, tx *sql.Tx, id int) {
-	SQL := "DELETE FROM produk_jual WHERE id = ?"
+	SQL := "DELETE FROM produk_jual WHERE id = ?;"
 	_, err := tx.ExecContext(ctx, SQL, id)
 	if err != nil {
 		panic(err)

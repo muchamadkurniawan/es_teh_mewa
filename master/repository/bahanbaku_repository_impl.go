@@ -39,7 +39,7 @@ func (BahanRepository) Delete(ctx context.Context, tx *sql.Tx, id int) {
 }
 
 func (BahanRepository) FindAll(ctx context.Context, tx *sql.Tx) []entity.BahanBakuFull {
-	SQL := "SELECT bahan_baku.id, satuan.nama, bahan_baku.nama FROM bahan_baku INNER JOIN satuan ON bahan_baku.id_satuan = satuan.id;"
+	SQL := "SELECT bahan_baku.id, satuan.nama, bahan_baku.nama FROM bahan_baku INNER JOIN satuan ON bahan_baku.id_satuan = satuan.id ORDER BY bahan_baku.id DESC;"
 	rows, err := tx.QueryContext(ctx, SQL)
 	if err != nil {
 		panic(err)

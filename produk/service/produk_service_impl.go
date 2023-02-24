@@ -70,22 +70,18 @@ func (service *ProdukServiceImpl) FindById(ctx context.Context, id int) (entity.
 	return produk, err
 }
 
-func (service *ProdukServiceImpl) Create(ctx context.Context, request entity.Produk) (entity.Produk, error) {
+func (service *ProdukServiceImpl) Create(ctx context.Context, request entity.Produk) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-	produk, err := service.ProdukRepository.CreateProduk(ctx, tx, request)
-	helperMain.PanicIfError(err)
-
-	return produk, nil
+	service.ProdukRepository.CreateProduk(ctx, tx, request)
 }
 
-func (service *ProdukServiceImpl) Update(ctx context.Context, produk entity.Produk) (entity.Produk, error) {
+func (service *ProdukServiceImpl) Update(ctx context.Context, produk entity.Produk) {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-	updateProduk := service.ProdukRepository.UpdateProduk(ctx, tx, produk)
-	return updateProduk, err
+	service.ProdukRepository.UpdateProduk(ctx, tx, produk)
 }
 
 func (service *ProdukServiceImpl) Delete(ctx context.Context, id int) error {

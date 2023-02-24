@@ -42,7 +42,7 @@ func (usersRepositoryImpl) FindByIdUsers(ctx context.Context, tx *sql.Tx, id int
 }
 
 func (usersRepositoryImpl) FindByAllUsers(ctx context.Context, tx *sql.Tx) ([]entity.Users, error) {
-	SQL := "SELECT id, username, password, type FROM users"
+	SQL := "SELECT id, username, password, type FROM users ORDER BY type DESC;"
 	rows, err := tx.QueryContext(ctx, SQL)
 	if err != nil {
 		panic(err)

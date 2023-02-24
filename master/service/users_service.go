@@ -48,10 +48,7 @@ func (service *UsersServiceImpl) Update(ctx context.Context, response web.UsersR
 		Password:  response.Password,
 		Type_user: response.Tipe,
 	}
-	_, err = service.UsersRepo.UpdateUsers(ctx, tx, user)
-	if err != nil {
-		panic(err)
-	}
+	service.UsersRepo.UpdateUsers(ctx, tx, user)
 }
 
 func (service *UsersServiceImpl) Delete(ctx context.Context, id int) {
@@ -60,11 +57,7 @@ func (service *UsersServiceImpl) Delete(ctx context.Context, id int) {
 		panic(err)
 	}
 	defer helperMain.ErrorTx(tx)
-
-	err = service.UsersRepo.DeleteUsers(context.Background(), tx, int32(id))
-	if err != nil {
-		panic(err)
-	}
+	service.UsersRepo.DeleteUsers(context.Background(), tx, int32(id))
 }
 
 func (service *UsersServiceImpl) FindAll(ctx context.Context) []web.UsersResponse {

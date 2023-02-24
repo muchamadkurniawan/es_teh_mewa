@@ -10,8 +10,8 @@ import (
 type ProdukService interface {
 	FindByAll(ctx context.Context) ([]web.ResponseProdukFull, error)
 	FindById(ctx context.Context, id int) (entity.Produk, error)
-	Create(ctx context.Context, produk entity.Produk) (entity.Produk, error)
-	Update(ctx context.Context, produk entity.Produk) (entity.Produk, error)
+	Create(ctx context.Context, produk entity.Produk)
+	Update(ctx context.Context, produk entity.Produk)
 	Delete(ctx context.Context, id int) error
 	FindAllByBahan(ctx context.Context, barang int) ([]web.ResponseProdukFull, error)
 	CheckByBahan(ctx context.Context, barang int) (entity.Produk, error)

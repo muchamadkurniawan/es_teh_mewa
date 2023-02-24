@@ -7,7 +7,6 @@ import (
 	"eh_teh_mewa/pembelian/model/entity"
 	"eh_teh_mewa/pembelian/model/web"
 	"errors"
-	"time"
 )
 
 type PembelianRespositoryImpl struct {
@@ -67,11 +66,9 @@ func (repository *PembelianRespositoryImpl) FindByIdPembelian(ctx context.Contex
 }
 func (repository *PembelianRespositoryImpl) FindByAllPembelian(ctx context.Context, tx *sql.Tx) ([]web.PembelianResponseFull, error) {
 	var pembelian []web.PembelianResponseFull
-	date := time.Now().AddDate(0, 0, 1).Format("2006-01-22")
-	now := time.Now().Format("2006-01-21")
 	SQL := "SELECT pembelian.id, pembelian.id_user, bahan_baku.nama, pembelian.tanggal, pembelian.jumlah, " +
-		"pembelian.biaya, pembelian.use_pembelian FROM pembelian INNER JOIN bahan_baku ON bahan_baku.id = pembelian.id_bahan_baku WHERE pembelian.tanggal BETWEEN ? AND ?;"
-	rows, err := tx.QueryContext(ctx, SQL, date, now)
+		"pembelian.biaya, pembelian.use_pembelian FROM pembelian INNER JOIN bahan_baku ON bahan_baku.id = pembelian.id_bahan_baku ORDER BY pembelian.tanggal DESC LIMIT 10;"
+	rows, err := tx.QueryContext(ctx, SQL)
 	helperMain.PanicIfError(err)
 	for rows.Next() {
 		newPembelian := web.PembelianResponseFull{}
