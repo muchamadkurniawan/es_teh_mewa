@@ -22,14 +22,12 @@ func (BahanRepository) Insert(ctx context.Context, tx *sql.Tx, baku entity.Bahan
 	}
 }
 
-func (BahanRepository) Update(ctx context.Context, tx *sql.Tx, baku entity.BahanBaku) entity.BahanBaku {
+func (BahanRepository) Update(ctx context.Context, tx *sql.Tx, baku entity.BahanBaku) {
 	SQL := "UPDATE bahan_baku SET id_satuan = ?, nama = ? WHERE id = ?"
 	_, err := tx.ExecContext(ctx, SQL, baku.IdSatuan, baku.Nama, baku.Id)
 	if err != nil {
 		panic(err)
-		return entity.BahanBaku{}
 	}
-	return baku
 }
 
 func (BahanRepository) Delete(ctx context.Context, tx *sql.Tx, id int) {

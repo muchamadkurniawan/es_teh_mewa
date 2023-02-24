@@ -81,7 +81,7 @@ func (controller *BahanBakuControllerImpl) Update(w http.ResponseWriter, r *http
 		Nama:     nama,
 	}
 	controller.service.Update(context.Background(), file)
-	http.Redirect(w, r, "/bahan-baku/show/"+params.ByName("id")+"/", http.StatusFound)
+	http.Redirect(w, r, "/bahan-baku/", http.StatusFound)
 }
 
 func (controller *BahanBakuControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

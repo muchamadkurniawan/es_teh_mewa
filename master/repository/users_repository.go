@@ -7,9 +7,9 @@ import (
 )
 
 type UsersRepository interface {
-	InsertUsers(ctx context.Context, tx *sql.Tx, user entity.Users) (entity.Users, error)
+	InsertUsers(ctx context.Context, tx *sql.Tx, user entity.Users)
 	FindByIdUsers(ctx context.Context, tx *sql.Tx, id int32) (entity.Users, error)
 	FindByAllUsers(ctx context.Context, tx *sql.Tx) ([]entity.Users, error)
-	UpdateUsers(ctx context.Context, tx *sql.Tx, user entity.Users) (entity.Users, error)
-	DeleteUsers(ctx context.Context, tx *sql.Tx, id int32) error
+	UpdateUsers(ctx context.Context, tx *sql.Tx, user entity.Users)
+	DeleteUsers(ctx context.Context, tx *sql.Tx, id int32)
 }

@@ -63,7 +63,7 @@ func (Service *BahanbakuServiceimpl) Delete(ctx context.Context, id int) {
 	if err != nil {
 		panic(err)
 	}
-	defer tx.Commit()
+	defer helperMain.ErrorTx(tx)
 
 	Service.BahanRepo.Delete(ctx, tx, id)
 }

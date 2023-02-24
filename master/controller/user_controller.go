@@ -57,7 +57,7 @@ func (controller *UserControllerImpl) Update(w http.ResponseWriter, r *http.Requ
 		Tipe:     tipe,
 	}
 	controller.UserService.Update(context.Background(), file)
-	http.Redirect(w, r, "/user/show/"+param.ByName("id")+"/", http.StatusFound)
+	http.Redirect(w, r, "/user/", http.StatusFound)
 }
 
 func (controller *UserControllerImpl) Delete(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
