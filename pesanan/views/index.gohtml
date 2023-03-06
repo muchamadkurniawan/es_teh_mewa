@@ -1,0 +1,88 @@
+{{define "indexPesanan"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head" .}}
+    {{template "TopBarKasir"}}
+    <div>
+
+        <div class="page-title">
+            <div>
+                <h3>Insert Order {{.now}}</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body">
+            <div class="card ml-auto mr-auto">
+            {{ if .produk }}
+                <form action="/pesanan/create/" method="POST">
+                <div class="card-body">
+                    <table class="table table-striped w-auto mr-auto ml-auto">
+                        <thead>
+                        <tr>
+                            <th class="text-center w-25">Produk</th>
+                            <th class="text-center w-25">Harga</th>
+                            <th class="text-center">Qty</th>
+                        </tr>
+                        </thead>
+
+                            <tbody>
+                                {{ range $item := .produk }}
+                                    <tr>
+                                        <td class="text-center">{{$item.Bahan_baku}}</td>
+                                        <td class="text-center">Rp. {{$item.Harga}}</td>
+                                        <div class="align-self-center">
+                                            <td class="form-check-inline">
+                                                <span class="input-group-btn">
+                                                  <button type="button" class="btn btn-default btn-number btn-sm" disabled="disabled" data-type="minus" data-field="quant[1]">
+                                                      <span class="glyphicon glyphicon-minus"></span>
+                                                  </button>
+                                                </span>
+                                                <div>
+                                                    <input type="text" name="item" class="form-control input-number" value="0" min="0" max="10">
+                                                </div>
+                                                <span class="input-group-btn">
+                                                  <button type="button" class="btn btn-default btn-number btn-sm" data-type="plus" data-field="quant[1]">
+                                                      <span class="glyphicon glyphicon-plus"></span>
+                                                  </button>
+                                                </span>
+                                            </td>
+                                        </div>
+
+                                    </tr>
+                                {{ end }}
+                            </tbody>
+                    </table>
+                </div>
+                <div class="card-footer ml-auto mr-auto">
+                    <button type="submit" class="btn-primary btn justify-content-center d-flex">PESAN</button>
+                </div>
+                </form>
+            {{else}}
+                <div class="card-body">
+                    <table class="table table-striped w-auto mr-auto ml-auto">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">Produk</th>
+                                <th class="text-center w-25">Harga</th>
+                                <th class="text-center">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="7" class="text-center">Data not available !</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {{ end }}
+            </div>
+
+        </div>
+
+    </div>
+    {{template "footer"}}
+    <script src="/static/js/kasirPesanan/index.js"></script>
+
+    </html>
+{{end}}

@@ -9,6 +9,10 @@ import (
 	controllerPembelian "eh_teh_mewa/pembelian/controller"
 	repositoryPembelian "eh_teh_mewa/pembelian/model/repository"
 	servicePembelian "eh_teh_mewa/pembelian/service"
+	controllerPesanan "eh_teh_mewa/pesanan/controller"
+	repositoryPesanan "eh_teh_mewa/pesanan/model/repository"
+	servicePesanan "eh_teh_mewa/pesanan/service"
+
 	controllerProduk "eh_teh_mewa/produk/controller"
 	repositoryProduk "eh_teh_mewa/produk/model/repository"
 	serviceProduk "eh_teh_mewa/produk/service"
@@ -33,14 +37,22 @@ func main() {
 	satuanService := service.NewSatuanService(satuanRepository, db)
 	satuanController := controller.NewSatuanController(satuanService)
 
+	//
 	bahanBakuRepository := repository.NewBahanRepository()
 	bahanBakuService := service.NewBahanbakuService(bahanBakuRepository, db)
 	bahanBakuController := controller.NewBahanBakuController(bahanBakuService)
 
+	//
 	produkRepository := repositoryProduk.NewProdukRepo()
 	produkService := serviceProduk.NewProdukService(produkRepository, db)
 	produkController := controllerProduk.NewProdukController(produkService)
 
+	//
+	pesananRepository := repositoryPesanan.NewPesananRepository()
+	pesananService := servicePesanan.NewPesananServie(pesananRepository, db)
+	pesananController := controllerPesanan.NewPesananController(pesananService)
+
+	//
 	router := httprouter.New()
 
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
@@ -78,6 +90,7 @@ func main() {
 	router.POST("/produk/update/:id/", produkController.Update)
 	router.POST("/produk/delete/:id/", produkController.Delete)
 
+	router.GET("/pesanan/", pesananController.Index)
 	server := http.Server{
 		Addr:    "localhost:8080",
 		Handler: router,

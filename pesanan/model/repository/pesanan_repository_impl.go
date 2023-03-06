@@ -6,9 +6,40 @@ import (
 	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/pesanan/model/entity"
 	"eh_teh_mewa/pesanan/web"
+	"time"
 )
 
 type PesananRepositoryImpl struct{}
+
+func NewPesananRepository() PesananRepository {
+	return &PesananRepositoryImpl{}
+}
+
+func (PesananRepositoryImpl) GetProdukJualsAll(ctx context.Context, tx *sql.Tx) []web.ProdukJual {
+	SQL := "SELECT produk_jual.id, bahan_baku.nama, produk_jual.harga FROM produk_jual INNER JOIN bahan_baku ON " +
+		"bahan_baku.id = produk_jual.id_bahan_baku;"
+	row, err := tx.QueryContext(ctx, SQL)
+	helperMain.PanicIfError(err)
+	var produks []web.ProdukJual
+	for row.Next() {
+		produk := web.ProdukJual{}
+		err = row.Scan(&produk.Id, &produk.Bahan_baku, &produk.Harga)
+		produks = append(produks, produk)
+	}
+	return produks
+}
+
+func (PesananRepositoryImpl) GetProdukJual(ctx context.Context, tx *sql.Tx, id int) web.ProdukJual {
+	SQL := "SELECT produk_jual.id, bahan_baku.nama, produk_jual.harga FROM produk_jual INNER JOIN bahan_baku ON " +
+		"bahan_baku.id = produk_jual.id_bahan_baku WHERE produk_jual.id = ?;"
+	row, err := tx.QueryContext(ctx, SQL, id)
+	helperMain.PanicIfError(err)
+	produk := web.ProdukJual{}
+	if row.Next() {
+		row.Scan(&produk.Id, &produk.Bahan_baku, &produk.Harga)
+	}
+	return produk
+}
 
 func (PesananRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) entity.PesananEntity {
 	SQL := "SELECT id, id_user, id_rekap, tanggal, pembayaran FROM pesanan WHERE id = ?;"
@@ -25,8 +56,9 @@ func (PesananRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) e
 }
 
 func (PesananRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.PesananEntity {
-	SQL := "SELECT id, id_user, id_rekap, tanggal, pembayaran FROM pesanan;"
-	row, err := tx.QueryContext(ctx, SQL)
+	now := time.Now().Format("2006-01-02")
+	SQL := "SELECT id, id_user, id_rekap, tanggal, pembayaran FROM pesanan WHERE tanggal = ?;"
+	row, err := tx.QueryContext(ctx, SQL, now)
 	helperMain.PanicIfError(err)
 	var pesanan []entity.PesananEntity
 	for row.Next() {
@@ -39,21 +71,29 @@ func (PesananRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.P
 }
 
 func (PesananRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) error {
-	//TODO implement me
-	panic("implement me")
+	SQL := "INSERT INTO pesanan(id_user, id_rekap, tanggal, pembayaran) VALUES(?, ?, ?, ?)"
+	_, err := tx.ExecContext(ctx, SQL, request.Id_user, request.Id_rekap, request.Tanggal, request.Pembayaran)
+	helperMain.PanicIfError(err)
+	return nil
 }
 
-func (PesananRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, request web.PesananResponseDateString) error {
-	//TODO implement me
-	panic("implement me")
+func (PesananRepositoryImpl) UpdatePembayaran(ctx context.Context, tx *sql.Tx, id int, pembayaran bool) error {
+	SQL := "UPDATE pesanan SET pembayaran = ? WHERE id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, pembayaran, id)
+	helperMain.PanicIfError(err)
+	return nil
 }
 
-func (PesananRepositoryImpl) UpdateRekap(ctx context.Context, tx *sql.Tx, id int) error {
-	//TODO implement me
-	panic("implement me")
+func (PesananRepositoryImpl) UpdateRekap(ctx context.Context, tx *sql.Tx, id int, id_rekap int) error {
+	SQL := "UPDATE pesanan SET id_rekap = ? WHERE id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, id_rekap, id)
+	helperMain.PanicIfError(err)
+	return nil
 }
 
 func (PesananRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, id int) error {
-	//TODO implement me
-	panic("implement me")
+	SQL := "DELETE FROM pesanan WHERE id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, id)
+	helperMain.PanicIfError(err)
+	return nil
 }

@@ -3,15 +3,17 @@ package web
 import "time"
 
 type PesananResponseDateString struct {
-	id       int
-	id_user  int
-	id_rekap int
-	tanggal  string
+	Id         int
+	Id_user    int
+	Id_rekap   int
+	Tanggal    string
+	Pembayaran bool
 }
 
 type PesananResponse struct {
-	id       int
-	id_user  int
-	id_rekap int
-	tanggal  time.Time
+	Id         int
+	Id_user    int
+	Id_rekap   int
+	Tanggal    time.Time
+	Pembayaran bool
 }

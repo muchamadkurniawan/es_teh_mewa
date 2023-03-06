@@ -10,8 +10,10 @@ import (
 type PesananRepository interface {
 	FindById(ctx context.Context, tx *sql.Tx, id int) entity.PesananEntity
 	FindAll(ctx context.Context, tx *sql.Tx) []entity.PesananEntity
+	GetProdukJualsAll(ctx context.Context, tx *sql.Tx) []web.ProdukJual
+	GetProdukJual(ctx context.Context, tx *sql.Tx, id int) web.ProdukJual
 	Create(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) error
-	Update(ctx context.Context, tx *sql.Tx, request web.PesananResponseDateString) error
-	UpdateRekap(ctx context.Context, tx *sql.Tx, id int) error
+	UpdatePembayaran(ctx context.Context, tx *sql.Tx, id int, pembayaran bool) error
+	UpdateRekap(ctx context.Context, tx *sql.Tx, id int, id_rekap int) error
 	Delete(ctx context.Context, tx *sql.Tx, id int) error
 }
