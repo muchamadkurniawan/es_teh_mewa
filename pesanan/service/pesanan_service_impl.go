@@ -21,6 +21,14 @@ func NewPesananServie(repo repository.PesananRepository, DB *sql.DB) PesananServ
 	}
 }
 
+func (service *PesananServiceImpl) GetIdProduk(ctx context.Context) []string {
+	tx, err := service.db.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	find := service.PesananRepository.GetIdProduk(ctx, tx)
+	return find
+}
+
 func (service *PesananServiceImpl) GetProdukJualsAll(ctx context.Context) []web.ProdukJual {
 	tx, err := service.db.Begin()
 	helperMain.PanicIfError(err)
@@ -58,12 +66,12 @@ func (service *PesananServiceImpl) FindAll(ctx context.Context) ([]web.PesananRe
 	return pesanans, nil
 }
 
-func (service *PesananServiceImpl) Create(ctx context.Context, request web.PesananRequestDateString) error {
+func (service *PesananServiceImpl) CreatePesanan(ctx context.Context, request web.PesananRequestDateString) int {
 	tx, err := service.db.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-	service.PesananRepository.Create(ctx, tx, request)
-	return nil
+	id := service.PesananRepository.CreatePesanan(ctx, tx, request)
+	return id
 }
 
 func (service *PesananServiceImpl) UpdatePembayaran(ctx context.Context, id int, pembayaran bool) error {

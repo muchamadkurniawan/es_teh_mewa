@@ -15,6 +15,20 @@ func NewPesananRepository() PesananRepository {
 	return &PesananRepositoryImpl{}
 }
 
+func (PesananRepositoryImpl) GetIdProduk(ctx context.Context, tx *sql.Tx) []string {
+	SQL := "Select id from produk_jual;"
+	row, err := tx.QueryContext(ctx, SQL)
+	helperMain.PanicIfError(err)
+	var ids []string
+	for row.Next() {
+		var id string
+		err := row.Scan(&id)
+		helperMain.PanicIfError(err)
+		ids = append(ids, id)
+	}
+	return ids
+}
+
 func (PesananRepositoryImpl) GetProdukJualsAll(ctx context.Context, tx *sql.Tx) []web.ProdukJual {
 	SQL := "SELECT produk_jual.id, bahan_baku.nama, produk_jual.harga FROM produk_jual INNER JOIN bahan_baku ON " +
 		"bahan_baku.id = produk_jual.id_bahan_baku;"
@@ -70,11 +84,19 @@ func (PesananRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.P
 	return pesanan
 }
 
-func (PesananRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) error {
+func (PesananRepositoryImpl) CreatePesanan(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) int {
 	SQL := "INSERT INTO pesanan(id_user, id_rekap, tanggal, pembayaran) VALUES(?, ?, ?, ?)"
-	_, err := tx.ExecContext(ctx, SQL, request.Id_user, request.Id_rekap, request.Tanggal, request.Pembayaran)
+	i, err := tx.ExecContext(ctx, SQL, request.Id_user, request.Id_rekap, request.Tanggal, request.Pembayaran)
 	helperMain.PanicIfError(err)
-	return nil
+	id, err := i.LastInsertId()
+	return int(id)
+}
+
+func (PesananRepositoryImpl) CreateDetail(ctx context.Context, tx *sql.Tx, request web.DetailRequest) error {
+	SQL := "INSERT INTO detail_pesanan(id_produk_jual, id_pesanan, jumlah, harga_satuan, total) VALUES(?, ?, ?, ?, ?);"
+	_, err := tx.ExecContext(ctx, SQL, request.Id_produk, request.Id_pesanan, request.Jumlah, request.Harga, request.Total)
+	helperMain.PanicIfError(err)
+	return err
 }
 
 func (PesananRepositoryImpl) UpdatePembayaran(ctx context.Context, tx *sql.Tx, id int, pembayaran bool) error {

@@ -91,6 +91,7 @@ func main() {
 	router.POST("/produk/delete/:id/", produkController.Delete)
 
 	router.GET("/pesanan/", pesananController.Index)
+	router.POST("/pesanan/create/", pesananController.Store)
 	server := http.Server{
 		Addr:    "localhost:8080",
 		Handler: router,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/pesanan/service"
+	"eh_teh_mewa/pesanan/web"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"
@@ -61,7 +62,26 @@ func (controller *PesananControllerImpl) Create(w http.ResponseWriter, r *http.R
 }
 
 func (controller *PesananControllerImpl) Store(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var bayar bool
+	if r.PostFormValue("pembayaran") == "on" {
+		bayar = true
+	} else {
+		bayar = false
+	}
+	data := web.PesananRequestDateString{
+		Id_user:    1,
+		Tanggal:    time.Now().Format("2006-01-02"),
+		Pembayaran: bayar,
+	}
+	idPesanan := controller.service.CreatePesanan(context.Background(), data)
+	ids := controller.service.GetIdProduk(context.Background())
+	check := false
+	for _, id := range ids {
+		if r.PostFormValue("qty"+id) != "0" {
+			check = true
 
+		}
+	}
 }
 
 func (controller *PesananControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

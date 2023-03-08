@@ -12,7 +12,9 @@ type PesananRepository interface {
 	FindAll(ctx context.Context, tx *sql.Tx) []entity.PesananEntity
 	GetProdukJualsAll(ctx context.Context, tx *sql.Tx) []web.ProdukJual
 	GetProdukJual(ctx context.Context, tx *sql.Tx, id int) web.ProdukJual
-	Create(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) error
+	GetIdProduk(ctx context.Context, tx *sql.Tx) []string
+	CreatePesanan(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) int
+	CreateDetail(ctx context.Context, tx *sql.Tx, request web.DetailRequest) error
 	UpdatePembayaran(ctx context.Context, tx *sql.Tx, id int, pembayaran bool) error
 	UpdateRekap(ctx context.Context, tx *sql.Tx, id int, id_rekap int) error
 	Delete(ctx context.Context, tx *sql.Tx, id int) error
