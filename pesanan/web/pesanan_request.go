@@ -15,3 +15,32 @@ type PesananRequest struct {
 	Tanggal    time.Time
 	Pembayaran bool
 }
+
+type PesananNamaBarang struct {
+	Id_detail  int
+	Id_pesanan int
+	Nama       string
+}
+
+type PesananRequestUpdate struct {
+	Id         int
+	Date       time.Time
+	Pembayaran bool
+}
+
+type PesananRequestSum struct {
+	Id         int
+	Time       string
+	Pembayaran bool
+	Total      int
+}
+
+type PesananDetail struct {
+	Pesanan PesananRequestSum
+	Detail  []PesananNamaBarang
+}
+
+type PesananDetailUpdate struct {
+	Pesanan PesananRequestUpdate
+	Detail  []DetailRespon
+}

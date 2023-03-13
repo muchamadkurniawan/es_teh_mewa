@@ -7,90 +7,63 @@
 
         <div class="page-title">
             <div>
-                <h3>Insert Order {{.now}}</h3>
+                <h4>List Order</h4>
+                <p>{{.now}}</p>
             </div>
         </div>
         <div class="clearfix"></div>
 
-        <div class="page-body">
-            <div class="card ml-auto mr-auto">
-            {{ if .produk }}
-                <form action="/pesanan/create/" method="POST" enctype="multipart/form-data">
-                <div class="card-body">
-                    <table class="table table-striped w-auto mr-auto ml-auto">
-                        <thead>
-                        <tr>
-                            <th class="text-center w-25">Produk</th>
-                            <th class="text-center w-25">Harga</th>
-                            <th class="text-center">Qty</th>
-                        </tr>
-                        </thead>
+        <div class="page-body mr-auto ml-auto">
+            <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped mr-auto ml-auto">
+                                <thead>
+                                <tr>
+                                    <th class="text-left-auto">Time</th>
+                                    <th class="text-center w-auto">Pay</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Show</th>
+                                </tr>
+                                </thead>
 
-                            <tbody>
-                                {{ range $index, $item := .produk }}
+                                <tbody>
+                                {{ range $index, $item := .data }}
                                     <tr>
-                                        <td class="text-center">{{$item.Bahan_baku}}</td>
-                                        <td class="text-center">Rp. {{$item.Harga}}</td>
-                                        <div class="align-self-center">
-                                            <td class="form-check-inline">
-                                                <span class="input-group-btn">
-                                                  <button type="button" class="btn btn-default btn-number btn-sm" disabled="disabled" data-type="minus" data-field="qty{{$item.Id}}">
-                                                      <span class="glyphicon glyphicon-minus"></span>
-                                                  </button>
-                                                </span>
-                                                <div>
-                                                    <input type="text" name="barang{{$item.Id}}" value="{{$item.Id}}" hidden="hidden">
-                                                    <input type="text" name="qty{{$item.Id}}" class="form-control input-number" value="0" min="0" max="10">
-                                                </div>
-                                                <span class="input-group-btn">
-                                                  <button type="button" class="btn btn-default btn-number btn-sm" data-type="plus" data-field="qty{{$item.Id}}">
-                                                      <span class="glyphicon glyphicon-plus"></span>
-                                                  </button>
-                                                </span>
-                                            </td>
-                                        </div>
-
+                                        <td class="text-center">
+                                            <div class="text-left">
+                                                {{$item.Pesanan.Time}}
+                                                <p>
+                                                    {{ range $detail := $item.Detail }}
+                                                        {{$detail.Nama}},
+                                                    {{ end }}
+                                                    ....
+                                                </p>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ if $item.Pesanan.Pembayaran }}
+                                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                                                    {{else}}
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            {{ end }}
+                                        </td>
+                                        <td class="text-center">Rp. {{$item.Pesanan.Total}}</td>
+                                        <td class="text-center"><a href="/pesanan/detail/{{$item.Pesanan.Id}}/"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                {{else}}
+                                    <tr>
+                                        <td colspan="7" class="text-center">Data not available !</td>
                                     </tr>
                                 {{ end }}
-                            </tbody>
-
-                    </table>
-                    <div class="container ml-lg-4">
-                        <input class="form-check-input" name="pembayaran" type="checkbox" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Pembayaran
-                        </label>
+                                </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="card-footer ml-auto mr-auto">
-                    <button type="submit" class="btn-primary btn justify-content-center d-flex">PESAN</button>
-                </div>
-                </form>
-            {{else}}
-                <div class="card-body">
-                    <table class="table table-striped w-auto mr-auto ml-auto">
-                        <thead>
-                            <tr>
-                                <th class="text-center w-25">Produk</th>
-                                <th class="text-center w-25">Harga</th>
-                                <th class="text-center">Qty</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td colspan="7" class="text-center">Data not available !</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            {{ end }}
             </div>
 
         </div>
 
     </div>
     {{template "footer"}}
-    <script src="/static/js/kasirPesanan/index.js"></script>
 
     </html>
 {{end}}

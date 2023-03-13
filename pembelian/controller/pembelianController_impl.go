@@ -55,11 +55,10 @@ func (controller *PembelianControllerImpl) Create(writer http.ResponseWriter, re
 		"pembelian/views/create.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
+	bahan := controller.PembelianService.GetAllBahanBaku(context.Background())
 	myTemplate.ExecuteTemplate(writer, "createPembelian", map[string]interface{}{
-		"Title": "Cafe Mewa - Create",
-		"barang": map[int]string{
-			1: "kopi",
-		},
+		"Title":  "Cafe Mewa - Create",
+		"barang": bahan,
 	})
 }
 func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
@@ -104,15 +103,11 @@ func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, requ
 		"view/layout/sidebar.gohtml"))
 	serv, err := controller.PembelianService.FindById(context.Background(), params.ByName("id"))
 	helperMain.PanicIfError(err)
-	//fmt.Fprintln(writer, serv)
-	type barang struct {
-		id   int
-		nama string
-	}
+	bahan := controller.PembelianService.GetAllBahanBaku(context.Background())
 	myTemplate.ExecuteTemplate(writer, "showPembelian", map[string]interface{}{
 		"Title":  "Cafe Mewa - Create",
 		"data":   serv,
-		"barang": 1,
+		"barang": bahan,
 	})
 }
 func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {

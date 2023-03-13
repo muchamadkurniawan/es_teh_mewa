@@ -1,0 +1,86 @@
+{{define "createPesanan"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head" .}}
+    {{template "TopBarKasir"}}
+    <div>
+
+        <div class="page-title">
+            <div>
+                <h3>Insert Order {{.now}}</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body">
+            <div class="card ml-auto mr-auto">
+            {{ if .produk }}
+                <form action="/pesanan/create/" method="POST" enctype="multipart/form-data">
+                <div class="card-body">
+                    <table class="table table-striped w-auto mr-auto ml-auto">
+                        <thead>
+                        <tr>
+                            <th class="text-center w-25">Produk</th>
+                            <th class="text-center w-25">Harga</th>
+                            <th class="text-left">Qty</th>
+                        </tr>
+                        </thead>
+
+                            <tbody>
+                                {{ range $index, $item := .produk }}
+                                    <tr>
+                                        <td class="text-center">{{$item.Bahan_baku}}</td>
+                                        <td class="text-center">Rp. {{$item.Harga}}</td>
+                                        <input name="harga{{$item.Id}}" value="{{$item.Harga}}" hidden="hidden">
+                                        <div class="align-self-center">
+                                            <td class="form-check-inline">
+                                                <div>
+                                                    <input type="text" name="barang{{$item.Id}}" value="{{$item.Id}}" hidden="hidden">
+                                                    <input type="number" name="qty{{$item.Id}}" class="form-control input-number w-25" min="0">
+                                                </div>
+                                            </td>
+                                        </div>
+
+                                    </tr>
+                                {{ end }}
+                            </tbody>
+
+                    </table>
+                    <div class="container ml-lg-4">
+                        <input class="form-check-input" name="pembayaran" type="checkbox" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Pembayaran
+                        </label>
+                    </div>
+                </div>
+                <div class="card-footer ml-auto mr-auto">
+                    <button type="submit" class="btn-primary btn justify-content-center d-flex">PESAN</button>
+                </div>
+                </form>
+            {{else}}
+                <div class="card-body">
+                    <table class="table table-striped w-auto mr-auto ml-auto">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">Produk</th>
+                                <th class="text-center w-25">Harga</th>
+                                <th class="text-center">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan="7" class="text-center">Data not available !</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {{ end }}
+            </div>
+
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}

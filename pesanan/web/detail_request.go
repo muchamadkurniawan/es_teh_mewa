@@ -7,3 +7,11 @@ type DetailRequest struct {
 	Harga      int
 	Total      int
 }
+
+type DetailRespon struct {
+	Id        int
+	Id_produk int
+	Jumlah    int
+	Harga     int
+	Total     int
+}

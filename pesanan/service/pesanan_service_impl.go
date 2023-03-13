@@ -45,12 +45,12 @@ func (service *PesananServiceImpl) GetProdukJual(ctx context.Context, id int) we
 	return find
 }
 
-func (service *PesananServiceImpl) FindById(ctx context.Context, id int) (web.PesananResponseDateString, error) {
+func (service *PesananServiceImpl) FindById(ctx context.Context, id int) (web.PesananRequestUpdate, error) {
 	tx, err := service.db.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
 	find := service.PesananRepository.FindById(ctx, tx, id)
-	return helper.PesananEntityToResponseString(find), nil
+	return find, err
 }
 
 func (service *PesananServiceImpl) FindAll(ctx context.Context) ([]web.PesananResponseDateString, error) {
@@ -66,12 +66,50 @@ func (service *PesananServiceImpl) FindAll(ctx context.Context) ([]web.PesananRe
 	return pesanans, nil
 }
 
+func (service *PesananServiceImpl) FindPesananDetail(ctx context.Context, id int) web.PesananDetailUpdate {
+	tx, err := service.db.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	pesanan := service.PesananRepository.FindById(ctx, tx, id)
+	detail := service.PesananRepository.ShowAllDetailPesananId(ctx, tx, pesanan.Id)
+	b := web.PesananDetailUpdate{
+		Pesanan: pesanan,
+		Detail:  detail,
+	}
+	return b
+}
+
+func (service *PesananServiceImpl) FindAllPesananDetail(ctx context.Context) []web.PesananDetail {
+	tx, err := service.db.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	pesanan := service.PesananRepository.FindAllPesananDetail(ctx, tx)
+	var pesananDetail []web.PesananDetail
+	for _, a := range pesanan {
+		detail := service.PesananRepository.FindAllDetailPesananId(ctx, tx, a.Id, 2)
+		b := web.PesananDetail{
+			Pesanan: a,
+			Detail:  detail,
+		}
+		pesananDetail = append(pesananDetail, b)
+	}
+	return pesananDetail
+}
+
 func (service *PesananServiceImpl) CreatePesanan(ctx context.Context, request web.PesananRequestDateString) int {
 	tx, err := service.db.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
 	id := service.PesananRepository.CreatePesanan(ctx, tx, request)
 	return id
+}
+
+func (service *PesananServiceImpl) CreateDetail(ctx context.Context, request web.DetailRequest) error {
+	tx, err := service.db.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	err = service.PesananRepository.CreateDetail(ctx, tx, request)
+	return err
 }
 
 func (service *PesananServiceImpl) UpdatePembayaran(ctx context.Context, id int, pembayaran bool) error {

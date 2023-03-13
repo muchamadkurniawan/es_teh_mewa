@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"eh_teh_mewa/helperMain"
+	webBahanBakuResponse "eh_teh_mewa/master/web"
 	"eh_teh_mewa/pembelian/model/entity"
 	"eh_teh_mewa/pembelian/model/web"
 	"errors"
@@ -14,6 +15,24 @@ type PembelianRespositoryImpl struct {
 
 func NewPembelianRepository() PembelianRepository {
 	return &PembelianRespositoryImpl{}
+}
+
+func (repository *PembelianRespositoryImpl) GetAllBahanBaku(ctx context.Context, tx *sql.Tx) []webBahanBakuResponse.BahanbakuResponse {
+	SQL := "SELECT id, id_satuan, nama FROM bahan_baku;"
+	rows, err := tx.QueryContext(ctx, SQL)
+	if err != nil {
+		panic(err)
+	}
+	var bahans []webBahanBakuResponse.BahanbakuResponse
+	for rows.Next() {
+		bahan := webBahanBakuResponse.BahanbakuResponse{}
+		err := rows.Scan(&bahan.Id, &bahan.IdSatuan, &bahan.Nama)
+		if err != nil {
+			panic(err)
+		}
+		bahans = append(bahans, bahan)
+	}
+	return bahans
 }
 
 func (repository *PembelianRespositoryImpl) UpdatePembelian(ctx context.Context, tx *sql.Tx, pembelian web.PembelianCreateRequest) (web.PembelianCreateRequest, error) {

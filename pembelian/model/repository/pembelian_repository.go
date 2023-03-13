@@ -3,11 +3,13 @@ package repository
 import (
 	"context"
 	"database/sql"
+	webBahanBakuResponse "eh_teh_mewa/master/web"
 	"eh_teh_mewa/pembelian/model/entity"
 	"eh_teh_mewa/pembelian/model/web"
 )
 
 type PembelianRepository interface {
+	GetAllBahanBaku(ctx context.Context, tx *sql.Tx) []webBahanBakuResponse.BahanbakuResponse
 	UpdatePembelian(ctx context.Context, tx *sql.Tx, pembelian web.PembelianCreateRequest) (web.PembelianCreateRequest, error)
 	DeletePembelian(ctx context.Context, tx *sql.Tx, id string) error
 	InsertPembelian(ctx context.Context, tx *sql.Tx, pembelian web.PembelianCreateRequest) (web.PembelianCreateRequest, error)

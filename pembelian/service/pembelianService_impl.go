@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"eh_teh_mewa/helperMain"
+	BahanBakuRespon "eh_teh_mewa/master/web"
 	"eh_teh_mewa/pembelian/helper"
 	"eh_teh_mewa/pembelian/model/repository"
 	"eh_teh_mewa/pembelian/model/web"
@@ -19,6 +20,14 @@ func NewPembelianService(pembelianRepository repository.PembelianRepository, DB 
 		PembelianRepository: pembelianRepository,
 		DB:                  DB,
 	}
+}
+
+func (service *PembelianServiceImpl) GetAllBahanBaku(ctx context.Context) []BahanBakuRespon.BahanbakuResponse {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	bahan := service.PembelianRepository.GetAllBahanBaku(ctx, tx)
+	return bahan
 }
 
 func (service *PembelianServiceImpl) FindById(ctx context.Context, id string) (web.PembelianUpdateResponse, error) {

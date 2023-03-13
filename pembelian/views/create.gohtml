@@ -32,7 +32,7 @@
                                     <select name="barang" id="barang" class="form-control">
                                         <option value="">Pilih Barang Pembelian</option>
                                         {{range $index , $item := .barang}}
-                                        <option value=1>{{$item}}</option>
+                                        <option value={{$item.Id}}>{{$item.Nama}}</option>
                                         {{end}}
                                     </select>
                                     <div class="form-group">

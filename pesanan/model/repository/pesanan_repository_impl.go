@@ -55,18 +55,66 @@ func (PesananRepositoryImpl) GetProdukJual(ctx context.Context, tx *sql.Tx, id i
 	return produk
 }
 
-func (PesananRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) entity.PesananEntity {
-	SQL := "SELECT id, id_user, id_rekap, tanggal, pembayaran FROM pesanan WHERE id = ?;"
+func (PesananRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) web.PesananRequestUpdate {
+	SQL := "SELECT id, tanggal, pembayaran FROM pesanan WHERE id = ?;"
 	row, err := tx.QueryContext(ctx, SQL, id)
 	helperMain.PanicIfError(err)
-	var pesanan entity.PesananEntity
+	defer helperMain.CloseRow(row)
+	pesanan := web.PesananRequestUpdate{}
+	//fmt.Println(row.Next())
 	if row.Next() {
-		err := row.Scan(&pesanan.Id, &pesanan.Id_user, &pesanan.Id_rekap, &pesanan.Tanggal, &pesanan.Pembayaran)
+		err := row.Scan(&pesanan.Id, &pesanan.Date, &pesanan.Pembayaran)
 		helperMain.PanicIfError(err)
 		return pesanan
 	} else {
 		return pesanan
 	}
+}
+
+func (i PesananRepositoryImpl) FindAllPesananDetail(ctx context.Context, tx *sql.Tx) []web.PesananRequestSum {
+	SQL := "SELECT pesanan.id , cast(pesanan.tanggal as time) as jam, pesanan.pembayaran, detail_pesanan.SB as total FROM pesanan INNER JOIN " +
+		"(SELECT id_pesanan, SUM(total) as SB FROM detail_pesanan GROUP BY id_pesanan) detail_pesanan ON detail_pesanan.id_pesanan = pesanan.id WHERE DATE(pesanan.tanggal) = CURDATE();"
+	row, err := tx.QueryContext(ctx, SQL)
+	helperMain.PanicIfError(err)
+	var pesanans []web.PesananRequestSum
+	for row.Next() {
+		pesanan := web.PesananRequestSum{}
+		err := row.Scan(&pesanan.Id, &pesanan.Time, &pesanan.Pembayaran, &pesanan.Total)
+		helperMain.PanicIfError(err)
+		pesanans = append(pesanans, pesanan)
+	}
+	row.Close()
+	return pesanans
+}
+
+func (i PesananRepositoryImpl) FindAllDetailPesananId(ctx context.Context, tx *sql.Tx, id int, limit int) []web.PesananNamaBarang {
+	SQL := "SELECT detail_pesanan.id as id, detail_pesanan.id_pesanan, bahan_baku.nama as nama FROM detail_pesanan INNER JOIN " +
+		"produk_jual ON produk_jual.id = detail_pesanan.id_produk_jual INNER JOIN bahan_baku ON produk_jual.id_bahan_baku = bahan_baku.id WHERE detail_pesanan.id_pesanan = ? LIMIT ?;"
+	row, err := tx.QueryContext(ctx, SQL, id, limit)
+	helperMain.PanicIfError(err)
+	var pesanans []web.PesananNamaBarang
+	for row.Next() {
+		pesanan := web.PesananNamaBarang{}
+		err := row.Scan(&pesanan.Id_detail, &pesanan.Id_pesanan, &pesanan.Nama)
+		helperMain.PanicIfError(err)
+		pesanans = append(pesanans, pesanan)
+	}
+	row.Close()
+	return pesanans
+}
+
+func (i PesananRepositoryImpl) ShowAllDetailPesananId(ctx context.Context, tx *sql.Tx, id int) []web.DetailRespon {
+	SQL := "SELECT id, id_produk_jual, jumlah, harga_satuan, total FROM detail_pesanan WHERE id_pesanan = ?;"
+	row, err := tx.QueryContext(ctx, SQL, id)
+	helperMain.PanicIfError(err)
+	var pesanans []web.DetailRespon
+	for row.Next() {
+		pesanan := web.DetailRespon{}
+		err := row.Scan(&pesanan.Id, &pesanan.Id_produk, &pesanan.Jumlah, &pesanan.Harga, &pesanan.Total)
+		helperMain.PanicIfError(err)
+		pesanans = append(pesanans, pesanan)
+	}
+	return pesanans
 }
 
 func (PesananRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.PesananEntity {
@@ -81,12 +129,13 @@ func (PesananRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.P
 		helperMain.PanicIfError(err)
 		pesanan = append(pesanan, newPesanan)
 	}
+	row.Close()
 	return pesanan
 }
 
 func (PesananRepositoryImpl) CreatePesanan(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) int {
-	SQL := "INSERT INTO pesanan(id_user, id_rekap, tanggal, pembayaran) VALUES(?, ?, ?, ?)"
-	i, err := tx.ExecContext(ctx, SQL, request.Id_user, request.Id_rekap, request.Tanggal, request.Pembayaran)
+	SQL := "INSERT INTO pesanan(id_user, pembayaran) VALUES(?, ?);"
+	i, err := tx.ExecContext(ctx, SQL, request.Id_user, request.Pembayaran)
 	helperMain.PanicIfError(err)
 	id, err := i.LastInsertId()
 	return int(id)

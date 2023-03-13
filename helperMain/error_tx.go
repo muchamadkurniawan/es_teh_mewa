@@ -14,3 +14,7 @@ func ErrorTx(tx *sql.Tx) {
 		PanicIfError(errorCommit)
 	}
 }
+
+func CloseRow(row *sql.Rows) {
+	row.Close()
+}

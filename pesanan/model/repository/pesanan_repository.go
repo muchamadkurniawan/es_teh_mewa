@@ -8,8 +8,11 @@ import (
 )
 
 type PesananRepository interface {
-	FindById(ctx context.Context, tx *sql.Tx, id int) entity.PesananEntity
+	FindById(ctx context.Context, tx *sql.Tx, id int) web.PesananRequestUpdate
 	FindAll(ctx context.Context, tx *sql.Tx) []entity.PesananEntity
+	FindAllPesananDetail(ctx context.Context, tx *sql.Tx) []web.PesananRequestSum
+	FindAllDetailPesananId(ctx context.Context, tx *sql.Tx, id int, limit int) []web.PesananNamaBarang
+	ShowAllDetailPesananId(ctx context.Context, tx *sql.Tx, id int) []web.DetailRespon
 	GetProdukJualsAll(ctx context.Context, tx *sql.Tx) []web.ProdukJual
 	GetProdukJual(ctx context.Context, tx *sql.Tx, id int) web.ProdukJual
 	GetIdProduk(ctx context.Context, tx *sql.Tx) []string

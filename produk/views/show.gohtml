@@ -22,7 +22,6 @@
                                 <div class="form-group">
                                     <label for="">Barang</label>
                                     <select name="barang" id="barang" class="form-control">
-                                        <option value="">Pilih Barang Jual</option>
                                         {{range $item := .barang}}
                                             <option value={{$item.Id}} {{if eq $.data.Id_Bahan $item.Id}}selected="selected"{{ end }}>{{$item.Nama}}</option>
                                         {{end}}
