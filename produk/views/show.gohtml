@@ -1,8 +1,8 @@
 {{define "showProduk"}}
     <!DOCTYPE html>
     <html lang="en">
-    {{template "head"}}
-    {{template "bodyTop"}}
+    {{template "head" .}}
+    {{template "bodyTop" .}}
     <div class="right_col" role="main">
 
         <div class="page-title">
@@ -24,7 +24,7 @@
                                     <select name="barang" id="barang" class="form-control">
                                         {{range $item := .barang}}
                                             <option value={{$item.Id}} {{if eq $.data.Id_Bahan $item.Id}}selected="selected"{{ end }}>{{$item.Nama}}</option>
-                                        {{end}}
+                                        {{end}},
                                     </select>
                                     <div class="form-group">
                                         <label for="">Harga</label>

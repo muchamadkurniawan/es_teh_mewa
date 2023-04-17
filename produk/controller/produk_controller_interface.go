@@ -6,6 +6,7 @@ import (
 )
 
 type ProdukController interface {
+	CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{}
 	FindById(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	FindByAll(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Create(w http.ResponseWriter, r *http.Request, params httprouter.Params)

@@ -11,8 +11,10 @@
                             <img src="/static/gentelella/production/images/img.jpg" alt="Gambar">
                         </a>
                         <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="javascript:;"> Profile</a>
-
+                            <a class="dropdown-item" href=""> Profile</a>
+                            <form action="/auth/logout/" method="post">
+                                <button class="dropdown-item" type="submit"> Logout</button>
+                            </form>
                         </div>
                     </li>
                 </ul>

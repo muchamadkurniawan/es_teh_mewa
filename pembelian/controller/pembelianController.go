@@ -7,6 +7,7 @@ import (
 )
 
 type PembelianController interface {
+	CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{}
 	Index(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
 	Create(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
 	Store(writer http.ResponseWriter, request *http.Request, params httprouter.Params)

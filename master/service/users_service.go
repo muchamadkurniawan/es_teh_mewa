@@ -7,6 +7,7 @@ import (
 	"eh_teh_mewa/master/model/entity"
 	"eh_teh_mewa/master/repository"
 	"eh_teh_mewa/master/web"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UsersServiceImpl struct {
@@ -27,9 +28,10 @@ func (service *UsersServiceImpl) Create(ctx context.Context, request web.UsersCr
 		panic(err)
 	}
 	defer helperMain.ErrorTx(tx)
+	pass, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	user := entity.Users{
 		UserName:  request.Username,
-		Password:  request.Password,
+		Password:  string(pass),
 		Type_user: request.Type,
 	}
 	service.UsersRepo.InsertUsers(ctx, tx, user)
@@ -41,11 +43,10 @@ func (service *UsersServiceImpl) Update(ctx context.Context, response web.UsersR
 		panic(err)
 	}
 	defer helperMain.ErrorTx(tx)
-
+	//pass, err := bcrypt.GenerateFromPassword([]byte(response.Password), bcrypt.DefaultCost)
 	user := entity.Users{
 		Id:        int32(response.Id),
 		UserName:  response.Username,
-		Password:  response.Password,
 		Type_user: response.Tipe,
 	}
 	service.UsersRepo.UpdateUsers(ctx, tx, user)

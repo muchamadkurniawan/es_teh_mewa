@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"eh_teh_mewa/auth/config"
 	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/pembelian/helper"
 	"eh_teh_mewa/pembelian/model/web"
@@ -27,7 +28,19 @@ func NewPembelianController(pembelianService service.PembelianService) Pembelian
 	}
 }
 
+func (controller *PembelianControllerImpl) CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{} {
+	session, _ := config.Store.Get(r, config.SESSION_ID)
+	if session.Values["loggedIn"] != true {
+		http.Redirect(w, r, "/auth/login/", http.StatusFound)
+	}
+	if session.Values["type"] != "admin" {
+		http.Redirect(w, r, "/pesanan/", http.StatusFound)
+	}
+	return session.Values
+}
+
 func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(writer, request)
 	myTemplate := template.New("LIST").Funcs(map[string]interface{}{
 		"add":          helper.Add,
 		"format":       helper.FormatTanggal,
@@ -43,6 +56,7 @@ func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, req
 	helperMain.PanicIfError(err)
 	myTemplate.ExecuteTemplate(writer, "indexPembelian", map[string]interface{}{
 		"Title":   "Cafe Mewa",
+		"Nama":    session["nama"],
 		"Awal":    awal,
 		"Akhir":   akhir,
 		"AllData": serv,
@@ -50,6 +64,7 @@ func (controller *PembelianControllerImpl) Index(writer http.ResponseWriter, req
 }
 
 func (controller *PembelianControllerImpl) Create(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(writer, request)
 	myTemplate := template.New("INSERT")
 	myTemplate = template.Must(myTemplate.ParseFiles(
 		"pembelian/views/create.gohtml", "view/layout/app.gohtml",
@@ -58,10 +73,12 @@ func (controller *PembelianControllerImpl) Create(writer http.ResponseWriter, re
 	bahan := controller.PembelianService.GetAllBahanBaku(context.Background())
 	myTemplate.ExecuteTemplate(writer, "createPembelian", map[string]interface{}{
 		"Title":  "Cafe Mewa - Create",
+		"Nama":   session["nama"],
 		"barang": bahan,
 	})
 }
 func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	_ = controller.CheckLogin(writer, request)
 	barang, err := strconv.Atoi(request.PostFormValue("barang"))
 	helperMain.PanicIfError(err)
 	jumlah, err := strconv.Atoi(request.PostFormValue("jumlah"))
@@ -89,7 +106,7 @@ func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, req
 	return
 }
 func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-
+	session := controller.CheckLogin(writer, request)
 	myTemplate := template.New("UPDATE").Funcs(
 		map[string]interface{}{
 			"add":          helper.Add,
@@ -106,11 +123,13 @@ func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, requ
 	bahan := controller.PembelianService.GetAllBahanBaku(context.Background())
 	myTemplate.ExecuteTemplate(writer, "showPembelian", map[string]interface{}{
 		"Title":  "Cafe Mewa - Create",
+		"Nama":   session["nama"],
 		"data":   serv,
 		"barang": bahan,
 	})
 }
 func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	_ = controller.CheckLogin(writer, request)
 	id, err := strconv.Atoi(params.ByName("id"))
 	barang, err := strconv.Atoi(request.PostFormValue("barang"))
 	jumlah, err := strconv.Atoi(request.PostFormValue("jumlah"))
@@ -136,6 +155,7 @@ func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, re
 	return
 }
 func (controller *PembelianControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	_ = controller.CheckLogin(writer, request)
 	err := controller.PembelianService.Delete(context.Background(), params.ByName("id"))
 	helperMain.PanicIfError(err)
 	http.Redirect(writer, request, "/pembelian/", http.StatusFound)

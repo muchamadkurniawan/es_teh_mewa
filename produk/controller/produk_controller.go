@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"eh_teh_mewa/auth/config"
 	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/produk/model/entity"
 	"eh_teh_mewa/produk/model/web"
@@ -22,7 +23,19 @@ func NewProdukController(serviceProduk service.ProdukService) ProdukController {
 	}
 }
 
+func (controller *ProdukControllerImpl) CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{} {
+	session, _ := config.Store.Get(r, config.SESSION_ID)
+	if session.Values["loggedIn"] != true {
+		http.Redirect(w, r, "/auth/login/", http.StatusFound)
+	}
+	if session.Values["type"] != "admin" {
+		http.Redirect(w, r, "/pesanan/", http.StatusFound)
+	}
+	return session.Values
+}
+
 func (controller *ProdukControllerImpl) FindById(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(w, r)
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	file, err := controller.service.FindById(context.Background(), id)
@@ -33,12 +46,14 @@ func (controller *ProdukControllerImpl) FindById(w http.ResponseWriter, r *http.
 		"view/layout/sidebar.gohtml"))
 	myTemplate.ExecuteTemplate(w, "showProduk", map[string]interface{}{
 		"Title":  "Cafe Mewa - Produk",
+		"Nama":   session["nama"],
 		"data":   file,
 		"barang": barang,
 	})
 }
 
 func (controller *ProdukControllerImpl) FindByAll(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(w, r)
 	var file []web.ResponseProdukFull
 	var err error
 	idBarang, err := strconv.Atoi(r.PostFormValue("barang_filter"))
@@ -55,6 +70,7 @@ func (controller *ProdukControllerImpl) FindByAll(w http.ResponseWriter, r *http
 		"view/layout/sidebar.gohtml"))
 	myTemplate.ExecuteTemplate(w, "indexProduk", map[string]interface{}{
 		"Title":      "Cafe Mewa - Produk",
+		"Nama":       session["nama"],
 		"data":       file,
 		"barang":     barang,
 		"namaBarang": r.URL.Query().Get("barang"),
@@ -62,17 +78,20 @@ func (controller *ProdukControllerImpl) FindByAll(w http.ResponseWriter, r *http
 }
 
 func (controller *ProdukControllerImpl) Create(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(w, r)
 	myTemplate := template.Must(template.ParseFiles("produk/views/create.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
 	barang, _ := controller.service.GetBahan(context.Background())
 	myTemplate.ExecuteTemplate(w, "createProduk", map[string]interface{}{
 		"Title":  "Cafe Mewa - Produk",
+		"Nama":   session["nama"],
 		"barang": barang,
 	})
 }
 
 func (controller *ProdukControllerImpl) Store(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	controller.CheckLogin(w, r)
 	idUser := 1
 	idBahan, err := strconv.Atoi(r.PostFormValue("barang"))
 	helperMain.PanicIfError(err)
@@ -91,7 +110,6 @@ func (controller *ProdukControllerImpl) Store(w http.ResponseWriter, r *http.Req
 		Stock:    stock,
 	}
 	check, err := controller.service.CheckByBahan(context.Background(), idBahan)
-	//fmt.Fprintln(w, check, request)
 	if check.Id == 0 {
 		controller.service.Create(context.Background(), request)
 		helperMain.PanicIfError(err)
@@ -104,6 +122,7 @@ func (controller *ProdukControllerImpl) Store(w http.ResponseWriter, r *http.Req
 }
 
 func (controller *ProdukControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	controller.CheckLogin(w, r)
 	id, err := strconv.Atoi(params.ByName("id"))
 	idBahan, err := strconv.Atoi(r.PostFormValue("barang"))
 	harga, err := strconv.Atoi(r.PostFormValue("harga"))
@@ -126,6 +145,7 @@ func (controller *ProdukControllerImpl) Update(w http.ResponseWriter, r *http.Re
 }
 
 func (controller *ProdukControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	controller.CheckLogin(w, r)
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	err = controller.service.Delete(context.Background(), id)

@@ -2,6 +2,9 @@ package main
 
 import (
 	_ "context"
+	controllerAuth "eh_teh_mewa/auth/controller"
+	repositoryAuth "eh_teh_mewa/auth/repository"
+	serviceAuth "eh_teh_mewa/auth/service"
 	"eh_teh_mewa/db"
 	"eh_teh_mewa/master/controller"
 	"eh_teh_mewa/master/repository"
@@ -23,6 +26,10 @@ import (
 
 func main() {
 	db := db.GetConnect()
+	UserRepoLogin := repositoryAuth.NewLoginRepository()
+	UserServiceLogin := serviceAuth.NewLoginService(UserRepoLogin, db)
+	UserControllerLogin := controllerAuth.NewLoginController(UserServiceLogin)
+
 	userRepo := repository.NewUsersRepository()
 	userService := service.NewUsersService(userRepo, db)
 	usersController := controller.NewUsersController(userService)
@@ -56,6 +63,10 @@ func main() {
 	router := httprouter.New()
 
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
+
+	router.GET("/auth/login/", UserControllerLogin.Login)
+	router.POST("/auth/login/check/", UserControllerLogin.LoginCheck)
+	router.POST("/auth/logout/", UserControllerLogin.Logout)
 
 	router.GET("/user/", usersController.FindAll)
 	router.GET("/user/create/", usersController.Create)
@@ -94,6 +105,7 @@ func main() {
 	router.GET("/pesanan/order/", pesananController.Create)
 	router.POST("/pesanan/create/", pesananController.Store)
 	router.GET("/pesanan/detail/:id/", pesananController.Show)
+	//router.POST("/pesanan/update/:id/", pesananController.Update)
 	server := http.Server{
 		Addr:    "localhost:8080",
 		Handler: router,

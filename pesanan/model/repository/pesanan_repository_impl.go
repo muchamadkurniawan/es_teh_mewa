@@ -133,6 +133,11 @@ func (PesananRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.P
 	return pesanan
 }
 
+//func (PesananRepositoryImpl) ShowIdDetailPesanan(ctx context.Context, tx *sql.Tx, id int) []int {
+//	//TODO implement me
+//	panic("implement me")
+//}
+
 func (PesananRepositoryImpl) CreatePesanan(ctx context.Context, tx *sql.Tx, request web.PesananRequestDateString) int {
 	SQL := "INSERT INTO pesanan(id_user, pembayaran) VALUES(?, ?);"
 	i, err := tx.ExecContext(ctx, SQL, request.Id_user, request.Pembayaran)

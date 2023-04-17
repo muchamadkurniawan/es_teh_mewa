@@ -6,6 +6,7 @@ import (
 )
 
 type UsersController interface {
+	CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{}
 	Create(w http.ResponseWriter, r *http.Request, param httprouter.Params)
 	Store(w http.ResponseWriter, r *http.Request, param httprouter.Params)
 	Update(w http.ResponseWriter, r *http.Request, param httprouter.Params)

@@ -63,8 +63,8 @@ func (usersRepositoryImpl) FindByAllUsers(ctx context.Context, tx *sql.Tx) ([]en
 }
 
 func (usersRepositoryImpl) UpdateUsers(ctx context.Context, tx *sql.Tx, user entity.Users) {
-	SQL := "UPDATE users SET username = ?, password = ?, type = ? where id = ?;"
-	_, err := tx.ExecContext(ctx, SQL, user.UserName, user.Password, user.Type_user, user.Id)
+	SQL := "UPDATE users SET username = ?, type = ? where id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, user.UserName, user.Type_user, user.Id)
 	helperMain.PanicIfError(err)
 }
 

@@ -1,0 +1,11 @@
+package service
+
+import (
+	"context"
+	"eh_teh_mewa/auth/model"
+)
+
+type LoginService interface {
+	Login(ctx context.Context, request model.UserLogin) (model.UserLogin, string)
+	Logout(ctx context.Context) error
+}

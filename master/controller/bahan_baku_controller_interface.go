@@ -6,6 +6,7 @@ import (
 )
 
 type BahanBakuController interface {
+	CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{}
 	FindAllBahanBaku(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	FindByIdBahanBaku(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	Create(w http.ResponseWriter, r *http.Request, params httprouter.Params)

@@ -62,11 +62,6 @@ func (controller *PesananControllerImpl) Create(w http.ResponseWriter, r *http.R
 }
 
 func (controller *PesananControllerImpl) Store(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	//ids := controller.service.GetIdProduk(context.Background())
-	//for _, id := range ids {
-	//	jumlah := r.PostFormValue("qty" + id)
-	//	fmt.Fprintln(w, jumlah)
-	//}
 	var bayar bool
 	if r.PostFormValue("pembayaran") == "on" {
 		bayar = true

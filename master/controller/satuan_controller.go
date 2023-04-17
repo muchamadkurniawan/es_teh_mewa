@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"eh_teh_mewa/auth/config"
 	"eh_teh_mewa/helperMain"
 	"eh_teh_mewa/master/service"
 	"eh_teh_mewa/master/web"
@@ -21,7 +22,19 @@ func NewSatuanController(serviceSatuan service.SatuanService) SatuanController {
 	}
 }
 
+func (controller *SatuanControllerImpl) CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{} {
+	session, _ := config.Store.Get(r, config.SESSION_ID)
+	if session.Values["loggedIn"] != true {
+		http.Redirect(w, r, "/auth/login/", http.StatusFound)
+	}
+	if session.Values["type"] != "admin" {
+		http.Redirect(w, r, "/pesanan/", http.StatusFound)
+	}
+	return session.Values
+}
+
 func (controller *SatuanControllerImpl) FindAllSatuan(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(response, request)
 	serv := controller.service.FindAll(context.Background())
 	myTemplate := template.Must(template.ParseFiles("master/views/satuan/index.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
@@ -29,11 +42,13 @@ func (controller *SatuanControllerImpl) FindAllSatuan(response http.ResponseWrit
 
 	myTemplate.ExecuteTemplate(response, "indexSatuan", map[string]interface{}{
 		"data":  serv,
+		"Nama":  session["nama"],
 		"Title": "Cafe Mewa - Satuan",
 	})
 }
 
 func (controller *SatuanControllerImpl) FindById(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(response, request)
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	serv := controller.service.FindById(context.Background(), id)
@@ -43,21 +58,25 @@ func (controller *SatuanControllerImpl) FindById(response http.ResponseWriter, r
 
 	myTemplate.ExecuteTemplate(response, "showSatuan", map[string]interface{}{
 		"data":  serv,
+		"Nama":  session["nama"],
 		"Title": "Cafe Mewa - Satuan",
 	})
 }
 
 func (controller *SatuanControllerImpl) Create(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	session := controller.CheckLogin(w, r)
 	myTemplate := template.Must(template.ParseFiles("master/views/satuan/create.gohtml", "view/layout/app.gohtml",
 		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 		"view/layout/sidebar.gohtml"))
 
 	myTemplate.ExecuteTemplate(w, "showSatuan", map[string]interface{}{
 		"Title": "Cafe Mewa - Satuan",
+		"Nama":  session["nama"],
 	})
 }
 
 func (controller *SatuanControllerImpl) Store(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	controller.CheckLogin(w, r)
 	file := web.SatuanRequest{
 		Nama: r.PostFormValue("name"),
 	}
@@ -66,6 +85,7 @@ func (controller *SatuanControllerImpl) Store(w http.ResponseWriter, r *http.Req
 }
 
 func (controller *SatuanControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	controller.CheckLogin(w, r)
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	file := web.SatuanResponse{
@@ -77,6 +97,7 @@ func (controller *SatuanControllerImpl) Update(w http.ResponseWriter, r *http.Re
 }
 
 func (controller *SatuanControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	controller.CheckLogin(w, r)
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	controller.service.Delete(context.Background(), id)
