@@ -70,6 +70,7 @@ func main() {
 
 	router.GET("/user/", usersController.FindAll)
 	router.GET("/user/create/", usersController.Create)
+	router.GET("/user/register/", usersController.Register)
 	router.POST("/user/store/", usersController.Store)
 	router.GET("/user/show/:id/", usersController.FindById)
 	router.POST("/user/update/:id/", usersController.Update)
@@ -105,6 +106,7 @@ func main() {
 	router.GET("/pesanan/order/", pesananController.Create)
 	router.POST("/pesanan/create/", pesananController.Store)
 	router.GET("/pesanan/detail/:id/", pesananController.Show)
+	router.GET("/pesanan/cetak/:id/", pesananController.Cetak)
 	//router.POST("/pesanan/update/:id/", pesananController.Update)
 	server := http.Server{
 		Addr:    "localhost:8080",

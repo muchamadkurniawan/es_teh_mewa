@@ -9,9 +9,10 @@ type DetailRequest struct {
 }
 
 type DetailRespon struct {
-	Id        int
-	Id_produk int
-	Jumlah    int
-	Harga     int
-	Total     int
+	Id          int
+	Id_produk   int
+	Nama_produk string
+	Jumlah      int
+	Harga       int
+	Total       int
 }

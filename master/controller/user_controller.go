@@ -47,7 +47,7 @@ func (controller *UserControllerImpl) Create(w http.ResponseWriter, r *http.Requ
 }
 
 func (controller *UserControllerImpl) Store(w http.ResponseWriter, r *http.Request, param httprouter.Params) {
-	controller.CheckLogin(w, r)
+	//controller.CheckLogin(w, r)
 	name := r.PostFormValue("username")
 	password := r.PostFormValue("password")
 	tipe := r.PostFormValue("typeUser")
@@ -112,5 +112,19 @@ func (controller *UserControllerImpl) FindById(w http.ResponseWriter, r *http.Re
 		"tipe": [2]string{
 			"admin", "kasir",
 		},
+	})
+}
+
+func (controller *UserControllerImpl) Register(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	myTemplate := template.Must(template.ParseFiles(
+		"master/views/user/create.gohtml", "view/layout/app.gohtml",
+		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
+		"view/layout/sidebar.gohtml"))
+	myTemplate.ExecuteTemplate(w, "createUser", map[string]interface{}{
+		"type": []string{
+			"admin", "kasir",
+		},
+		"Nama":  "Unknow",
+		"Title": "Cafe Mewa - User",
 	})
 }

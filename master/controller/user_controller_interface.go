@@ -13,4 +13,5 @@ type UsersController interface {
 	Delete(w http.ResponseWriter, r *http.Request, param httprouter.Params)
 	FindAll(w http.ResponseWriter, r *http.Request, param httprouter.Params)
 	FindById(w http.ResponseWriter, r *http.Request, param httprouter.Params)
+	Register(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }

@@ -17,9 +17,11 @@ type PesananRequest struct {
 }
 
 type PesananNamaBarang struct {
-	Id_detail  int
-	Id_pesanan int
-	Nama       string
+	Id_detail    int
+	Id_pesanan   int
+	Nama         string
+	Harga_satuan int
+	Harga        int
 }
 
 type PesananRequestUpdate struct {
