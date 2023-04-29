@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"eh_teh_mewa/helperMain"
-	"eh_teh_mewa/helperMain/pdfGenerator"
 	"eh_teh_mewa/pesanan/service"
 	"eh_teh_mewa/pesanan/web"
 	"fmt"
@@ -114,27 +113,12 @@ func (controller *PesananControllerImpl) Delete(w http.ResponseWriter, r *http.R
 }
 
 func (controller *PesananControllerImpl) Cetak(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	pdf := pdfGenerator.NewRequestPdf("")
-
-	templatePath := "view/kasir/cetak/struk.gohtml"
-
-	output := "storage/example.pdf"
-	id, _ := strconv.Atoi(params.ByName("id"))
-	data := controller.service.FindPesananDetail(context.Background(), id)
-	templateData := map[string]interface{}{
-		"Title":   "Cafe Mawah",
-		"tanggal": data.Pesanan.Date.String(),
-		"detail":  data.Detail,
-	}
-	if err := pdf.ParseTempalate(templatePath, templateData); err == nil {
-		args := []string{"no-pdf-compression"}
-
-		ok, _ := pdf.GeneratePDF(output, args)
-		fmt.Fprintln(w, "Success")
-		fmt.Fprintln(w, ok)
+	id, err := strconv.Atoi(params.ByName("id"))
+	helperMain.PanicIfError(err)
+	err = controller.service.Cetak(context.Background(), id)
+	if err != nil {
+		fmt.Fprintln(w, "Error", err)
 	} else {
-		fmt.Fprintln(w, "Error")
-		fmt.Fprintln(w, err)
+		http.Redirect(w, r, "/storage/struk.pdf", http.StatusFound)
 	}
-	//http.Redirect(w, r, "/pesanan/detail/"+strconv.Itoa(id), http.StatusFound)
 }

@@ -18,4 +18,5 @@ type PesananService interface {
 	UpdatePembayaran(ctx context.Context, id int, pembayaran bool) error
 	UpdateRekap(ctx context.Context, id int, id_rekap int) error
 	Delete(ctx context.Context, id int) error
+	Cetak(ctx context.Context, id int) error
 }

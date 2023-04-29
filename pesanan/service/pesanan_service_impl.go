@@ -7,6 +7,8 @@ import (
 	"eh_teh_mewa/pesanan/helper"
 	"eh_teh_mewa/pesanan/model/repository"
 	"eh_teh_mewa/pesanan/web"
+	"github.com/johnfercher/maroto/pkg/consts"
+	"github.com/johnfercher/maroto/pkg/pdf"
 )
 
 type PesananServiceImpl struct {
@@ -137,4 +139,16 @@ func (service *PesananServiceImpl) Delete(ctx context.Context, id int) error {
 	err = service.PesananRepository.Delete(ctx, tx, id)
 	helperMain.PanicIfError(err)
 	return err
+}
+
+func (service *PesananServiceImpl) Cetak(ctx context.Context, id int) error {
+	m := pdf.NewMaroto(consts.Portrait, consts.A4)
+	m.SetPageMargins(20, 10, 20)
+	helper.PdfHeader(m)
+	//tableHeading := []string{"Keterangan", "Harga", "Total"}
+	err := m.OutputFileAndClose("storage/struk.pdf")
+	if err != nil {
+		return err
+	}
+	return nil
 }

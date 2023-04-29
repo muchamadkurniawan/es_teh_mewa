@@ -63,6 +63,7 @@ func main() {
 	router := httprouter.New()
 
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
+	router.ServeFiles("/storage/*filepath", http.Dir("./storage/"))
 
 	router.GET("/auth/login/", UserControllerLogin.Login)
 	router.POST("/auth/login/check/", UserControllerLogin.LoginCheck)
