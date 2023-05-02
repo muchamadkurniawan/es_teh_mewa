@@ -7,8 +7,10 @@ import (
 	"eh_teh_mewa/pesanan/helper"
 	"eh_teh_mewa/pesanan/model/repository"
 	"eh_teh_mewa/pesanan/web"
+	"github.com/johnfercher/maroto/pkg/color"
 	"github.com/johnfercher/maroto/pkg/consts"
 	"github.com/johnfercher/maroto/pkg/pdf"
+	"github.com/johnfercher/maroto/pkg/props"
 )
 
 type PesananServiceImpl struct {
@@ -142,11 +144,29 @@ func (service *PesananServiceImpl) Delete(ctx context.Context, id int) error {
 }
 
 func (service *PesananServiceImpl) Cetak(ctx context.Context, id int) error {
-	m := pdf.NewMaroto(consts.Portrait, consts.A4)
+	tx, err := service.db.Begin()
+	m := pdf.NewMaroto(consts.Portrait, consts.A5)
 	m.SetPageMargins(20, 10, 20)
 	helper.PdfHeader(m)
-	//tableHeading := []string{"Keterangan", "Harga", "Total"}
-	err := m.OutputFileAndClose("storage/struk.pdf")
+	tableHeading := []string{"Keterangan", "Harga", "Total"}
+	m.SetBackgroundColor(color.NewWhite())
+	data := service.PesananRepository.ShowAllDetailPesananId(ctx, tx, id)
+	converData := helper.SetData(data)
+	m.TableList(tableHeading, converData, props.TableList{
+		HeaderProp: props.TableListContent{
+			Size:      9,
+			GridSizes: []uint{5, 2, 2},
+		},
+		ContentProp: props.TableListContent{
+			Size:      9,
+			GridSizes: []uint{5, 2, 2},
+		},
+
+		Align:              consts.Left,
+		HeaderContentSpace: 2,
+		Line:               true,
+	})
+	err = m.OutputFileAndClose("storage/struk.pdf")
 	if err != nil {
 		return err
 	}

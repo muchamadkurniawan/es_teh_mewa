@@ -46,3 +46,9 @@ type PesananDetailUpdate struct {
 	Pesanan PesananRequestUpdate
 	Detail  []DetailRespon
 }
+
+type CetakPesanan struct {
+	Keterangan string
+	Harga      int
+	Total      int
+}

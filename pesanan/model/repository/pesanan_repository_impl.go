@@ -105,7 +105,7 @@ func (i PesananRepositoryImpl) FindAllDetailPesananId(ctx context.Context, tx *s
 
 func (i PesananRepositoryImpl) ShowAllDetailPesananId(ctx context.Context, tx *sql.Tx, id int) []web.DetailRespon {
 	SQL := "SELECT detail_pesanan.id, detail_pesanan.id_produk_jual, detail_pesanan.jumlah, detail_pesanan.harga_satuan, detail_pesanan.total, bahan_baku.nama FROM detail_pesanan INNER JOIN " +
-		"produk_jual ON produk_jual.id = detail_pesanan.id_produk_jual INNER JOIN bahan_baku ON produk_jual.id_bahan_baku = bahan_baku.id WHERE detail_pesanan.id_pesanan = ? = ?;"
+		"produk_jual ON produk_jual.id = detail_pesanan.id_produk_jual INNER JOIN bahan_baku ON produk_jual.id_bahan_baku = bahan_baku.id WHERE detail_pesanan.id_pesanan = ?;"
 	row, err := tx.QueryContext(ctx, SQL, id)
 	helperMain.PanicIfError(err)
 	var pesanans []web.DetailRespon
