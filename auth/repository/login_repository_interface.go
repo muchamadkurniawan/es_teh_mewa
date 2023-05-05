@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/auth/model"
+	"es_teh_mewa/auth/model"
 )
 
 type LoginRepository interface {

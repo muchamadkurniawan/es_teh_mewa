@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/auth/model"
-	"eh_teh_mewa/auth/repository"
-	"eh_teh_mewa/helperMain"
+	"es_teh_mewa/auth/model"
+	"es_teh_mewa/auth/repository"
+	"es_teh_mewa/helperMain"
 	"golang.org/x/crypto/bcrypt"
 )
 

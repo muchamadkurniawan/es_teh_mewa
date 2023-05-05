@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/master/model/entity"
+	"es_teh_mewa/master/model/entity"
 )
 
 type SatuanRepository interface {

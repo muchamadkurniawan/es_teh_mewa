@@ -2,23 +2,26 @@ package main
 
 import (
 	_ "context"
-	controllerAuth "eh_teh_mewa/auth/controller"
-	repositoryAuth "eh_teh_mewa/auth/repository"
-	serviceAuth "eh_teh_mewa/auth/service"
-	"eh_teh_mewa/db"
-	"eh_teh_mewa/master/controller"
-	"eh_teh_mewa/master/repository"
-	"eh_teh_mewa/master/service"
-	controllerPembelian "eh_teh_mewa/pembelian/controller"
-	repositoryPembelian "eh_teh_mewa/pembelian/model/repository"
-	servicePembelian "eh_teh_mewa/pembelian/service"
-	controllerPesanan "eh_teh_mewa/pesanan/controller"
-	repositoryPesanan "eh_teh_mewa/pesanan/model/repository"
-	servicePesanan "eh_teh_mewa/pesanan/service"
+	controllerAuth "es_teh_mewa/auth/controller"
+	repositoryAuth "es_teh_mewa/auth/repository"
+	serviceAuth "es_teh_mewa/auth/service"
+	"es_teh_mewa/db"
+	"es_teh_mewa/master/controller"
+	"es_teh_mewa/master/repository"
+	"es_teh_mewa/master/service"
+	controllerPembelian "es_teh_mewa/pembelian/controller"
+	repositoryPembelian "es_teh_mewa/pembelian/model/repository"
+	servicePembelian "es_teh_mewa/pembelian/service"
+	controllerPesanan "es_teh_mewa/pesanan/controller"
+	repositoryPesanan "es_teh_mewa/pesanan/model/repository"
+	servicePesanan "es_teh_mewa/pesanan/service"
+	controllerRekap "es_teh_mewa/rekap/controller"
+	repositoryRekap "es_teh_mewa/rekap/model/repository"
+	serviceRekap "es_teh_mewa/rekap/service"
 
-	controllerProduk "eh_teh_mewa/produk/controller"
-	repositoryProduk "eh_teh_mewa/produk/model/repository"
-	serviceProduk "eh_teh_mewa/produk/service"
+	controllerProduk "es_teh_mewa/produk/controller"
+	repositoryProduk "es_teh_mewa/produk/model/repository"
+	serviceProduk "es_teh_mewa/produk/service"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -58,6 +61,12 @@ func main() {
 	pesananRepository := repositoryPesanan.NewPesananRepository()
 	pesananService := servicePesanan.NewPesananServie(pesananRepository, db)
 	pesananController := controllerPesanan.NewPesananController(pesananService)
+
+	//
+
+	rekapRepository := repositoryRekap.NewRekapRepository()
+	rekapService := serviceRekap.NewRekapServiceImpl(rekapRepository, db)
+	rekapController := controllerRekap.NewRekapController(rekapService)
 
 	//
 	router := httprouter.New()
@@ -109,6 +118,9 @@ func main() {
 	router.GET("/pesanan/detail/:id/", pesananController.Show)
 	router.GET("/pesanan/cetak/:id/", pesananController.Cetak)
 	//router.POST("/pesanan/update/:id/", pesananController.Update)
+
+	router.GET("/rekap-kasir/", rekapController.Index)
+
 	server := http.Server{
 		Addr:    "localhost:8080",
 		Handler: router,

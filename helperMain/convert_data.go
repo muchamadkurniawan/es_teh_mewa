@@ -1,8 +1,8 @@
 package helperMain
 
 import (
-	"eh_teh_mewa/master/web"
 	"encoding/json"
+	"es_teh_mewa/master/web"
 )
 
 func StructToMap_Users(data web.UsersResponse) map[string]interface{} {

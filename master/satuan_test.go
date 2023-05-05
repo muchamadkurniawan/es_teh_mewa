@@ -2,10 +2,10 @@ package master
 
 import (
 	"context"
-	"eh_teh_mewa/db"
-	"eh_teh_mewa/master/repository"
-	"eh_teh_mewa/master/service"
-	"eh_teh_mewa/master/web"
+	"es_teh_mewa/db"
+	"es_teh_mewa/master/repository"
+	"es_teh_mewa/master/service"
+	"es_teh_mewa/master/web"
 	"fmt"
 	"testing"
 )

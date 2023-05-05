@@ -2,11 +2,11 @@ package controller
 
 import (
 	"context"
-	"eh_teh_mewa/auth/config"
-	"eh_teh_mewa/helperMain"
-	"eh_teh_mewa/pembelian/helper"
-	"eh_teh_mewa/pembelian/model/web"
-	"eh_teh_mewa/pembelian/service"
+	"es_teh_mewa/auth/config"
+	"es_teh_mewa/helperMain"
+	"es_teh_mewa/pembelian/helper"
+	"es_teh_mewa/pembelian/model/web"
+	"es_teh_mewa/pembelian/service"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"

@@ -2,10 +2,10 @@ package produk
 
 import (
 	"context"
-	"eh_teh_mewa/db"
-	"eh_teh_mewa/produk/model/entity"
-	"eh_teh_mewa/produk/model/repository"
-	"eh_teh_mewa/produk/service"
+	"es_teh_mewa/db"
+	"es_teh_mewa/produk/model/entity"
+	"es_teh_mewa/produk/model/repository"
+	"es_teh_mewa/produk/service"
 	"fmt"
 	"testing"
 )

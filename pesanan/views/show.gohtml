@@ -13,9 +13,8 @@
         </div>
         <div class="clearfix"></div>
 
-        <div class="page-body mr-auto ml-auto">
+        <div class="page-body">
             <div class="card">
-                <form action="/pesanan/update/{{.data.Pesanan.Id}}" method="POST" enctype="multipart/form-data">
                     <div class="card-body">
                         <table class="table table-striped w-auto mr-auto ml-auto">
                             <thead>
@@ -30,36 +29,33 @@
                             {{ range $index, $item := .data.Detail }}
                                 <tr>
                                     <td class="text-center">
-                                        <select name="produk{{$item.Id}}" class="form-control w-auto">
+                                        <select name="produk{{$item.Id}}" class="form-control w-auto" disabled>
                                             {{range $i, $produk := $.produks}}
                                                 <option value="{{$item.Id}}" {{if eq $item.Id $produk.Id}}selected="selected"{{ end }}>{{$produk.Bahan_baku}}</option>
                                             {{end}}
                                         </select>
                                     </td>
                                     <td class="text-center">
-                                        <input type="number" class="form-control w-100" name="harga{{$item.Id}}" value="{{ $item.Harga }}">
+                                        <input type="number" class="form-control w-100" name="harga{{$item.Id}}" value="{{ $item.Harga }}" disabled>
                                     </td>
                                     <td class="text-center">
-                                        <input type="number" class="form-control w-75" name="qty{{$item.Id}}" value="{{ $item.Jumlah }}">
+                                        <input type="number" class="form-control w-75" name="qty{{$item.Id}}" value="{{ $item.Jumlah }}" disabled>
                                     </td>
                                 </tr>
                             {{ end }}
                             </tbody>
-
                         </table>
-                        <div class="container ml-lg-4">
+                        <div class="container ml-4">
                             <input class="form-check-input" name="pembayaran" type="checkbox" id="flexCheckDefault"
-                            {{if .data.Pesanan.Pembayaran}}checked{{end}}>
+                            {{if .data.Pesanan.Pembayaran}}checked{{end}} disabled>
                             <label class="form-check-label" for="flexCheckDefault">
                                 Pembayaran
                             </label>
                         </div>
                     </div>
-                    <div class="card-footer ml-auto mr-auto d-flex">
-                        <button type="submit" class="btn-primary btn justify-content-center d-flex">PESAN</button>
+                    <div class="card-footer">
                         <a href="/pesanan/cetak/{{.data.Pesanan.Id}}" class="btn btn-success" target="_blank">CETAK</a>
                     </div>
-                </form>
 
                 </div>
             </div>

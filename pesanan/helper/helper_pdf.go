@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"eh_teh_mewa/pesanan/web"
+	"es_teh_mewa/pesanan/web"
 	"github.com/johnfercher/maroto/pkg/color"
 	"github.com/johnfercher/maroto/pkg/consts"
 	"github.com/johnfercher/maroto/pkg/pdf"

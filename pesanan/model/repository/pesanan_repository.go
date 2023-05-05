@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/pesanan/model/entity"
-	"eh_teh_mewa/pesanan/web"
+	"es_teh_mewa/pesanan/model/entity"
+	"es_teh_mewa/pesanan/web"
 )
 
 type PesananRepository interface {

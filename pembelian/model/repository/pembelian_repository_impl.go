@@ -3,11 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/helperMain"
-	webBahanBakuResponse "eh_teh_mewa/master/web"
-	"eh_teh_mewa/pembelian/model/entity"
-	"eh_teh_mewa/pembelian/model/web"
 	"errors"
+	"es_teh_mewa/helperMain"
+	webBahanBakuResponse "es_teh_mewa/master/web"
+	"es_teh_mewa/pembelian/model/entity"
+	"es_teh_mewa/pembelian/model/web"
 )
 
 type PembelianRespositoryImpl struct {

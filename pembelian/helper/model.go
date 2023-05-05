@@ -1,9 +1,9 @@
 package helper
 
 import (
-	"eh_teh_mewa/helperMain"
-	"eh_teh_mewa/pembelian/model/entity"
-	"eh_teh_mewa/pembelian/model/web"
+	"es_teh_mewa/helperMain"
+	"es_teh_mewa/pembelian/model/entity"
+	"es_teh_mewa/pembelian/model/web"
 	"time"
 )
 

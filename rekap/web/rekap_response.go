@@ -13,3 +13,10 @@ type RekapResponseDateString struct {
 	tanggal    string
 	keterangan string
 }
+
+type AllPesananRekap struct {
+	Id           int
+	Tanggal      time.Time
+	Pembayaran   bool
+	TotalPesanan int
+}

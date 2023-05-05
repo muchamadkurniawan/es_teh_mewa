@@ -1,8 +1,8 @@
 package helperMain
 
 import (
-	"eh_teh_mewa/master/model/entity"
-	"eh_teh_mewa/master/web"
+	"es_teh_mewa/master/model/entity"
+	"es_teh_mewa/master/web"
 )
 
 func ToUserResponses(users []entity.Users) []web.UsersResponse {

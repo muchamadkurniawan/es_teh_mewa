@@ -3,12 +3,12 @@ package service
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/helperMain"
-	repositoryBahan "eh_teh_mewa/master/repository"
-	webBahan "eh_teh_mewa/master/web"
-	"eh_teh_mewa/produk/model/entity"
-	"eh_teh_mewa/produk/model/repository"
-	"eh_teh_mewa/produk/model/web"
+	"es_teh_mewa/helperMain"
+	repositoryBahan "es_teh_mewa/master/repository"
+	webBahan "es_teh_mewa/master/web"
+	"es_teh_mewa/produk/model/entity"
+	"es_teh_mewa/produk/model/repository"
+	"es_teh_mewa/produk/model/web"
 )
 
 type ProdukServiceImpl struct {

@@ -2,9 +2,9 @@ package controller
 
 import (
 	"context"
-	"eh_teh_mewa/auth/config"
-	"eh_teh_mewa/auth/model"
-	"eh_teh_mewa/auth/service"
+	"es_teh_mewa/auth/config"
+	"es_teh_mewa/auth/model"
+	"es_teh_mewa/auth/service"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"

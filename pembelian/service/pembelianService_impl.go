@@ -3,11 +3,11 @@ package service
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/helperMain"
-	BahanBakuRespon "eh_teh_mewa/master/web"
-	"eh_teh_mewa/pembelian/helper"
-	"eh_teh_mewa/pembelian/model/repository"
-	"eh_teh_mewa/pembelian/model/web"
+	"es_teh_mewa/helperMain"
+	BahanBakuRespon "es_teh_mewa/master/web"
+	"es_teh_mewa/pembelian/helper"
+	"es_teh_mewa/pembelian/model/repository"
+	"es_teh_mewa/pembelian/model/web"
 )
 
 type PembelianServiceImpl struct {

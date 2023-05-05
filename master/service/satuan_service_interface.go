@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"eh_teh_mewa/master/web"
+	"es_teh_mewa/master/web"
 )
 
 type SatuanService interface {

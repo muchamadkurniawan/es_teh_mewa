@@ -3,9 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
-	webBahanBakuResponse "eh_teh_mewa/master/web"
-	"eh_teh_mewa/pembelian/model/entity"
-	"eh_teh_mewa/pembelian/model/web"
+	webBahanBakuResponse "es_teh_mewa/master/web"
+	"es_teh_mewa/pembelian/model/entity"
+	"es_teh_mewa/pembelian/model/web"
 )
 
 type PembelianRepository interface {

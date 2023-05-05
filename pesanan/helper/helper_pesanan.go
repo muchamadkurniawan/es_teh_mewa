@@ -1,8 +1,8 @@
 package helper
 
 import (
-	"eh_teh_mewa/pesanan/model/entity"
-	"eh_teh_mewa/pesanan/web"
+	"es_teh_mewa/pesanan/model/entity"
+	"es_teh_mewa/pesanan/web"
 )
 
 func PesananEntityToResponseString(pesanan entity.PesananEntity) web.PesananResponseDateString {

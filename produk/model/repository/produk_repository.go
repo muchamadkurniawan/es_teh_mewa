@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/produk/model/entity"
-	"eh_teh_mewa/produk/model/web"
+	"es_teh_mewa/produk/model/entity"
+	"es_teh_mewa/produk/model/web"
 )
 
 type ProdukRepository interface {

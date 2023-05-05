@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	webBahan "eh_teh_mewa/master/web"
-	"eh_teh_mewa/produk/model/entity"
-	"eh_teh_mewa/produk/model/web"
+	webBahan "es_teh_mewa/master/web"
+	"es_teh_mewa/produk/model/entity"
+	"es_teh_mewa/produk/model/web"
 )
 
 type ProdukService interface {

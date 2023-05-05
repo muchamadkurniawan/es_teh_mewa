@@ -1,0 +1,68 @@
+{{define "indexRekapKasir"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head" .}}
+    {{template "TopBarKasir"}}
+    <div>
+
+        <div class="page-title">
+            <div class="ml-5 text-white">
+                <h4>List Order</h4>
+                <p>{{.now}}</p>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body w-75 mr-auto ml-auto mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped mr-auto ml-auto">
+                        <thead>
+                        <tr>
+                            <th class="text-left-auto">Time</th>
+                            <th class="text-center w-auto">Pay</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Show</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {{ range $index, $item := .Data }}
+                            <tr>
+                                <td class="text-center">
+                                    <div class="text-left">
+                                        {{$item.Tanggal.Format "02 Jan 2006 15:04:05"}}
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    {{ if $item.Pembayaran }}
+                                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                                    {{else}}
+                                        <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                    {{ end }}
+                                </td>
+                                <td class="text-center">Rp. {{$item.TotalPesanan}}</td>
+                                <td class="text-center"><a href="/pesanan/detail/{{$item.Id}}/"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                            </tr>
+                        {{else}}
+                            <tr>
+                                <td colspan="7" class="text-center">Data not available !</td>
+                            </tr>
+                        {{ end }}
+                        </tbody>
+                    </table>
+                    <p>
+                    <form action="/rekap-kasir/" method="post">
+                        <button type="submit" class="btn btn-warning">Rekap </button>
+                    </form>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}

@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"eh_teh_mewa/pesanan/web"
+	"es_teh_mewa/pesanan/web"
 )
 
 type PesananService interface {

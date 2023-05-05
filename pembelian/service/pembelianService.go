@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	BahanBakuRespon "eh_teh_mewa/master/web"
-	"eh_teh_mewa/pembelian/model/web"
+	BahanBakuRespon "es_teh_mewa/master/web"
+	"es_teh_mewa/pembelian/model/web"
 )
 
 type PembelianService interface {

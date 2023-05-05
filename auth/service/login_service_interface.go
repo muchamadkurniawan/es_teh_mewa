@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"eh_teh_mewa/auth/model"
+	"es_teh_mewa/auth/model"
 )
 
 type LoginService interface {

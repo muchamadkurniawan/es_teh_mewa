@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 	"database/sql"
-	"eh_teh_mewa/helperMain"
-	"eh_teh_mewa/master/model/entity"
-	"eh_teh_mewa/master/repository"
-	"eh_teh_mewa/master/web"
+	"es_teh_mewa/helperMain"
+	"es_teh_mewa/master/model/entity"
+	"es_teh_mewa/master/repository"
+	"es_teh_mewa/master/web"
 	"golang.org/x/crypto/bcrypt"
 )
 
