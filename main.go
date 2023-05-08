@@ -5,6 +5,9 @@ import (
 	controllerAuth "es_teh_mewa/auth/controller"
 	repositoryAuth "es_teh_mewa/auth/repository"
 	serviceAuth "es_teh_mewa/auth/service"
+	controllerBiaya "es_teh_mewa/biaya/controller"
+	repositoryBiaya "es_teh_mewa/biaya/model/repository"
+	serviceBiaya "es_teh_mewa/biaya/service"
 	"es_teh_mewa/db"
 	"es_teh_mewa/master/controller"
 	"es_teh_mewa/master/repository"
@@ -69,6 +72,10 @@ func main() {
 	rekapController := controllerRekap.NewRekapController(rekapService)
 
 	//
+	biayaRepository := repositoryBiaya.NewBiayaRepository()
+	biayaService := serviceBiaya.NewBiayaService(biayaRepository, db)
+	biayaController := controllerBiaya.NewBiayaController(biayaService)
+	//
 	router := httprouter.New()
 
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
@@ -120,6 +127,8 @@ func main() {
 	//router.POST("/pesanan/update/:id/", pesananController.Update)
 
 	router.GET("/rekap-kasir/", rekapController.Index)
+
+	router.GET("/biaya-kasir/", biayaController.Index)
 
 	server := http.Server{
 		Addr:    "localhost:8080",

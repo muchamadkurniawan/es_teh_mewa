@@ -4,8 +4,6 @@
         <div class="main_container">
             <div class="menu_fixed">
 
-
-
                     <!-- sidebar menu -->
                     <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
                         <a class="navbar-brand" href="/pesanan/">Cafe Mewa</a>
@@ -22,18 +20,20 @@
                                     <a class="nav-link" href="/pesanan/order/">Order <span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/pesanan/order/">Biaya <span class="sr-only">(current)</span></a>
+                                    <a class="nav-link" href="/pesanan/order/">Pengeluaran <span class="sr-only">(current)</span></a>
                                 </li>
                             </ul>
 
                         </div>
-                        <form action="/auth/logout/" method="post">
-                            <button class="btn-warning btn" type="submit"> Logout</button>
-                        </form>
+                        <div class="d-flex">
+                            <form action="/auth/logout/" method="post">
+                                <button class="btn-warning btn" type="submit"> Logout</button>
+                            </form>
+                            <a href="/rekap-kasir/" class="btn-danger btn">Rekap</a>
+                        </div>
                     </nav>
 
                     <!-- /sidebar menu -->
                 </div>
             </div>
-
 {{end}}
