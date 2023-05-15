@@ -33,3 +33,19 @@ func (service *BiayaServiceImpl) GetBiayaTodayServ(ctx context.Context) []web.Ge
 	bahan := service.repo.GetBiayaTodayRepo(ctx, tx)
 	return bahan
 }
+
+func (service *BiayaServiceImpl) CreateBiaya(ctx context.Context, create web.BiayaRequestCreate) error {
+	tx, err := service.DB.Begin()
+	defer helperMain.ErrorTx(tx)
+	err = service.repo.CreateBiaya(ctx, tx, create)
+	helperMain.PanicIfError(err)
+	return err
+}
+
+func (service *BiayaServiceImpl) FindById(ctx context.Context, id string) web.GetBiayaRespon {
+	tx, err := service.DB.Begin()
+	defer helperMain.ErrorTx(tx)
+	helperMain.PanicIfError(err)
+	data := service.repo.FindById(ctx, tx, id)
+	return data
+}

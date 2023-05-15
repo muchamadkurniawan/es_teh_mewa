@@ -127,8 +127,11 @@ func main() {
 	//router.POST("/pesanan/update/:id/", pesananController.Update)
 
 	router.GET("/rekap-kasir/", rekapController.Index)
+	router.POST("/rekap-kasir/create", rekapController.Create)
 
 	router.GET("/biaya-kasir/", biayaController.Index)
+	router.POST("/biaya-kasir/create", biayaController.CreateBiaya)
+	router.GET("/biaya-kasir/detail/:id/", biayaController.FindById)
 
 	server := http.Server{
 		Addr:    "localhost:8080",
