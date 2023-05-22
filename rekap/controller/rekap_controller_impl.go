@@ -3,8 +3,8 @@ package controller
 import (
 	"context"
 	"es_teh_mewa/auth/config"
+	"es_teh_mewa/helperMain"
 	"es_teh_mewa/rekap/service"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"
@@ -52,8 +52,12 @@ func (controller *RekapControllerImpl) Index(w http.ResponseWriter, r *http.Requ
 
 func (controller *RekapControllerImpl) Create(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	r.ParseForm()
-	fmt.Fprintln(w, r.Form["pesanan"])
-	fmt.Fprintln(w, r.Form["biaya"])
+	//fmt.Fprintln(w, r.Form["pesanan"])
+	//fmt.Fprintln(w, r.Form["biaya"])
+	id, err := controller.service.Create(context.Background(), r.Form["keterangan"][0])
+	helperMain.PanicIfError(err)
+	err = controller.service.UpdateRekapPesananBiaya(context.Background(), id, r.Form["pesanan"], r.Form["biaya"])
+	http.Redirect(w, r, "/rekap-kasir/", http.StatusFound)
 }
 
 func (controller *RekapControllerImpl) Show(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

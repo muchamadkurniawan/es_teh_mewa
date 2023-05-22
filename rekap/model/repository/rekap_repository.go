@@ -12,7 +12,6 @@ type RekapRepository interface {
 	FindAll(ctx context.Context, tx *sql.Tx) ([]web.RekapResponseTime, error)
 	PesananNonRekapByDate(ctx context.Context, tx *sql.Tx) []web.AllPesananRekap
 	BiayaNonRekapByDate(ctx context.Context, tx *sql.Tx) []BiayaRespon.GetBiayaTodayRespon
-	Create(ctx context.Context, tx *sql.Tx, request web.RekapRequestDateString) error
-	Update(ctx context.Context, tx *sql.Tx, request web.RekapRequestDateString) error
-	Delete(ctx context.Context, tx *sql.Tx, id int) error
+	Create(ctx context.Context, tx *sql.Tx, keterangan string) (int, error)
+	UpdateIdRekapPesananBiaya(ctx context.Context, tx *sql.Tx, id int, id_pesanan []int, id_biaya []int) error
 }

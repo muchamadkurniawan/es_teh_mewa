@@ -42,10 +42,17 @@ func (service *BiayaServiceImpl) CreateBiaya(ctx context.Context, create web.Bia
 	return err
 }
 
-func (service *BiayaServiceImpl) FindById(ctx context.Context, id string) web.GetBiayaRespon {
+func (service *BiayaServiceImpl) FindById(ctx context.Context, id int) web.GetBiayaRespon {
 	tx, err := service.DB.Begin()
 	defer helperMain.ErrorTx(tx)
 	helperMain.PanicIfError(err)
 	data := service.repo.FindById(ctx, tx, id)
 	return data
+}
+
+func (service *BiayaServiceImpl) Delete(ctx context.Context, id int) error {
+	tx, err := service.DB.Begin()
+	defer helperMain.ErrorTx(tx)
+	helperMain.PanicIfError(err)
+	return service.repo.Delete(ctx, tx, id)
 }

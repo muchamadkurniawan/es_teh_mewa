@@ -100,10 +100,9 @@ func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, req
 		Biaya:         biaya,
 		Use_pembelian: use,
 	}
-	respon, err := controller.PembelianService.Store(context.Background(), requestCustom)
+	_, err = controller.PembelianService.Store(context.Background(), requestCustom)
 	helperMain.PanicIfError(err)
-	http.Redirect(writer, request, "/pembelian/show/"+strconv.Itoa(respon.Id), http.StatusFound)
-	return
+	http.Redirect(writer, request, "/pembelian/", http.StatusFound)
 }
 func (controller *PembelianControllerImpl) Show(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	session := controller.CheckLogin(writer, request)

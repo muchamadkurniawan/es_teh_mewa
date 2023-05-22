@@ -8,6 +8,9 @@ import (
 	controllerBiaya "es_teh_mewa/biaya/controller"
 	repositoryBiaya "es_teh_mewa/biaya/model/repository"
 	serviceBiaya "es_teh_mewa/biaya/service"
+	controllerDashboard "es_teh_mewa/dashboard/controller"
+	repositoryDashboard "es_teh_mewa/dashboard/repository"
+	serviceDashboard "es_teh_mewa/dashboard/service"
 	"es_teh_mewa/db"
 	"es_teh_mewa/master/controller"
 	"es_teh_mewa/master/repository"
@@ -76,6 +79,12 @@ func main() {
 	biayaService := serviceBiaya.NewBiayaService(biayaRepository, db)
 	biayaController := controllerBiaya.NewBiayaController(biayaService)
 	//
+
+	dashboardRepository := repositoryDashboard.NewDashboardRepository()
+	dashboardService := serviceDashboard.NewDashboardService(dashboardRepository, db)
+	dashboardController := controllerDashboard.NewDashboardController(dashboardService)
+
+	//
 	router := httprouter.New()
 
 	router.ServeFiles("/static/*filepath", http.Dir("./static/"))
@@ -132,6 +141,10 @@ func main() {
 	router.GET("/biaya-kasir/", biayaController.Index)
 	router.POST("/biaya-kasir/create", biayaController.CreateBiaya)
 	router.GET("/biaya-kasir/detail/:id/", biayaController.FindById)
+	router.POST("/biaya-kasir/delete/:id/", biayaController.Delete)
+
+	router.GET("/admin/dashboard", dashboardController.GetRekap)
+	router.GET("/admin/detail-rekap/:id/", dashboardController.GetRekap)
 
 	server := http.Server{
 		Addr:    "localhost:8080",

@@ -22,6 +22,5 @@ type GetBiayaRespon struct {
 	Jumlah      int
 	HargaSatuan int
 	Total       int
-	Id_Rekap    int
 	Tanggal     time.Time
 }

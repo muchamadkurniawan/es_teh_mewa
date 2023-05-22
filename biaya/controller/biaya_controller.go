@@ -10,4 +10,5 @@ type BiayaController interface {
 	Index(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	CreateBiaya(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 	FindById(w http.ResponseWriter, r *http.Request, params httprouter.Params)
+	Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params)
 }

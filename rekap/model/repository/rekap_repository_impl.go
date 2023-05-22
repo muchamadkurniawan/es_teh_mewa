@@ -47,7 +47,7 @@ func (r *RekapRepositoryImpl) BiayaNonRekapByDate(ctx context.Context, tx *sql.T
 		"detail_biaya.harga_satuan AS harga_satuan, detail_biaya.total AS total FROM detail_biaya " +
 		"LEFT JOIN bahan_baku ON bahan_baku.id = detail_biaya.id_bahan_baku " +
 		"LEFT JOIN satuan ON bahan_baku.id_satuan = satuan.id " +
-		"WHERE CAST(detail_biaya.tanggal AS DATE) = ? AND detail_biaya.id_detail_pesanan IS NULL;"
+		"WHERE CAST(detail_biaya.tanggal AS DATE) = ? AND detail_biaya.id_detail_pesanan IS NULL AND detail_biaya.id_rekap IS NULL;"
 	row, err := tx.QueryContext(ctx, SQL, currentTime.Format("2006-01-02"))
 	helperMain.PanicIfError(err)
 	var biayas []BiayaRespon.GetBiayaTodayRespon
@@ -59,17 +59,26 @@ func (r *RekapRepositoryImpl) BiayaNonRekapByDate(ctx context.Context, tx *sql.T
 	return biayas
 }
 
-func (r *RekapRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, request web.RekapRequestDateString) error {
-	//TODO implement me
-	panic("implement me")
+func (r *RekapRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, keterangan string) (int, error) {
+	SQL := "insert into rekap(tanggal, keterangan) values(?, ?);"
+	currentTime := time.Now()
+	get, err := tx.ExecContext(ctx, SQL, currentTime.Format("2006-01-02 15:04:05"), keterangan)
+	helperMain.PanicIfError(err)
+	id, err := get.LastInsertId()
+	return int(id), err
 }
 
-func (r *RekapRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, request web.RekapRequestDateString) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r *RekapRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, id int) error {
-	//TODO implement me
-	panic("implement me")
+func (r *RekapRepositoryImpl) UpdateIdRekapPesananBiaya(ctx context.Context, tx *sql.Tx, id int, id_pesanan []int, id_biaya []int) error {
+	var err error
+	for _, i := range id_pesanan {
+		SQLPesanan := "update pesanan set id_rekap = ? where id = ?;"
+		_, err = tx.ExecContext(ctx, SQLPesanan, id, i)
+		helperMain.PanicIfError(err)
+	}
+	for _, i2 := range id_biaya {
+		SQLBiaya := "update detail_biaya set id_rekap = ? where id = ?;"
+		_, err = tx.ExecContext(ctx, SQLBiaya, id, i2)
+		helperMain.PanicIfError(err)
+	}
+	return err
 }

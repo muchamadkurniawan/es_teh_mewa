@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"es_teh_mewa/biaya/web"
 	"es_teh_mewa/helperMain"
-	"strconv"
 	"time"
 )
 
@@ -37,7 +36,7 @@ func (repo *BiayaRepositoryImpl) GetBiayaTodayRepo(ctx context.Context, tx *sql.
 		"detail_biaya.harga_satuan AS harga_satuan, detail_biaya.total AS total FROM detail_biaya " +
 		"LEFT JOIN bahan_baku ON bahan_baku.id = detail_biaya.id_bahan_baku " +
 		"LEFT JOIN satuan ON bahan_baku.id_satuan = satuan.id " +
-		"WHERE CAST(detail_biaya.tanggal AS DATE) = ? AND detail_biaya.id_detail_pesanan IS NULL;"
+		"WHERE CAST(detail_biaya.tanggal AS DATE) = ? AND detail_biaya.id_detail_pesanan IS NULL order by detail_biaya.tanggal DESC;"
 	row, err := tx.QueryContext(ctx, SQL, currentTime.Format("2006-01-02"))
 	helperMain.PanicIfError(err)
 	var biayas []web.GetBiayaTodayRespon
@@ -51,20 +50,29 @@ func (repo *BiayaRepositoryImpl) GetBiayaTodayRepo(ctx context.Context, tx *sql.
 }
 
 func (repo *BiayaRepositoryImpl) CreateBiaya(ctx context.Context, tx *sql.Tx, request web.BiayaRequestCreate) error {
-	SQL := "insert into detail_biaya(id_bahan_baku, jumlah, harga_satuan, total) VALUES(?, ?, ?, ?);"
-	_, err := tx.ExecContext(ctx, SQL, request.Barang, request.Jumlah, request.HargaSatuan, request.Total)
+	currentTime := time.Now()
+	SQL := "insert into detail_biaya(id_bahan_baku, jumlah, harga_satuan, total, tanggal) VALUES(?, ?, ?, ?, ?);"
+	_, err := tx.ExecContext(ctx, SQL, request.Barang, request.Jumlah, request.HargaSatuan, request.Total, currentTime.Format("2006-01-02 15:04:05"))
 	return err
 }
 
-func (repo *BiayaRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id string) web.GetBiayaRespon {
-	SQL := "select id, id_bahan_baku, id_detail_pesanan, jumlah, harga_satuan, total, tanggal from detail_biaya " +
+func (repo *BiayaRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) web.GetBiayaRespon {
+	SQL := "select id, id_bahan_baku, jumlah, harga_satuan, total, tanggal from detail_biaya " +
 		"where id = ?;"
-	Id, _ := strconv.Atoi(id)
-	row, err := tx.QueryContext(ctx, SQL, Id)
+	row, err := tx.QueryContext(ctx, SQL, id)
 	helperMain.PanicIfError(err)
 	var data web.GetBiayaRespon
 	if row.Next() {
-		row.Scan(&data.Id, &data.Barang, &data.Id_Rekap, &data.Jumlah, &data.HargaSatuan, &data.Total, &data.Tanggal)
+		row.Scan(&data.Id, &data.Barang, &data.Jumlah, &data.HargaSatuan, &data.Total, &data.Tanggal)
 	}
 	return data
+}
+
+func (repo *BiayaRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, id int) error {
+	SQL := "delete from detail_biaya where id = ?;"
+	_, err := tx.ExecContext(ctx, SQL, id)
+	if err != nil {
+		panic(err)
+	}
+	return nil
 }

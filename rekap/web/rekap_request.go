@@ -1,6 +1,6 @@
 package web
 
 type RekapRequestDateString struct {
-	tanggal    string
-	keterangan string
+	Tanggal    string
+	Keterangan string
 }

@@ -69,7 +69,8 @@ func (controller *BiayaControllerImpl) FindById(w http.ResponseWriter, r *http.R
 	session := controller.CheckLogin(w, r)
 	myTemplate := template.Must(template.ParseFiles("biaya/view/kasir/show.gohtml", "view/layout/app.gohtml",
 		"view/kasir/headKasir.gohtml", "view/kasir/footerKasir.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml"))
-	data := controller.service.FindById(context.Background(), params.ByName("id"))
+	id, _ := strconv.Atoi(params.ByName("id"))
+	data := controller.service.FindById(context.Background(), id)
 	bahan := controller.service.GetBahanBakuNonProdukServ(context.Background())
 	myTemplate.ExecuteTemplate(w, "showBiaya", map[string]interface{}{
 		"Title": "Cafe Mewa - Detail Biaya",
@@ -78,4 +79,11 @@ func (controller *BiayaControllerImpl) FindById(w http.ResponseWriter, r *http.R
 		"Data":  data,
 		"Bahan": bahan,
 	})
+}
+
+func (controller *BiayaControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	id, _ := strconv.Atoi(params.ByName("id"))
+	err := controller.service.Delete(context.Background(), id)
+	helperMain.PanicIfError(err)
+	http.Redirect(w, r, "/biaya-kasir/", http.StatusFound)
 }
