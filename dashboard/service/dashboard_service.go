@@ -10,6 +10,6 @@ import (
 type DashboardService interface {
 	GetRekap(ctx context.Context) []web.ResponseDashboard
 	GetRekapById(ctx context.Context, id int) web.ResponseDashboard
-	GetBiayaRekapById(ctx context.Context, id int) []web2.GetBiayaTodayRespon
-	GetPesananRekapById(ctx context.Context, id int) []web3.AllPesananRekap
+	GetBiayaRekapById(ctx context.Context, id int) ([]web2.GetBiayaTodayRespon, int)
+	GetPesananRekapById(ctx context.Context, id int) ([]web3.AllPesananRekap, int)
 }

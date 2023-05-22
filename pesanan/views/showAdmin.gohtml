@@ -1,0 +1,68 @@
+{{define "showPesananAdmin"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head" .}}
+    {{template "bodyTop" .}}
+    <div class="right_col" role="main">
+
+        <div class="page-title mb-5">
+            <div class="title_left">
+                <h3>Detail Pesanan - {{.data.Pesanan.Date.Format "02 Jan 2006 15:04:05"}}</h3>
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped w-auto mr-auto ml-auto">
+                        <thead>
+                        <tr>
+                            <th class="text-center w-auto">Produk</th>
+                            <th class="text-center w-auto">Harga</th>
+                            <th class="text-left w-auto">Qty</th>
+                            <th class="text-left w-auto">Total</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {{ range $index, $item := .data.Detail }}
+                            <tr>
+                                <td class="text-center">
+                                    <select class="form-control w-auto" disabled>
+                                        {{range $i, $produk := $.produks}}
+                                            <option value="{{$item.Id}}" {{if eq $item.Id $produk.Id}}selected="selected"{{ end }}>{{$produk.Bahan_baku}}</option>
+                                        {{end}}
+                                    </select>
+                                </td>
+                                <td class="text-center">
+                                    <input type="number" class="form-control w-100" value="{{ $item.Harga }}" disabled>
+                                </td>
+                                <td class="text-center">
+                                    <input type="number" class="form-control w-75" value="{{ $item.Jumlah }}" disabled>
+                                </td>
+                                <td class="text-center">
+                                    <input type="number" class="form-control w-75" value="{{ $item.Total }}" disabled>
+                                </td>
+                            </tr>
+                        {{ end }}
+                        </tbody>
+                    </table>
+                    <div class="container ml-4">
+                        <input class="form-check-input" name="pembayaran" type="checkbox" id="flexCheckDefault"
+                               {{if .data.Pesanan.Pembayaran}}checked{{end}} disabled>
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Pembayaran
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}

@@ -5,63 +5,139 @@
     {{template "bodyTop" .}}
     <div class="right_col" role="main">
 
-        <div class="page-title">
+        <div class="page-title mb-5">
             <div class="title_left">
                 <h3>REKAP OPERASIONAL - {{.Data.Tanggal.Format "02 Jan 2006"}}</h3>
             </div>
-            <div class="title_right text-right">
-                <form action="/pembelian/" METHOD="GET">
-                    <div class="row">
-                        <div class="col">
-                            <input type="date" class="form-control" placeholder="Tanggal Awal" name="awal">
-                        </div>
-                        <div class="col">
-                            <input type="date" class="form-control" placeholder="Tanggal Akhir" name="akhir">
-                        </div>
-                        <button type="submit" class="btn btn-outline-warning"><i class="fa fa-search"></i>Filter</button>
-                    </div>
-                </form>
-            </div>
+
         </div>
         <div class="clearfix"></div>
 
-        <div class="page-body">
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th class="text-center">#</th>
-                            <th class="text-center">Tanggal</th>
-                            <th class="text-center">Keterangan</th>
-                            <th class="text-left">SHOW</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+        <div>
+            <div class="h-50 table-wrapper-scroll-y my-custom-scrollbar mb-5">
+                <div class="page-body w-75 mr-auto ml-auto mb-3 h-50">
+                    <h4>List Pesanan {{.Data.Tanggal.Format "02 Jan 2006"}}</h4>
+                    <div class="card h-50">
+                        <div class="card-body">
+                            <table class="table table-striped mr-auto ml-auto h-50">
+                                <thead>
+                                <tr>
+                                    <th class="text-left-auto">Time</th>
+                                    <th class="text-center w-auto">Pay</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Show</th>
+                                </tr>
+                                </thead>
 
-                        {{ range $index, $item := .Data }}
-                            <tr>
-                                <td class="text-center">#</td>
-                                <td class="text-center">{{ $item.Tanggal.Format "02 Jan 2006" }}</td>
-                                <td class="text-center">{{ $item.Keterangan }}</td>
-                                <td class="text-right">
-                                    <div class="form-inline text-right">
-                                        <a href="/admin/detail-rekap/{{$item.Id}}/" class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        {{ else }}
-                            <tr>
-                                <td colspan="7" class="text-center">Data not available !</td>
-                            </tr>
-                        {{ end }}
+                                <tbody>
+                                {{ range $index, $item := .Pesanan }}
+                                    <input type="hidden" name="pesanan" value={{$item.Id}}>
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="text-left">
+                                                {{$item.Tanggal.Format "02 Jan 2006 15:04:05"}}
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ if $item.Pembayaran }}
+                                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                                            {{else}}
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            {{ end }}
+                                        </td>
+                                        <td class="text-center">Rp. {{$item.TotalPesanan}}</td>
+                                        <td class="text-center"><a href="/admin/pesanan/detail/{{$item.Id}}/"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                {{else}}
+                                    <tr>
+                                        <td colspan="7" class="text-center">Data not available !</td>
+                                    </tr>
+                                {{ end }}
+                                </tbody>
+                                <tfoot>
+                                {{ if .TotalPesanan }}
+                                    <tr>
+                                        <td colspan="2" class="text-center font-weight-bold">
+                                            Total
+                                        </td>
+                                        <td class="text-center font-weight-bold">
+                                            Rp. {{.TotalPesanan}}
+                                        </td>
+                                    </tr>
+                                {{ end }}
+                                </tfoot>
+                            </table>
 
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="h-50 table-wrapper-scroll-y my-custom-scrollbar mb-5">
+                <div class="page-body w-75 mr-auto ml-auto mb-3 h-50">
+                    <h4>List Biaya {{.Data.Tanggal.Format "02 Jan 2006"}}</h4>
+                    <div class="card h-50">
+                        <div class="card-body">
+                            <table class="table table-striped mr-auto ml-auto h-50">
+                                <thead>
+                                <tr>
+                                    <th class="text-left-auto">Brang</th>
+                                    <th class="text-center w-auto">Jumlah</th>
+                                    <th class="text-center">Harga</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Show</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {{ range $index, $item := .Biaya }}
+                                    <input type="hidden" name="biaya" value={{$item.Id}}>
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="text-left">
+                                                {{$item.Barang}}
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            {{$item.Jumlah}}
+                                        </td>
+                                        <td class="text-center">Rp. {{$item.HargaSatuan}}</td>
+                                        <td class="text-center">Rp. {{$item.Total}}</td>
+                                        <td class="text-center"><a href="/admin/biaya/detail/{{$item.Id}}/"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                                    </tr>
+                                {{else}}
+                                    <tr>
+                                        <td colspan="7" class="text-center">Data not available !</td>
+                                    </tr>
+                                {{ end }}
+                                </tbody>
+                                <tfoot>
+                                {{ if .TotalBiaya }}
+                                    <tr>
+                                        <td colspan="3" class="text-center font-weight-bold">
+                                            Total
+                                        </td>
+                                        <td class="text-center font-weight-bold">
+                                            Rp. {{.TotalBiaya}}
+                                        </td>
+                                    </tr>
+                                {{ end }}
+                                </tfoot>
+                            </table>
+                            <p>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
+        <div class="container page-body w-75 mr-auto ml-auto mb-3 h-50">
+            <h4>Keterangan</h4>
+            <input type="text" class="form-control mb-3" disabled placeholder="Keterangan" name="keterangan" value="{{.Data.Keterangan}}">
+        </div>
+        </form>
     </div>
     {{template "footer"}}
 

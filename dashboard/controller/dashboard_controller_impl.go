@@ -55,13 +55,15 @@ func (d *DashboardControllerImpl) DetailRekap(w http.ResponseWriter, r *http.Req
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	data := d.service.GetRekapById(context.Background(), id)
-	pesanan := d.service.GetPesananRekapById(context.Background(), id)
-	biaya := d.service.GetBiayaRekapById(context.Background(), id)
+	pesanan, totalPesanan := d.service.GetPesananRekapById(context.Background(), id)
+	biaya, totalBiaya := d.service.GetBiayaRekapById(context.Background(), id)
 	myTemplate.ExecuteTemplate(w, "showDashboard", map[string]interface{}{
-		"Title":   "Cafe Mewa",
-		"Nama":    session["nama"],
-		"Data":    data,
-		"Pesanan": pesanan,
-		"Biaya":   biaya,
+		"Title":        "Cafe Mewa",
+		"Nama":         session["nama"],
+		"Data":         data,
+		"Pesanan":      pesanan,
+		"Biaya":        biaya,
+		"TotalPesanan": totalPesanan,
+		"TotalBiaya":   totalBiaya,
 	})
 }

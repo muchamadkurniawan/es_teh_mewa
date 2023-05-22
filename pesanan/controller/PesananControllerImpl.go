@@ -24,7 +24,7 @@ func NewPesananController(pesananService service.PesananService) PesananControll
 	}
 }
 
-func (controller *PesananControllerImpl) CheckLogin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{} {
+func (controller *PesananControllerImpl) CheckLoginKasir(w http.ResponseWriter, r *http.Request) map[interface{}]interface{} {
 	session, _ := config.Store.Get(r, config.SESSION_ID)
 	if session.Values["loggedIn"] != true {
 		http.Redirect(w, r, "/auth/login/", http.StatusFound)
@@ -35,8 +35,19 @@ func (controller *PesananControllerImpl) CheckLogin(w http.ResponseWriter, r *ht
 	return session.Values
 }
 
+func (controller *PesananControllerImpl) CheckLoginAdmin(w http.ResponseWriter, r *http.Request) map[interface{}]interface{} {
+	session, _ := config.Store.Get(r, config.SESSION_ID)
+	if session.Values["loggedIn"] != true {
+		http.Redirect(w, r, "/auth/login/", http.StatusFound)
+	}
+	if session.Values["type"] != "admin" {
+		http.Redirect(w, r, "/pesanan/", http.StatusFound)
+	}
+	return session.Values
+}
+
 func (controller *PesananControllerImpl) Show(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	session := controller.CheckLogin(w, r)
+	session := controller.CheckLoginKasir(w, r)
 	myTemplate := template.Must(template.ParseFiles("pesanan/views/show.gohtml", "view/layout/app.gohtml",
 		"view/kasir/headKasir.gohtml", "view/kasir/footerKasir.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml"))
 	id, err := strconv.Atoi(params.ByName("id"))
@@ -53,7 +64,7 @@ func (controller *PesananControllerImpl) Show(w http.ResponseWriter, r *http.Req
 }
 
 func (controller *PesananControllerImpl) Index(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	session := controller.CheckLogin(w, r)
+	session := controller.CheckLoginKasir(w, r)
 	myTemplate := template.Must(template.ParseFiles("pesanan/views/index.gohtml", "view/layout/app.gohtml",
 		"view/kasir/headKasir.gohtml", "view/kasir/footerKasir.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml"))
 	data := controller.service.FindAllPesananDetail(context.Background())
@@ -66,7 +77,7 @@ func (controller *PesananControllerImpl) Index(w http.ResponseWriter, r *http.Re
 }
 
 func (controller *PesananControllerImpl) Create(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	session := controller.CheckLogin(w, r)
+	session := controller.CheckLoginKasir(w, r)
 	myTemplate := template.Must(template.ParseFiles("pesanan/views/create.gohtml", "view/layout/app.gohtml",
 		"view/kasir/headKasir.gohtml", "view/kasir/footerKasir.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 	))
@@ -80,7 +91,7 @@ func (controller *PesananControllerImpl) Create(w http.ResponseWriter, r *http.R
 }
 
 func (controller *PesananControllerImpl) Store(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	controller.CheckLogin(w, r)
+	controller.CheckLoginKasir(w, r)
 	var bayar bool
 	if r.PostFormValue("pembayaran") == "on" {
 		bayar = true
@@ -131,7 +142,7 @@ func (controller *PesananControllerImpl) Delete(w http.ResponseWriter, r *http.R
 }
 
 func (controller *PesananControllerImpl) Cetak(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	controller.CheckLogin(w, r)
+	controller.CheckLoginKasir(w, r)
 	id, err := strconv.Atoi(params.ByName("id"))
 	helperMain.PanicIfError(err)
 	err = controller.service.Cetak(context.Background(), id)
@@ -143,7 +154,7 @@ func (controller *PesananControllerImpl) Cetak(w http.ResponseWriter, r *http.Re
 }
 
 func (controller *PesananControllerImpl) AddBiaya(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	session := controller.CheckLogin(w, r)
+	session := controller.CheckLoginKasir(w, r)
 	myTemplate := template.Must(template.ParseFiles("pesanan/views/create.gohtml", "view/layout/app.gohtml",
 		"view/kasir/headKasir.gohtml", "view/kasir/footerKasir.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
 	))
@@ -153,5 +164,23 @@ func (controller *PesananControllerImpl) AddBiaya(w http.ResponseWriter, r *http
 		"Nama":   session["nama"],
 		"now":    time.Now().Format("02 Jan 2006"),
 		"produk": produk,
+	})
+}
+
+func (controller *PesananControllerImpl) ShowAdmin(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	session := controller.CheckLoginAdmin(w, r)
+	myTemplate := template.Must(template.ParseFiles("pesanan/views/showAdmin.gohtml", "view/layout/app.gohtml",
+		"view/layout/bodyTop.gohtml", "view/layout/footer.gohtml", "view/layout/head.gohtml", "view/layout/header.gohtml",
+		"view/layout/sidebar.gohtml"))
+	id, err := strconv.Atoi(params.ByName("id"))
+	helperMain.PanicIfError(err)
+	detail := controller.service.FindPesananDetail(context.Background(), id)
+	produks := controller.service.GetProdukJualsAll(context.Background())
+	helperMain.PanicIfError(err)
+	myTemplate.ExecuteTemplate(w, "showPesananAdmin", map[string]interface{}{
+		"Title":   "Cafe Mewa - Detail",
+		"Nama":    session["nama"],
+		"data":    detail,
+		"produks": produks,
 	})
 }

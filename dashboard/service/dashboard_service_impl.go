@@ -38,18 +38,26 @@ func (d DashboardServiceImpl) GetRekapById(ctx context.Context, id int) web.Resp
 	return data
 }
 
-func (d DashboardServiceImpl) GetBiayaRekapById(ctx context.Context, id int) []BiayaRespon.GetBiayaTodayRespon {
+func (d DashboardServiceImpl) GetBiayaRekapById(ctx context.Context, id int) ([]BiayaRespon.GetBiayaTodayRespon, int) {
 	tx, err := d.DB.Begin()
 	defer helperMain.ErrorTx(tx)
 	helperMain.PanicIfError(err)
 	data := d.repo.GetBiayaRekapById(ctx, tx, id)
-	return data
+	var total int
+	for _, datum := range data {
+		total += datum.Total
+	}
+	return data, total
 }
 
-func (d DashboardServiceImpl) GetPesananRekapById(ctx context.Context, id int) []web3.AllPesananRekap {
+func (d DashboardServiceImpl) GetPesananRekapById(ctx context.Context, id int) ([]web3.AllPesananRekap, int) {
 	tx, err := d.DB.Begin()
 	defer helperMain.ErrorTx(tx)
 	helperMain.PanicIfError(err)
 	data := d.repo.GetPesananRekapById(ctx, tx, id)
-	return data
+	var total int
+	for _, datum := range data {
+		total += datum.TotalPesanan
+	}
+	return data, total
 }

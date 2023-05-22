@@ -1,0 +1,51 @@
+{{define "showBiayaAdmin"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head" .}}
+    {{template "bodyTop" .}}
+    <div class="right_col" role="main">
+        <div class="clearfix"></div>
+
+        <div class="page-body w-75 align-content-center ml-auto mr-auto mb-3">
+            <h4>Pengeluaran Biaya {{.Data.Tanggal.Format "02 Jan 2006 15:04:05"}}</h4>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Barang</th>
+                            <th class="text-center">Jumlah</th>
+                            <th class="text-center">Harga</th>
+                            <th class="text-center">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-center">#</td>
+                            <form action="/biaya-kasir/update/{{.Data.Id}}" method="POST">
+                                <td class="text-center" style="width: 30%">
+                                    <select name="barang" id="satuan" disabled class="form-control">
+                                        {{range $item := .Bahan}}
+                                            <option value="{{$item.Id}}" {{if eq $.Data.Barang $item.Id}}selected="selected"{{ end }}>{{$item.Nama}} - {{$item.Satuan}}</option>
+                                        {{end}}
+                                    </select>
+                                </td>
+                                <td class="text-center" style="width: 20%"><input type="text" disabled class="form-control" placeholder="Jumlah" name="jumlah" value="{{.Data.Jumlah}}"></td>
+                                <td class="text-center" style="width: 20%"><input type="text" disabled class="form-control" placeholder="Harga" name="harga" value="{{.Data.HargaSatuan}}"></td>
+                                <td class="text-center" style="width: 20%"><input type="text" disabled class="form-control" placeholder="Total" name="total" value="{{.Data.Total}}"></td>
+
+                            </form>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}

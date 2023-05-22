@@ -143,8 +143,10 @@ func main() {
 	router.GET("/biaya-kasir/detail/:id/", biayaController.FindById)
 	router.POST("/biaya-kasir/delete/:id/", biayaController.Delete)
 
-	router.GET("/admin/dashboard", dashboardController.GetRekap)
-	router.GET("/admin/detail-rekap/:id/", dashboardController.GetRekap)
+	router.GET("/", dashboardController.GetRekap)
+	router.GET("/admin/detail-rekap/:id/", dashboardController.DetailRekap)
+	router.GET("/admin/pesanan/detail/:id/", pesananController.ShowAdmin)
+	router.GET("/admin/biaya/detail/:id/", biayaController.FindByIdAdmin)
 
 	server := http.Server{
 		Addr:    "localhost:8080",
