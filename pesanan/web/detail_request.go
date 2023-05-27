@@ -16,3 +16,11 @@ type DetailRespon struct {
 	Harga       int
 	Total       int
 }
+
+type DetailPesanan struct {
+	Id        int
+	Id_Produk int
+	Jumlah    int
+	Harga     int
+	Total     int
+}

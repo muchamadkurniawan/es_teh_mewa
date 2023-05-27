@@ -34,9 +34,7 @@ func (service *PembelianServiceImpl) FindById(ctx context.Context, id string) (w
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-
 	pembelian, err := service.PembelianRepository.FindByIdPembelian(ctx, tx, id)
-
 	return helper.ToPembelianUpdateResponse(pembelian), err
 }
 
@@ -60,10 +58,17 @@ func (service *PembelianServiceImpl) Store(ctx context.Context, request web.Pemb
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-
 	pembelian, err := service.PembelianRepository.InsertPembelian(ctx, tx, request)
 	helperMain.PanicIfError(err)
 	return helper.RequestToResponse(pembelian), nil
+}
+
+func (service *PembelianServiceImpl) UpdateStok(ctx context.Context, bahan int, jumlah int) {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	service.PembelianRepository.UpdateStok(ctx, tx, bahan, jumlah)
+	helperMain.PanicIfError(err)
 }
 
 func (service *PembelianServiceImpl) Update(ctx context.Context, request web.PembelianCreateRequest) (web.PembelianResponse, error) {

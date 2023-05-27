@@ -40,7 +40,8 @@ func (Service *BahanbakuServiceimpl) Save(ctx context.Context, request web.Bahan
 		IdSatuan: request.IdSatuan,
 		Nama:     request.Nama,
 	}
-	Service.BahanRepo.Insert(ctx, tx, bahan)
+	id := Service.BahanRepo.Insert(ctx, tx, bahan)
+	Service.BahanRepo.InsertStok(ctx, tx, id)
 }
 
 func (Service *BahanbakuServiceimpl) Update(ctx context.Context, response web.BahanbakuRequest) {

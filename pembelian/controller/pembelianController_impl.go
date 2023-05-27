@@ -101,6 +101,7 @@ func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, req
 		Use_pembelian: use,
 	}
 	_, err = controller.PembelianService.Store(context.Background(), requestCustom)
+	controller.PembelianService.UpdateStok(context.Background(), barang, jumlah)
 	helperMain.PanicIfError(err)
 	http.Redirect(writer, request, "/pembelian/", http.StatusFound)
 }

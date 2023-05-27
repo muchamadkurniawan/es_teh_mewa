@@ -105,6 +105,7 @@ func (controller *PesananControllerImpl) Store(w http.ResponseWriter, r *http.Re
 	idPesanan := controller.service.CreatePesanan(context.Background(), data)
 	ids := controller.service.GetIdProduk(context.Background())
 	check := true
+	var dataDetail []web.BiayaPesananReq
 	for _, id := range ids {
 		if r.PostFormValue("qty"+id) != "" {
 			check = false
@@ -120,8 +121,20 @@ func (controller *PesananControllerImpl) Store(w http.ResponseWriter, r *http.Re
 				Jumlah:     jumlah,
 				Total:      total,
 			}
-			err = controller.service.CreateDetail(context.Background(), request)
+			err, idDetail := controller.service.CreateDetail(context.Background(), request)
+			dataDetail = append(dataDetail, web.BiayaPesananReq{
+				Id_produk: idProduk,
+				Id_detail: idDetail,
+				Jumlah:    jumlah,
+			})
 		}
+	}
+	for _, req := range dataDetail {
+		bahan := controller.service.GetIdBahan(context.Background(), req.Id_produk)
+		harga := controller.service.GetHargaBiaya(context.Background(), bahan)
+		err := controller.service.CreateBiaya(context.Background(), bahan, req.Jumlah, harga, req.Id_detail)
+		controller.service.UpdateStok(context.Background(), bahan, req.Jumlah)
+		helperMain.PanicIfError(err)
 	}
 	if check {
 		http.Redirect(w, r, "/pesanan/order/", http.StatusFound)

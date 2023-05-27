@@ -55,6 +55,37 @@ func (PesananRepositoryImpl) GetProdukJual(ctx context.Context, tx *sql.Tx, id i
 	return produk
 }
 
+func (PesananRepositoryImpl) CreateBiayaPesanan(ctx context.Context, tx *sql.Tx, jumlah int, bahan int, harga int, id_detail int) (error, int) {
+	currentTime := time.Now()
+	SQL := "INSERT INTO detail_biaya(id_bahan_baku, id_detail_pesanan, jumlah, harga_satuan, total, tanggal) values(?, ?, ?, ?, ?, ?);"
+	succ, err := tx.ExecContext(ctx, SQL, bahan, id_detail, jumlah, harga,
+		jumlah*harga, currentTime.Format("2006-01-02 15:04:05"))
+	idSu, _ := succ.LastInsertId()
+	return err, int(idSu)
+}
+
+func (PesananRepositoryImpl) GetIdBahan(ctx context.Context, tx *sql.Tx, id int) int {
+	SQL := "select id_bahan_baku from produk_jual where id = ?;"
+	data, err := tx.QueryContext(ctx, SQL, id)
+	helperMain.PanicIfError(err)
+	var idBahan int
+	if data.Next() {
+		data.Scan(&idBahan)
+	}
+	return idBahan
+}
+
+func (PesananRepositoryImpl) GetHargaBiaya(ctx context.Context, tx *sql.Tx, id int) int {
+	SQL := "select biaya from pembelian where id_bahan_baku = ?;"
+	row, err := tx.QueryContext(ctx, SQL, id)
+	helperMain.PanicIfError(err)
+	var harga int
+	if row.Next() {
+		row.Scan(&harga)
+	}
+	return harga
+}
+
 func (PesananRepositoryImpl) FindById(ctx context.Context, tx *sql.Tx, id int) web.PesananRequestUpdate {
 	SQL := "SELECT id, tanggal, pembayaran FROM pesanan WHERE id = ?;"
 	row, err := tx.QueryContext(ctx, SQL, id)
@@ -147,11 +178,12 @@ func (PesananRepositoryImpl) CreatePesanan(ctx context.Context, tx *sql.Tx, requ
 	return int(id)
 }
 
-func (PesananRepositoryImpl) CreateDetail(ctx context.Context, tx *sql.Tx, request web.DetailRequest) error {
+func (PesananRepositoryImpl) CreateDetail(ctx context.Context, tx *sql.Tx, request web.DetailRequest) (error, int) {
 	SQL := "INSERT INTO detail_pesanan(id_produk_jual, id_pesanan, jumlah, harga_satuan, total) VALUES(?, ?, ?, ?, ?);"
-	_, err := tx.ExecContext(ctx, SQL, request.Id_produk, request.Id_pesanan, request.Jumlah, request.Harga, request.Total)
+	id, err := tx.ExecContext(ctx, SQL, request.Id_produk, request.Id_pesanan, request.Jumlah, request.Harga, request.Total)
 	helperMain.PanicIfError(err)
-	return err
+	Id, _ := id.LastInsertId()
+	return err, int(Id)
 }
 
 func (PesananRepositoryImpl) UpdatePembayaran(ctx context.Context, tx *sql.Tx, id int, pembayaran bool) error {
@@ -171,6 +203,15 @@ func (PesananRepositoryImpl) UpdateRekap(ctx context.Context, tx *sql.Tx, id int
 func (PesananRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, id int) error {
 	SQL := "DELETE FROM pesanan WHERE id = ?;"
 	_, err := tx.ExecContext(ctx, SQL, id)
+	helperMain.PanicIfError(err)
+	return nil
+}
+
+func (PesananRepositoryImpl) CreateDetailStok(ctx context.Context, tx *sql.Tx, BP int, jumlah int) error {
+	SQL := "insert into detail_stok(id_bahan_baku, type, jumlah) values(?, 'out', ?)"
+	_, err := tx.ExecContext(ctx, SQL, BP, jumlah)
+	SQL2 := "update stok set total = total - ? where id_bahan_baku = ?;"
+	_, err = tx.ExecContext(ctx, SQL2, jumlah, BP)
 	helperMain.PanicIfError(err)
 	return nil
 }

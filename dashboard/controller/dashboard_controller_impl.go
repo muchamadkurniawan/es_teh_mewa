@@ -67,3 +67,8 @@ func (d *DashboardControllerImpl) DetailRekap(w http.ResponseWriter, r *http.Req
 		"TotalBiaya":   totalBiaya,
 	})
 }
+
+func (controller *DashboardControllerImpl) CreateBiayaPesanan(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	//TODO implement me
+	panic("implement me")
+}

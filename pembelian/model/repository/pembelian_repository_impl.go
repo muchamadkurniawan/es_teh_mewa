@@ -65,6 +65,14 @@ func (repository *PembelianRespositoryImpl) InsertPembelian(ctx context.Context,
 	return pembelian, nil
 }
 
+func (repository *PembelianRespositoryImpl) UpdateStok(ctx context.Context, tx *sql.Tx, id_bahan int, jumlah int) {
+	SQL := "UPDATE stok SET total = total + ? where id_bahan_baku = ?;"
+	_, err := tx.ExecContext(ctx, SQL, jumlah, id_bahan)
+	SQL2 := "insert into detail_stok(id_bahan_baku, type, jumlah) values(?, 'in', ?);"
+	_, err = tx.ExecContext(ctx, SQL2, id_bahan, jumlah)
+	helperMain.PanicIfError(err)
+}
+
 func (repository *PembelianRespositoryImpl) FindByIdPembelian(ctx context.Context, tx *sql.Tx, id string) (entity.Pembelian, error) {
 	var pembelian entity.Pembelian
 	SQL := "SELECT id, id_user, id_bahan_baku, tanggal, jumlah, biaya, use_pembelian FROM pembelian WHERE id = ? LIMIT 1;"

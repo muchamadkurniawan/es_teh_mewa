@@ -14,9 +14,19 @@ func NewBahanRepository() *BahanRepository {
 	return &BahanRepository{}
 }
 
-func (BahanRepository) Insert(ctx context.Context, tx *sql.Tx, baku entity.BahanBaku) {
-	SQL := "INSERT INTO bahan_baku (id_Satuan, nama) VALUES (?, ?)"
-	_, err := tx.ExecContext(ctx, SQL, baku.IdSatuan, baku.Nama)
+func (BahanRepository) Insert(ctx context.Context, tx *sql.Tx, baku entity.BahanBaku) int {
+	SQL := "INSERT INTO bahan_baku (id_Satuan, nama) VALUES (?, ?);"
+	row, err := tx.ExecContext(ctx, SQL, baku.IdSatuan, baku.Nama)
+	id, err := row.LastInsertId()
+	if err != nil {
+		panic(err)
+	}
+	return int(id)
+}
+
+func (r BahanRepository) InsertStok(ctx context.Context, tx *sql.Tx, id int) {
+	SQL := "INSERT INTO stok (id_bahan_baku, total) VALUES (?, 0);"
+	_, err := tx.ExecContext(ctx, SQL, id)
 	if err != nil {
 		panic(err)
 	}

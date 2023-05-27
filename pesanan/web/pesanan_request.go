@@ -52,3 +52,9 @@ type CetakPesanan struct {
 	Harga      int
 	Total      int
 }
+
+type BiayaPesananReq struct {
+	Id_produk int
+	Id_detail int
+	Jumlah    int
+}

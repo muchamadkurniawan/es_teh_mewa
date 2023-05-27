@@ -13,5 +13,6 @@ type RekapRepository interface {
 	PesananNonRekapByDate(ctx context.Context, tx *sql.Tx) []web.AllPesananRekap
 	BiayaNonRekapByDate(ctx context.Context, tx *sql.Tx) []BiayaRespon.GetBiayaTodayRespon
 	Create(ctx context.Context, tx *sql.Tx, keterangan string) (int, error)
-	UpdateIdRekapPesananBiaya(ctx context.Context, tx *sql.Tx, id int, id_pesanan []int, id_biaya []int) error
+	UpdateIdRekapPesananBiaya(ctx context.Context, tx *sql.Tx, id int, id_pesanan []int, id_biaya []int, BP []int) error
+	BiayaNonRekapByDatePesanan(ctx context.Context, tx *sql.Tx) []BiayaRespon.GetBiayaTodayRespon
 }

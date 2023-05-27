@@ -14,6 +14,9 @@
     {{template "head" .}}
     {{template "TopBarKasir"}}
     <form action="/rekap-kasir/create" method="post" name="form">
+        {{ range $index, $item := .BiayaPesanan }}
+            <input type="hidden" name="biayaPesanan" value={{$item.Id}}>
+        {{ end }}
     <div>
         <div class="h-50 table-wrapper-scroll-y my-custom-scrollbar">
             <div class="page-title">
@@ -96,7 +99,7 @@
                         <table class="table table-striped mr-auto ml-auto h-50">
                             <thead>
                             <tr>
-                                <th class="text-left-auto">Brang</th>
+                                <th class="text-left-auto">Barang</th>
                                 <th class="text-center w-auto">Jumlah</th>
                                 <th class="text-center">Harga</th>
                                 <th class="text-center">Total</th>

@@ -11,6 +11,7 @@ type PembelianService interface {
 	FindById(ctx context.Context, id string) (web.PembelianUpdateResponse, error)
 	FindByAll(ctx context.Context, filterAwal string, filterAkhir string) ([]web.PembelianResponseFull, error)
 	Store(ctx context.Context, request web.PembelianCreateRequest) (web.PembelianResponse, error)
+	UpdateStok(ctx context.Context, bahan int, jumlah int)
 	Update(ctx context.Context, response web.PembelianCreateRequest) (web.PembelianResponse, error)
 	Delete(ctx context.Context, id string) error
 }

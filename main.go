@@ -24,6 +24,9 @@ import (
 	controllerRekap "es_teh_mewa/rekap/controller"
 	repositoryRekap "es_teh_mewa/rekap/model/repository"
 	serviceRekap "es_teh_mewa/rekap/service"
+	controllerStok "es_teh_mewa/stok/controller"
+	repositoryStok "es_teh_mewa/stok/repository"
+	serviceStok "es_teh_mewa/stok/service"
 
 	controllerProduk "es_teh_mewa/produk/controller"
 	repositoryProduk "es_teh_mewa/produk/model/repository"
@@ -35,6 +38,12 @@ import (
 
 func main() {
 	db := db.GetConnect()
+
+	StokRepository := repositoryStok.NewStokRepository()
+	StokService := serviceStok.NewStokService(db, StokRepository)
+	StokController := controllerStok.NewStokController(StokService)
+
+	//
 	UserRepoLogin := repositoryAuth.NewLoginRepository()
 	UserServiceLogin := serviceAuth.NewLoginService(UserRepoLogin, db)
 	UserControllerLogin := controllerAuth.NewLoginController(UserServiceLogin)
@@ -136,10 +145,10 @@ func main() {
 	//router.POST("/pesanan/update/:id/", pesananController.Update)
 
 	router.GET("/rekap-kasir/", rekapController.Index)
-	router.POST("/rekap-kasir/create", rekapController.Create)
+	router.POST("/rekap-kasir/create/", rekapController.Create)
 
 	router.GET("/biaya-kasir/", biayaController.Index)
-	router.POST("/biaya-kasir/create", biayaController.CreateBiaya)
+	router.POST("/biaya-kasir/create/", biayaController.CreateBiaya)
 	router.GET("/biaya-kasir/detail/:id/", biayaController.FindById)
 	router.POST("/biaya-kasir/delete/:id/", biayaController.Delete)
 
@@ -147,7 +156,10 @@ func main() {
 	router.GET("/admin/detail-rekap/:id/", dashboardController.DetailRekap)
 	router.GET("/admin/pesanan/detail/:id/", pesananController.ShowAdmin)
 	router.GET("/admin/biaya/detail/:id/", biayaController.FindByIdAdmin)
+	router.POST("/admin/biaya/create/pesanan/:id/", dashboardController.CreateBiayaPesanan)
 
+	router.GET("/stok/", StokController.Index)
+	router.GET("/detail-stok/", StokController.Detail)
 	server := http.Server{
 		Addr:    "localhost:8080",
 		Handler: router,

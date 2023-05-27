@@ -108,12 +108,39 @@ func (service *PesananServiceImpl) CreatePesanan(ctx context.Context, request we
 	return id
 }
 
-func (service *PesananServiceImpl) CreateDetail(ctx context.Context, request web.DetailRequest) error {
+func (service *PesananServiceImpl) CreateDetail(ctx context.Context, request web.DetailRequest) (error, int) {
 	tx, err := service.db.Begin()
 	helperMain.PanicIfError(err)
 	defer helperMain.ErrorTx(tx)
-	err = service.PesananRepository.CreateDetail(ctx, tx, request)
+	err, id := service.PesananRepository.CreateDetail(ctx, tx, request)
+	return err, id
+}
+
+func (service *PesananServiceImpl) CreateBiaya(ctx context.Context, bahan int, jumlah int, harga int, id_detail int) error {
+	tx, err := service.db.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	err, _ = service.PesananRepository.CreateBiayaPesanan(ctx, tx, jumlah, bahan, harga, id_detail)
+	helperMain.PanicIfError(err)
 	return err
+}
+
+func (service *PesananServiceImpl) GetIdBahan(ctx context.Context, id int) int {
+	tx, err := service.db.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	bahan := service.PesananRepository.GetIdBahan(ctx, tx, id)
+	helperMain.PanicIfError(err)
+	return bahan
+}
+
+func (service *PesananServiceImpl) GetHargaBiaya(ctx context.Context, id int) int {
+	tx, err := service.db.Begin()
+	helperMain.PanicIfError(err)
+	defer helperMain.ErrorTx(tx)
+	harga := service.PesananRepository.GetHargaBiaya(ctx, tx, id)
+	helperMain.PanicIfError(err)
+	return harga
 }
 
 func (service *PesananServiceImpl) UpdatePembayaran(ctx context.Context, id int, pembayaran bool) error {
@@ -171,4 +198,11 @@ func (service *PesananServiceImpl) Cetak(ctx context.Context, id int) error {
 		return err
 	}
 	return nil
+}
+
+func (service *PesananServiceImpl) UpdateStok(ctx context.Context, BP int, jumlah int) {
+	tx, err := service.db.Begin()
+	defer helperMain.ErrorTx(tx)
+	helperMain.PanicIfError(err)
+	err = service.PesananRepository.CreateDetailStok(ctx, tx, BP, jumlah)
 }

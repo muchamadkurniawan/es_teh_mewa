@@ -59,6 +59,24 @@ func (r *RekapRepositoryImpl) BiayaNonRekapByDate(ctx context.Context, tx *sql.T
 	return biayas
 }
 
+func (r *RekapRepositoryImpl) BiayaNonRekapByDatePesanan(ctx context.Context, tx *sql.Tx) []BiayaRespon.GetBiayaTodayRespon {
+	currentTime := time.Now()
+	SQL := "SELECT detail_biaya.id AS id, concat(bahan_baku.nama, '-', satuan.nama) AS bahan, detail_biaya.jumlah AS jumlah, " +
+		"detail_biaya.harga_satuan AS harga_satuan, detail_biaya.total AS total FROM detail_biaya " +
+		"LEFT JOIN bahan_baku ON bahan_baku.id = detail_biaya.id_bahan_baku " +
+		"LEFT JOIN satuan ON bahan_baku.id_satuan = satuan.id " +
+		"WHERE CAST(detail_biaya.tanggal AS DATE) = ? AND detail_biaya.id_rekap IS NULL;"
+	row, err := tx.QueryContext(ctx, SQL, currentTime.Format("2006-01-02"))
+	helperMain.PanicIfError(err)
+	var biayas []BiayaRespon.GetBiayaTodayRespon
+	for row.Next() {
+		biaya := BiayaRespon.GetBiayaTodayRespon{}
+		row.Scan(&biaya.Id, &biaya.Barang, &biaya.Jumlah, &biaya.HargaSatuan, &biaya.Total)
+		biayas = append(biayas, biaya)
+	}
+	return biayas
+}
+
 func (r *RekapRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, keterangan string) (int, error) {
 	SQL := "insert into rekap(tanggal, keterangan) values(?, ?);"
 	currentTime := time.Now()
@@ -68,7 +86,7 @@ func (r *RekapRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, keterangan
 	return int(id), err
 }
 
-func (r *RekapRepositoryImpl) UpdateIdRekapPesananBiaya(ctx context.Context, tx *sql.Tx, id int, id_pesanan []int, id_biaya []int) error {
+func (r *RekapRepositoryImpl) UpdateIdRekapPesananBiaya(ctx context.Context, tx *sql.Tx, id int, id_pesanan []int, id_biaya []int, id_biayaPesanan []int) error {
 	var err error
 	for _, i := range id_pesanan {
 		SQLPesanan := "update pesanan set id_rekap = ? where id = ?;"
@@ -78,6 +96,11 @@ func (r *RekapRepositoryImpl) UpdateIdRekapPesananBiaya(ctx context.Context, tx 
 	for _, i2 := range id_biaya {
 		SQLBiaya := "update detail_biaya set id_rekap = ? where id = ?;"
 		_, err = tx.ExecContext(ctx, SQLBiaya, id, i2)
+		helperMain.PanicIfError(err)
+	}
+	for _, i3 := range id_biayaPesanan {
+		SQLBiaya := "update detail_biaya set id_rekap = ? where id = ?;"
+		_, err = tx.ExecContext(ctx, SQLBiaya, id, i3)
 		helperMain.PanicIfError(err)
 	}
 	return err
