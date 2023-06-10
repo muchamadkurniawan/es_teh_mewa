@@ -32,7 +32,7 @@
                                 <td class="text-center">
                                     <select class="form-control w-auto" disabled>
                                         {{range $i, $produk := $.produks}}
-                                            <option value="{{$item.Id}}" {{if eq $item.Id $produk.Id}}selected="selected"{{ end }}>{{$produk.Bahan_baku}}</option>
+                                            <option value="{{$item.Id}}" {{if eq $item.Id_produk $produk.Id}}selected="selected"{{ end }}>{{$produk.Bahan_baku}}</option>
                                         {{end}}
                                     </select>
                                 </td>

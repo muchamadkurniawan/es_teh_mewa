@@ -65,6 +65,7 @@ func (d *DashboardControllerImpl) DetailRekap(w http.ResponseWriter, r *http.Req
 		"Biaya":        biaya,
 		"TotalPesanan": totalPesanan,
 		"TotalBiaya":   totalBiaya,
+		"Laba":         totalPesanan - totalBiaya,
 	})
 }
 

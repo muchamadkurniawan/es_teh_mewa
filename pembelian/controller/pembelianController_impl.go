@@ -98,6 +98,7 @@ func (controller *PembelianControllerImpl) Store(writer http.ResponseWriter, req
 		Jumlah:        jumlah,
 		Tanggal:       request.PostFormValue("tanggal"),
 		Biaya:         biaya,
+		Total:         biaya * jumlah,
 		Use_pembelian: use,
 	}
 	_, err = controller.PembelianService.Store(context.Background(), requestCustom)
@@ -141,17 +142,18 @@ func (controller *PembelianControllerImpl) Update(writer http.ResponseWriter, re
 		use = false
 	}
 	helperMain.PanicIfError(err)
-	respon, err := controller.PembelianService.Update(context.Background(), web.PembelianCreateRequest{
+	_, err = controller.PembelianService.Update(context.Background(), web.PembelianCreateRequest{
 		Id:            id,
 		Id_user:       1,
 		Id_bahan_baku: barang,
 		Tanggal:       request.PostFormValue("tanggal"),
 		Jumlah:        jumlah,
 		Biaya:         biaya,
+		Total:         biaya * jumlah,
 		Use_pembelian: use,
 	})
 	helperMain.PanicIfError(err)
-	http.Redirect(writer, request, "/pembelian/show/"+strconv.Itoa(respon.Id), http.StatusFound)
+	http.Redirect(writer, request, "/pembelian/", http.StatusFound)
 	return
 }
 func (controller *PembelianControllerImpl) Delete(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {

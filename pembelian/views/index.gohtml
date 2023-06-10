@@ -41,6 +41,7 @@
                                 <th class="text-center">Bahan Baku</th>
                                 <th class="text-center">Jumlah</th>
                                 <th class="text-center">Biaya</th>
+                                <th class="text-center">Total</th>
                                 <th class="text-left">Action</th>
                             </tr>
                             </thead>
@@ -53,6 +54,7 @@
                                         <td class="text-center">{{ $item.Id_bahan_baku }}</td>
                                         <td class="text-center">{{ $item.Jumlah }}</td>
                                         <td class="text-center">Rp. {{ formatNumber $item.Biaya }}</td>
+                                        <td class="text-center">Rp. {{ formatNumber $item.Total }}</td>
 
                                         <td class="text-right">
                                             <div class="form-inline text-right">

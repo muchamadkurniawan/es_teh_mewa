@@ -160,6 +160,7 @@ func main() {
 
 	router.GET("/stok/", StokController.Index)
 	router.GET("/detail-stok/", StokController.Detail)
+	router.GET("/stock-kasir/", StokController.IndexKasir)
 	server := http.Server{
 		Addr:    "localhost:8080",
 		Handler: router,

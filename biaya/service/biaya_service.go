@@ -7,6 +7,7 @@ import (
 
 type BiayaService interface {
 	GetBahanBakuNonProdukServ(ctx context.Context) []web.GetBahanBakuNonProdukRespon
+	GetBahanBaku(ctx context.Context) []web.GetBahanBakuNonProdukRespon
 	GetBiayaTodayServ(ctx context.Context) []web.GetBiayaTodayRespon
 	CreateBiaya(ctx context.Context, create web.BiayaRequestCreate) error
 	FindById(ctx context.Context, id int) web.GetBiayaRespon

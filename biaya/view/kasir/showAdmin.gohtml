@@ -25,7 +25,7 @@
                             <td class="text-center">#</td>
                             <form action="/biaya-kasir/update/{{.Data.Id}}" method="POST">
                                 <td class="text-center" style="width: 30%">
-                                    <select name="barang" id="satuan" disabled class="form-control">
+                                    <select name="barang" id="barang" disabled class="form-control">
                                         {{range $item := .Bahan}}
                                             <option value="{{$item.Id}}" {{if eq $.Data.Barang $item.Id}}selected="selected"{{ end }}>{{$item.Nama}} - {{$item.Satuan}}</option>
                                         {{end}}

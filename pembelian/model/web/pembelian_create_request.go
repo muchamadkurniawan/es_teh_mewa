@@ -7,5 +7,6 @@ type PembelianCreateRequest struct {
 	Tanggal       string
 	Biaya         int
 	Jumlah        int
+	Total         int
 	Use_pembelian bool
 }

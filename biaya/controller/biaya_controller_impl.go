@@ -65,12 +65,11 @@ func (controller *BiayaControllerImpl) CreateBiaya(w http.ResponseWriter, r *htt
 	barang, _ := strconv.Atoi(r.PostFormValue("barang"))
 	jumlah, _ := strconv.Atoi(r.PostFormValue("jumlah"))
 	harga, _ := strconv.Atoi(r.PostFormValue("harga"))
-	total, _ := strconv.Atoi(r.PostFormValue("total"))
 	request := web.BiayaRequestCreate{
 		Barang:      barang,
 		Jumlah:      jumlah,
 		HargaSatuan: harga,
-		Total:       total,
+		Total:       harga * jumlah,
 	}
 	err := controller.service.CreateBiaya(context.Background(), request)
 	helperMain.PanicIfError(err)
@@ -108,7 +107,7 @@ func (controller *BiayaControllerImpl) FindByIdAdmin(w http.ResponseWriter, r *h
 		"view/layout/sidebar.gohtml"))
 	id, _ := strconv.Atoi(params.ByName("id"))
 	data := controller.service.FindById(context.Background(), id)
-	bahan := controller.service.GetBahanBakuNonProdukServ(context.Background())
+	bahan := controller.service.GetBahanBaku(context.Background())
 	myTemplate.ExecuteTemplate(w, "showBiayaAdmin", map[string]interface{}{
 		"Title": "Cafe Mewa - Detail Biaya",
 		"Nama":  session["nama"],

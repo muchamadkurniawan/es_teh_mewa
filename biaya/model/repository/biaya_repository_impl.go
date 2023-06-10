@@ -30,6 +30,21 @@ func (repo *BiayaRepositoryImpl) GetBahanBakuNonProdukRepo(ctx context.Context, 
 	return bahans
 }
 
+func (repo *BiayaRepositoryImpl) GetBahanBaku(ctx context.Context, tx *sql.Tx) []web.GetBahanBakuNonProdukRespon {
+	SQL := "select bahan_baku.id as id, satuan.nama as satuan, bahan_baku.nama as nama from bahan_baku " +
+		"left join satuan on bahan_baku.id_satuan = satuan.id " +
+		"left join produk_jual on produk_jual.id_bahan_baku = bahan_baku.id;"
+	row, err := tx.QueryContext(ctx, SQL)
+	helperMain.PanicIfError(err)
+	var bahans []web.GetBahanBakuNonProdukRespon
+	for row.Next() {
+		bahan := web.GetBahanBakuNonProdukRespon{}
+		row.Scan(&bahan.Id, &bahan.Satuan, &bahan.Nama)
+		bahans = append(bahans, bahan)
+	}
+	return bahans
+}
+
 func (repo *BiayaRepositoryImpl) GetBiayaTodayRepo(ctx context.Context, tx *sql.Tx) []web.GetBiayaTodayRespon {
 	currentTime := time.Now()
 	SQL := "SELECT detail_biaya.id AS id, concat(bahan_baku.nama, '-', satuan.nama) AS bahan, detail_biaya.jumlah AS jumlah, " +

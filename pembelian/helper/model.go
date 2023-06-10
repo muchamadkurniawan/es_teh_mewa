@@ -22,6 +22,7 @@ func RequestToResponse(pembelian web.PembelianCreateRequest) web.PembelianRespon
 		Tanggal:       pembelian.Tanggal,
 		Biaya:         int(pembelian.Biaya),
 		Jumlah:        int(pembelian.Jumlah),
+		Total:         int(pembelian.Total),
 		Use_pembelian: pembelian.Use_pembelian,
 	}
 }
@@ -34,6 +35,7 @@ func ToPembelianResponse(pembelian entity.Pembelian) web.PembelianResponse {
 		Tanggal:       FormatTanggal(pembelian.Tanggal),
 		Biaya:         int(pembelian.Biaya),
 		Jumlah:        int(pembelian.Jumlah),
+		Total:         int(pembelian.Total),
 		Use_pembelian: pembelian.UsePembelian,
 	}
 }
@@ -46,6 +48,7 @@ func ToPembelianUpdateResponse(pembelian entity.Pembelian) web.PembelianUpdateRe
 		Tanggal:       pembelian.Tanggal,
 		Biaya:         int(pembelian.Biaya),
 		Jumlah:        int(pembelian.Jumlah),
+		Total:         int(pembelian.Total),
 		Use_pembelian: pembelian.UsePembelian,
 	}
 }

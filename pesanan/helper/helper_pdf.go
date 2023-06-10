@@ -36,12 +36,13 @@ func SetData(data []web.DetailRespon) [][]string {
 	total := 0
 	for _, datum := range data {
 		a := []string{}
-		a = append(a, datum.Nama_produk+"	"+strconv.Itoa(datum.Jumlah))
+		a = append(a, datum.Nama_produk)
+		a = append(a, strconv.Itoa(datum.Jumlah))
 		a = append(a, strconv.Itoa(datum.Harga))
 		a = append(a, strconv.Itoa(datum.Total))
 		datas = append(datas, a)
 		total += datum.Total
 	}
-	datas = append(datas, []string{"Total	", "	", strconv.Itoa(total)})
+	datas = append(datas, []string{"Total	", "	", "	", strconv.Itoa(total)})
 	return datas
 }

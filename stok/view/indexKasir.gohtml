@@ -1,0 +1,52 @@
+{{define "indexStockKasir"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    {{template "head" .}}
+    {{template "TopBarKasir"}}
+    <div>
+
+        <div class="page-title">
+            <div>
+                <h4>Stock</h4>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="page-body mr-auto ml-auto">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped mr-auto ml-auto">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Bahan</th>
+                            <th class="text-center">Jumlah</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {{ range $index, $item := .AllData }}
+                            <tr>
+                                <td class="text-center">#</td>
+                                <td class="text-center">{{ $item.Bahan }}</td>
+                                <td class="text-center">{{ $item.Total }}</td>
+                            </tr>
+                        {{ else }}
+                            <tr>
+                                <td colspan="7" class="text-center">Data not available !</td>
+                            </tr>
+                        {{ end }}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    {{template "footer"}}
+
+    </html>
+{{end}}

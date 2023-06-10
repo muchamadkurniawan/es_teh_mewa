@@ -22,6 +22,7 @@
                                 <th class="text-center w-auto">Produk</th>
                                 <th class="text-center w-auto">Harga</th>
                                 <th class="text-left w-auto">Qty</th>
+                                <th class="text-left w-auto">Total</th>
                             </tr>
                             </thead>
 
@@ -31,7 +32,7 @@
                                     <td class="text-center">
                                         <select name="produk{{$item.Id}}" class="form-control w-auto" disabled>
                                             {{range $i, $produk := $.produks}}
-                                                <option value="{{$item.Id}}" {{if eq $item.Id $produk.Id}}selected="selected"{{ end }}>{{$produk.Bahan_baku}}</option>
+                                                <option value="{{$produk.Id}}" {{if eq $item.Id_produk $produk.Id}}selected="selected"{{ end }}>{{$produk.Bahan_baku}}</option>
                                             {{end}}
                                         </select>
                                     </td>
@@ -40,6 +41,9 @@
                                     </td>
                                     <td class="text-center">
                                         <input type="number" class="form-control w-75" name="qty{{$item.Id}}" value="{{ $item.Jumlah }}" disabled>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="number" class="form-control w-75" name="qty{{$item.Id}}" value="{{ $item.Total }}" disabled>
                                     </td>
                                 </tr>
                             {{ end }}

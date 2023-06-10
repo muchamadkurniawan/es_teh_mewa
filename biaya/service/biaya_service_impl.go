@@ -27,6 +27,13 @@ func (service *BiayaServiceImpl) GetBahanBakuNonProdukServ(ctx context.Context) 
 	return bahan
 }
 
+func (service *BiayaServiceImpl) GetBahanBaku(ctx context.Context) []web.GetBahanBakuNonProdukRespon {
+	tx, err := service.DB.Begin()
+	helperMain.PanicIfError(err)
+	bahan := service.repo.GetBahanBaku(ctx, tx)
+	return bahan
+}
+
 func (service *BiayaServiceImpl) GetBiayaTodayServ(ctx context.Context) []web.GetBiayaTodayRespon {
 	tx, err := service.DB.Begin()
 	helperMain.PanicIfError(err)

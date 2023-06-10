@@ -9,6 +9,7 @@ type PembelianResponse struct {
 	Tanggal       string
 	Biaya         int
 	Jumlah        int
+	Total         int
 	Use_pembelian bool
 }
 
@@ -19,5 +20,6 @@ type PembelianResponseFull struct {
 	Tanggal       time.Time
 	Biaya         int
 	Jumlah        int
+	Total         int
 	Use_pembelian bool
 }

@@ -131,6 +131,30 @@
                     </div>
                 </div>
             </div>
+
+            <div class="h-50 table-wrapper-scroll-y my-custom-scrollbar mb-5">
+                <div class="page-body w-75 mr-auto ml-auto mb-3 h-50">
+                    <h4>Laba Rugi {{.Data.Tanggal.Format "02 Jan 2006"}}</h4>
+                    <div class="card h-50">
+                        <div class="card-body">
+                            <table class="table table-striped mr-auto ml-auto h-50">
+                                <tfoot>
+                                {{ if .Laba }}
+                                    <tr>
+                                        <td colspan="3" class="text-center font-weight-bold">
+                                            Laba Rugi
+                                        </td>
+                                        <td class="text-center font-weight-bold">
+                                            Rp. {{.Laba}}
+                                        </td>
+                                    </tr>
+                                {{ end }}
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="container page-body w-75 mr-auto ml-auto mb-3 h-50">
