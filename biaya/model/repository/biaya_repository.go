@@ -13,4 +13,5 @@ type BiayaRepository interface {
 	CreateBiaya(ctx context.Context, tx *sql.Tx, request web.BiayaRequestCreate) error
 	FindById(ctx context.Context, tx *sql.Tx, id int) web.GetBiayaRespon
 	Delete(ctx context.Context, tx *sql.Tx, id int) error
+	CreateDetailStok(ctx context.Context, tx *sql.Tx, BP int, jumlah int) error
 }

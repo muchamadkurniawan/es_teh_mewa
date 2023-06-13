@@ -12,4 +12,5 @@ type DashboardService interface {
 	GetRekapById(ctx context.Context, id int) web.ResponseDashboard
 	GetBiayaRekapById(ctx context.Context, id int) ([]web2.GetBiayaTodayRespon, int)
 	GetPesananRekapById(ctx context.Context, id int) ([]web3.AllPesananRekap, int)
+	//Cetak(ctx context.Context, id int) error
 }

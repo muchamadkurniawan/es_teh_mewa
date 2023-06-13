@@ -63,3 +63,10 @@ func (service *BiayaServiceImpl) Delete(ctx context.Context, id int) error {
 	helperMain.PanicIfError(err)
 	return service.repo.Delete(ctx, tx, id)
 }
+
+func (service *BiayaServiceImpl) UpdateStok(ctx context.Context, BP int, jumlah int) {
+	tx, err := service.DB.Begin()
+	defer helperMain.ErrorTx(tx)
+	helperMain.PanicIfError(err)
+	err = service.repo.CreateDetailStok(ctx, tx, BP, jumlah)
+}

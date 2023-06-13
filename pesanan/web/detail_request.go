@@ -1,5 +1,7 @@
 package web
 
+import "time"
+
 type DetailRequest struct {
 	Id_produk  int
 	Id_pesanan int
@@ -23,4 +25,10 @@ type DetailPesanan struct {
 	Jumlah    int
 	Harga     int
 	Total     int
+}
+
+type DetailRekap struct {
+	Id         int
+	Keterangan string
+	Tanggal    time.Time
 }

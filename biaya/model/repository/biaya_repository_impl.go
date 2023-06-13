@@ -91,3 +91,12 @@ func (repo *BiayaRepositoryImpl) Delete(ctx context.Context, tx *sql.Tx, id int)
 	}
 	return nil
 }
+
+func (repo *BiayaRepositoryImpl) CreateDetailStok(ctx context.Context, tx *sql.Tx, BP int, jumlah int) error {
+	SQL := "insert into detail_stok(id_bahan_baku, type, jumlah) values(?, 'out', ?)"
+	_, err := tx.ExecContext(ctx, SQL, BP, jumlah)
+	SQL2 := "update stok set total = total - ? where id_bahan_baku = ?;"
+	_, err = tx.ExecContext(ctx, SQL2, jumlah, BP)
+	helperMain.PanicIfError(err)
+	return nil
+}

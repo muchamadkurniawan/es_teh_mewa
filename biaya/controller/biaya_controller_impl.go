@@ -72,6 +72,7 @@ func (controller *BiayaControllerImpl) CreateBiaya(w http.ResponseWriter, r *htt
 		Total:       harga * jumlah,
 	}
 	err := controller.service.CreateBiaya(context.Background(), request)
+	controller.service.UpdateStok(context.Background(), barang, jumlah)
 	helperMain.PanicIfError(err)
 	http.Redirect(w, r, "/biaya-kasir/", http.StatusFound)
 }

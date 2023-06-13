@@ -153,10 +153,10 @@ func main() {
 	router.POST("/biaya-kasir/delete/:id/", biayaController.Delete)
 
 	router.GET("/", dashboardController.GetRekap)
+	router.GET("/cetak/:id/", dashboardController.Cetak)
 	router.GET("/admin/detail-rekap/:id/", dashboardController.DetailRekap)
 	router.GET("/admin/pesanan/detail/:id/", pesananController.ShowAdmin)
 	router.GET("/admin/biaya/detail/:id/", biayaController.FindByIdAdmin)
-	router.POST("/admin/biaya/create/pesanan/:id/", dashboardController.CreateBiayaPesanan)
 
 	router.GET("/stok/", StokController.Index)
 	router.GET("/detail-stok/", StokController.Detail)

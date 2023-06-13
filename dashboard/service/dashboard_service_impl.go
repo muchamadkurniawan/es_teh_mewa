@@ -22,7 +22,7 @@ func NewDashboardService(repo repository.DashboardRepository, DB *sql.DB) Dashbo
 	}
 }
 
-func (d DashboardServiceImpl) GetRekap(ctx context.Context) []web.ResponseDashboard {
+func (d *DashboardServiceImpl) GetRekap(ctx context.Context) []web.ResponseDashboard {
 	tx, err := d.DB.Begin()
 	defer helperMain.ErrorTx(tx)
 	helperMain.PanicIfError(err)
@@ -30,7 +30,7 @@ func (d DashboardServiceImpl) GetRekap(ctx context.Context) []web.ResponseDashbo
 	return data
 }
 
-func (d DashboardServiceImpl) GetRekapById(ctx context.Context, id int) web.ResponseDashboard {
+func (d *DashboardServiceImpl) GetRekapById(ctx context.Context, id int) web.ResponseDashboard {
 	tx, err := d.DB.Begin()
 	defer helperMain.ErrorTx(tx)
 	helperMain.PanicIfError(err)
@@ -38,7 +38,7 @@ func (d DashboardServiceImpl) GetRekapById(ctx context.Context, id int) web.Resp
 	return data
 }
 
-func (d DashboardServiceImpl) GetBiayaRekapById(ctx context.Context, id int) ([]BiayaRespon.GetBiayaTodayRespon, int) {
+func (d *DashboardServiceImpl) GetBiayaRekapById(ctx context.Context, id int) ([]BiayaRespon.GetBiayaTodayRespon, int) {
 	tx, err := d.DB.Begin()
 	defer helperMain.ErrorTx(tx)
 	helperMain.PanicIfError(err)
@@ -50,7 +50,7 @@ func (d DashboardServiceImpl) GetBiayaRekapById(ctx context.Context, id int) ([]
 	return data, total
 }
 
-func (d DashboardServiceImpl) GetPesananRekapById(ctx context.Context, id int) ([]web3.AllPesananRekap, int) {
+func (d *DashboardServiceImpl) GetPesananRekapById(ctx context.Context, id int) ([]web3.AllPesananRekap, int) {
 	tx, err := d.DB.Begin()
 	defer helperMain.ErrorTx(tx)
 	helperMain.PanicIfError(err)
@@ -61,3 +61,12 @@ func (d DashboardServiceImpl) GetPesananRekapById(ctx context.Context, id int) (
 	}
 	return data, total
 }
+
+//func (d *DashboardServiceImpl) Cetak(ctx context.Context, id int) error {
+//	tx, err := d.DB.Begin()
+//
+//	if err != nil {
+//		return err
+//	}
+//	return nil
+//}

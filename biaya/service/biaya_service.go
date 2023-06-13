@@ -12,4 +12,5 @@ type BiayaService interface {
 	CreateBiaya(ctx context.Context, create web.BiayaRequestCreate) error
 	FindById(ctx context.Context, id int) web.GetBiayaRespon
 	Delete(ctx context.Context, id int) error
+	UpdateStok(ctx context.Context, BP int, jumlah int)
 }
