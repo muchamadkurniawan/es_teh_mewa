@@ -55,7 +55,7 @@ func (repository *PembelianRespositoryImpl) DeletePembelian(ctx context.Context,
 }
 
 func (repository *PembelianRespositoryImpl) InsertPembelian(ctx context.Context, tx *sql.Tx, pembelian web.PembelianCreateRequest) (web.PembelianCreateRequest, error) {
-	SQL := "INSERT INTO pembelian(id_user, id_bahan_baku, tanggal, jumlah, biaya, total, use_pembelian) VALUES(?, ?, ?, ?, ?, ?);"
+	SQL := "INSERT INTO pembelian(id_user, id_bahan_baku, tanggal, jumlah, biaya, total, use_pembelian) VALUES(?, ?, ?, ?, ?, ?, ?);"
 	result, err := tx.ExecContext(ctx, SQL, pembelian.Id_user, pembelian.Id_bahan_baku, pembelian.Tanggal, pembelian.Jumlah, pembelian.Biaya, pembelian.Total, pembelian.Use_pembelian)
 	helperMain.PanicIfError(err)
 
